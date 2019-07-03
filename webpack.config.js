@@ -50,7 +50,7 @@ module.exports = (env) => {
     },
     plugins: [
       new webpack.BannerPlugin({
-        banner: `${pjson.name} v${pjson.version} | ${pjson.author} | license: ${pjson.license}`,
+        banner: `${pjson.name} v${pjson.version} | ${pjson.author.name} | license: ${pjson.license}`,
       }),
     ],
   };
