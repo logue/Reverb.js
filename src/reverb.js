@@ -1,11 +1,13 @@
 /**
  * JS reverb effect class
  *
- * @author    Logue <logue@hotmail.co.jp>
- * @copyright 2019 Logue
+ * @author    Logue
+ * @copyright 2019 Logue <logue@hotmail.co.jp>
  * @license   MIT
+ * @see       {@link https://github.com/logue/Reverb.js}
+ *            {@link https://github.com/web-audio-components/simple-reverb}
  */
-class Reverb {
+export default class Reverb {
   /**
    * constructor
    * @param {AudioContext} ctx
@@ -142,25 +144,24 @@ class Reverb {
     const impulseR = new Float32Array(length);
 
     for (let i = 0; i < length; i++) {
-      let n = void 0;
-      let pow = void 0;
+      /** @var {number} */
+      let n = 0;
+      /** @var {number} */
+      let pow = 0;
       if (i < delayDuration) {
         // Delay Effect
         impulseL[i] = 0;
         impulseR[i] = 0;
-      } else {
         n = this._reverse ? length - (i - delayDuration) : i - delayDuration;
+      } else {
         n = this._reverse ? length - i : i;
-        pow = Math.pow(1 - n / length, this._decay);
-        impulseL[i] = (Math.random() * 2 - 1) * pow;
-        impulseR[i] = (Math.random() * 2 - 1) * pow;
       }
-      n = this._reverse ? length - (i - delayDuration) : i - delayDuration;
       pow = Math.pow(1 - n / length, this._decay);
       impulseL[i] = (Math.random() * 2 - 1) * pow;
       impulseR[i] = (Math.random() * 2 - 1) * pow;
     }
 
+    // Generate stereo inpulse response data.
     impulse.getChannelData(0).set(impulseL);
     impulse.getChannelData(1).set(impulseR);
 
@@ -168,6 +169,7 @@ class Reverb {
   }
 
   /**
+   * Set Dry level.
    * @param {number} value
    * @return {number}
    * @private
@@ -185,6 +187,7 @@ class Reverb {
   }
 
   /**
+   * Set Wet level.
    * @param {number} value
    * @return {number}
    * @private
@@ -200,6 +203,4 @@ class Reverb {
 
     return 1 - ((value - 0.5) * 2);
   }
-}
-
-export default Reverb;
+};

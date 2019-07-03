@@ -3,11 +3,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else {
-		var a = factory();
-		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
-	}
+		define("Reverb", [], factory);
+	else if(typeof exports === 'object')
+		exports["Reverb"] = factory();
+	else
+		root["Reverb"] = factory();
 })((typeof self !== 'undefined' ? self : this), function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -106,6 +106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Reverb; });
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -115,9 +116,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 /**
  * JS reverb effect class
  *
- * @author    Logue <logue@hotmail.co.jp>
- * @copyright 2019 Logue
+ * @author    Logue
+ * @copyright 2019 Logue <logue@hotmail.co.jp>
  * @license   MIT
+ * @see       {@link https://github.com/logue/Reverb.js}
+ *            {@link https://github.com/web-audio-components/simple-reverb}
  */
 var Reverb =
 /*#__PURE__*/
@@ -292,32 +295,33 @@ function () {
       var impulseR = new Float32Array(length);
 
       for (var i = 0; i < length; i++) {
-        var n = void 0;
-        var pow = void 0;
+        /** @var {number} */
+        var n = 0;
+        /** @var {number} */
+
+        var pow = 0;
 
         if (i < delayDuration) {
           // Delay Effect
           impulseL[i] = 0;
           impulseR[i] = 0;
-        } else {
           n = this._reverse ? length - (i - delayDuration) : i - delayDuration;
+        } else {
           n = this._reverse ? length - i : i;
-          pow = Math.pow(1 - n / length, this._decay);
-          impulseL[i] = (Math.random() * 2 - 1) * pow;
-          impulseR[i] = (Math.random() * 2 - 1) * pow;
         }
 
-        n = this._reverse ? length - (i - delayDuration) : i - delayDuration;
         pow = Math.pow(1 - n / length, this._decay);
         impulseL[i] = (Math.random() * 2 - 1) * pow;
         impulseR[i] = (Math.random() * 2 - 1) * pow;
-      }
+      } // Generate stereo inpulse response data.
+
 
       impulse.getChannelData(0).set(impulseL);
       impulse.getChannelData(1).set(impulseR);
       this.node.buffer = impulse;
     }
     /**
+     * Set Dry level.
      * @param {number} value
      * @return {number}
      * @private
@@ -337,6 +341,7 @@ function () {
       return 1 - (value - 0.5) * 2;
     }
     /**
+     * Set Wet level.
      * @param {number} value
      * @return {number}
      * @private
@@ -360,7 +365,8 @@ function () {
   return Reverb;
 }();
 
-/* harmony default export */ __webpack_exports__["default"] = (Reverb);
+
+;
 
 /***/ })
 

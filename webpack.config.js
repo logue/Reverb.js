@@ -19,6 +19,7 @@ module.exports = (env) => {
     output: {
       path: path.resolve(__dirname, 'bin'),
       filename: !isProduction ? '[name].js' : '[name].min.js',
+      library: 'Reverb',
       libraryTarget: 'umd',
       umdNamedDefine: true,
       globalObject: `(typeof self !== 'undefined' ? self : this)`,
@@ -31,7 +32,7 @@ module.exports = (env) => {
       concatenateModules: false,
     },
     module: {
-      rules:[
+      rules: [
         {
           test: /\.js/,
           exclude: /node_modules/,
