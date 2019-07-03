@@ -280,15 +280,15 @@
       }
 
       document.getElementById('decay').onchange = () => {
-        reverb.time(document.getElementById('decay').value);
+        reverb.decay(document.getElementById('decay').value);
       }
 
       document.getElementById('delay').onchange = () => {
-        reverb.time(document.getElementById('delay').value);
+        reverb.delay(document.getElementById('delay').value);
       }
 
       document.getElementById('mix').onchange = () => {
-        reverb.time(document.getElementById('mix').value);
+        reverb.mix(document.getElementById('mix').value);
       }
     })
   </script>
