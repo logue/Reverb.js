@@ -10,7 +10,8 @@
   <meta property="og:title" content="JavaScript Reverb Effect Test" />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://logue.github.io/Reverb.js/" />
-  <meta property="og:image" content="https://repository-images.githubusercontent.com/194181712/20bdd780-9995-11e9-8811-42e3b44d1cec" />
+  <meta property="og:image"
+    content="https://repository-images.githubusercontent.com/194181712/20bdd780-9995-11e9-8811-42e3b44d1cec" />
   <meta property="og:site_name" content="Logue's Lab" />
   <meta property="og:description" content="Reverb effect written in JavaScript." />
   <meta property="fb:app_id" content="129144050466298" />
@@ -20,7 +21,8 @@
   <meta name="twitter:title" content="JavaScript Reverb Effect Test" />
   <meta name="twitter:url" content="https://logue.github.io/Reverb.js/" />
   <meta name="twitter:description" content="Reverb effect written in JavaScript." />
-  <meta name="twitter:image" content="https://repository-images.githubusercontent.com/194181712/20bdd780-9995-11e9-8811-42e3b44d1cec" />
+  <meta name="twitter:image"
+    content="https://repository-images.githubusercontent.com/194181712/20bdd780-9995-11e9-8811-42e3b44d1cec" />
   <title>Reverb.js Demo</title>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-33600926-1"></script>
@@ -70,7 +72,7 @@
       <h1>Reverb.js Demo</h1>
       <button id="play" class="btn btn-primary" disabled><i class="fas fa-play"></i> Play</button>
       <button id="stop" class="btn btn-secondary" disabled><i class="fas fa-stop"></i> Stop</button>
-      <hr />
+      <h2>Reverb Control</h2>
       <div class="custom-control custom-switch">
         <input id="reverb" type="checkbox" class="custom-control-input">
         <label class="custom-control-label" for="reverb">Reverb</label>
@@ -138,7 +140,7 @@
           </div>
         </div>
       </div>
-      <hr />
+      <h2>FFT</h2>
       <div class="overflow-auto">
         <canvas id="graph" width="512" height="256"></canvas>
       </div>
@@ -150,12 +152,13 @@
       <address class="text-muted"><i class="far fa-copyright"></i> 2019 by Logue / MIT License.</address>
     </div>
   </footer>
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
+  <!--script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
     integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha256-fzFFyH01cBVPYzl16KT40wqjhgPtq6FFUB6ckN2+GGw=" crossorigin="anonymous"></script>
+    integrity="sha256-fzFFyH01cBVPYzl16KT40wqjhgPtq6FFUB6ckN2+GGw=" crossorigin="anonymous"></script-->
   <script src="reverb.min.js"></script>
   <script>
+    // Setup Audio Context
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
 
     // Defreeze AudioContext for iOS.
@@ -193,35 +196,62 @@
     const analysedata = new Float32Array(1024);
     const DrawGraph = () => {
       analyser.getFloatFrequencyData(analysedata);
+      // Background
       canvas.fillStyle = "#343a40";
       canvas.fillRect(0, 0, 512, 256);
+      // FFT Graph
       canvas.fillStyle = document.getElementById('reverb').checked ? "#17a2b8" : "#28a745";
       for (let i = 0; i < 512; ++i) {
-        let f = ctx.sampleRate * i / 1024;
+        const f = ctx.sampleRate * i / 1024;
         y = 128 + (analysedata[i] + 48.16) * 2.56;
         canvas.fillRect(i, 256 - y, 1, y);
       }
 
+      // y axis (dB)
       for (let d = -50; d < 50; d += 10) {
-        let y = 128 - (d * 256 / 100) | 0;
+        const y = 128 - (d * 256 / 100) | 0;
+        // Line
         canvas.fillStyle = "#6c757d";
         canvas.fillRect(20, y, 512, 1);
-        canvas.fillStyle = "#ffc107";
+        // Label
+        canvas.fillStyle = "#fd7e14";
         canvas.fillText(d + "dB", 5, y);
       }
+      canvas.fillStyle = "#ffc107";
       canvas.fillRect(20, 128, 512, 1);
+
+      // x axis (frequency)
       for (let f = 2000; f < ctx.sampleRate / 2; f += 2000) {
-        let x = (f * 1024 / ctx.sampleRate) | 0;
+        const x = (f * 1024 / ctx.sampleRate) | 0;
+        // Line
         canvas.fillStyle = "#6c757d";
         canvas.fillRect(x, 0, 1, 245);
-        canvas.fillStyle = "#dc3545";
-        canvas.fillText(f + "Hz", x - 10, 255);
+        // Label
+        canvas.fillStyle = "#e83e8c";
+        canvas.fillText(f / 1000 + "kHz", (x - 10), 255);
       }
     }
 
     window.addEventListener('load', async () => {
       const sound = await LoadSample('./demo.wav');
       const src = ctx.createBufferSource();
+
+      // Reverb switch handler
+      const setReverb = () => {
+        if (document.getElementById('reverb').checked) {
+          // Connect Reverb
+          src.connect(reverb.node);
+          // Connect Output
+          reverb.node.connect(analyser).connect(ctx.destination);
+        } else {
+          // Disconnect Reverb
+          try {
+            src.disconnect(reverb.node);
+          } catch (e) { }
+          // Connect directly
+          src.connect(analyser).connect(ctx.destination);
+        }
+      }
 
       // Draw FFT
       setInterval(DrawGraph, 10);
@@ -238,59 +268,37 @@
           src.buffer = sound;
           src.loop = true;
 
-          if (document.getElementById('reverb').checked) {
-            // Connect Reverb
-            src.connect(reverb.node);
-            // Connect Output
-            reverb.node.connect(analyser).connect(ctx.destination);
-          } else {
-            // Connect directly
-            src.connect(analyser).connect(ctx.destination);
-          }
+          setReverb();
           src.start();
         }
       });
 
+      // Stop button
       document.getElementById('stop').addEventListener('click', () => {
         if (src.buffer) src.stop();
       });
 
       // Reverb switch button
-      document.getElementById('reverb').onclick = () => {
-        if (document.getElementById('reverb').checked) {
-          if (src.buffer) src.connect(reverb.node);
-          reverb.node.connect(analyser).connect(ctx.destination);
-        } else {
-          if (src.buffer) src.disconnect(reverb.node);
-          reverb.node.disconnect(analyser).disconnect(ctx.destination);
-          src.connect(analyser).connect(ctx.destination);
-        }
-      }
-
-      document.getElementById('reverse').onclick = () => {
-        reverb.reverse(document.getElementById('reverse').checked);
-      }
-
-      document.getElementById('filter').onchange = () => {
-        reverb.filterType(document.getElementById('filter').value);
-      }
-
-      document.getElementById('time').onchange = () => {
-        reverb.time(document.getElementById('time').value);
-      }
-
-      document.getElementById('decay').onchange = () => {
-        reverb.decay(document.getElementById('decay').value);
-      }
-
-      document.getElementById('delay').onchange = () => {
-        reverb.delay(document.getElementById('delay').value);
-      }
-
-      document.getElementById('mix').onchange = () => {
-        reverb.mix(document.getElementById('mix').value);
-      }
-    })
+      document.getElementById('reverb').addEventListener('click', setReverb);
+      // Reverse checkbox
+      document.getElementById('reverse').addEventListener('click', () =>
+        reverb.reverse(document.getElementById('reverse').checked));
+      // Filter select box
+      document.getElementById('filter').addEventListener('change', () =>
+        reverb.filterType(document.getElementById('filter').value));
+      // Reverb dualation time
+      document.getElementById('time').addEventListener('change', () =>
+        reverb.time(document.getElementById('time').value));
+      // Decay time
+      document.getElementById('decay').addEventListener('change', () =>
+        reverb.decay(document.getElementById('decay').value));
+      // Delay time
+      document.getElementById('delay').addEventListener('change', () =>
+        reverb.delay(document.getElementById('delay').value));
+      // Dry/Wet slider
+      document.getElementById('mix').addEventListener('change', () =>
+        reverb.mix(document.getElementById('mix').value));
+    });
   </script>
 </body>
 
