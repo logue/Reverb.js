@@ -10,7 +10,7 @@
   <meta property="og:title" content="JavaScript Reverb Effect Test" />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://logue.github.io/Reverb.js/" />
-  <meta property="og:image" content="https://logue.github.io/Reverb.js/icon.png" />
+  <meta property="og:image" content="https://repository-images.githubusercontent.com/194181712/20bdd780-9995-11e9-8811-42e3b44d1cec" />
   <meta property="og:site_name" content="Logue's Lab" />
   <meta property="og:description" content="Reverb effect written in JavaScript." />
   <meta property="fb:app_id" content="129144050466298" />
@@ -20,7 +20,7 @@
   <meta name="twitter:title" content="JavaScript Reverb Effect Test" />
   <meta name="twitter:url" content="https://logue.github.io/Reverb.js/" />
   <meta name="twitter:description" content="Reverb effect written in JavaScript." />
-  <meta name="twitter:image" content="https://logue.github.io/Reverb.js/icon.png" />
+  <meta name="twitter:image" content="https://repository-images.githubusercontent.com/194181712/20bdd780-9995-11e9-8811-42e3b44d1cec" />
   <title>Reverb.js Demo</title>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-33600926-1"></script>
@@ -68,8 +68,8 @@
   <main role="main" class="flex-shrink-0 mt-2">
     <div class="container">
       <h1>Reverb.js Demo</h1>
-      <button id="play" class="btn btn-primary"><i class="fas fa-play"></i> Play</button>
-      <button id="stop" class="btn btn-secondary"><i class="fas fa-stop"></i> Stop</button>
+      <button id="play" class="btn btn-primary" disabled><i class="fas fa-play"></i> Play</button>
+      <button id="stop" class="btn btn-secondary" disabled><i class="fas fa-stop"></i> Stop</button>
       <hr />
       <div class="custom-control custom-switch">
         <input id="reverb" type="checkbox" class="custom-control-input">
@@ -97,8 +97,8 @@
       </div>
       <div class="form-group">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="customCheck1">
-          <label class="custom-control-label" for="customCheck1">Reverse</label>
+          <input type="checkbox" class="custom-control-input" id="reverse">
+          <label class="custom-control-label" for="reverse">Reverse</label>
         </div>
       </div>
       <div class="form-group">
@@ -139,7 +139,9 @@
         </div>
       </div>
       <hr />
-      <canvas id="graph" width="512" height="256"></canvas>
+      <div class="overflow-auto">
+        <canvas id="graph" width="512" height="256"></canvas>
+      </div>
     </div>
   </main>
 
@@ -154,46 +156,62 @@
     integrity="sha256-fzFFyH01cBVPYzl16KT40wqjhgPtq6FFUB6ckN2+GGw=" crossorigin="anonymous"></script>
   <script src="reverb.min.js"></script>
   <script>
-    const ctx = new AudioContext();
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Defreeze AudioContext for iOS.
+    document.addEventListener('touchstart', initAudioContext);
+    function initAudioContext() {
+      document.removeEventListener('touchstart', initAudioContext);
+      // wake up AudioContext
+      const emptySource = ctx.createBufferSource();
+      emptySource.start();
+      emptySource.stop();
+    }
+
+    // Setup Reverb Class
     const reverb = new Reverb.default(ctx);
 
+    // Load audio file and decode asyncly.
     const LoadSample = (url) => {
-      return new Promise((resolv) => {
-        fetch(url).then((response) => {
-          return response.arrayBuffer();
-        }).then((arraybuf) => {
-          return ctx.decodeAudioData(arraybuf);
-        }).then((buf) => {
-          resolv(buf);
-        })
+      return new Promise(resolve => {
+        fetch(url)
+          .then(response => response.arrayBuffer())
+          .then(arraybuf => ctx.decodeAudioData(arraybuf,
+            buffer => {
+              resolve(buffer)
+            },
+            e => alert(e))
+          )
+          .catch(e => alert(e))
       });
     }
 
-    ///////////////////////// for Graph
-    const analyser = new AnalyserNode(ctx, { smoothingTimeConstant: 0.7, fftSize: 1024 });
+    // Draw FFT to canvas
+    // Code taken from https://www.g200kg.com/jp/docs/webaudio/filter.html
+    const analyser = ctx.createAnalyser();
     const canvas = document.getElementById('graph').getContext("2d");
     const analysedata = new Float32Array(1024);
     const DrawGraph = () => {
       analyser.getFloatFrequencyData(analysedata);
       canvas.fillStyle = "#343a40";
       canvas.fillRect(0, 0, 512, 256);
-      canvas.fillStyle = "#28a745";
-      for (var i = 0; i < 512; ++i) {
-        var f = ctx.sampleRate * i / 1024;
+      canvas.fillStyle = document.getElementById('reverb').checked ? "#17a2b8" : "#28a745";
+      for (let i = 0; i < 512; ++i) {
+        let f = ctx.sampleRate * i / 1024;
         y = 128 + (analysedata[i] + 48.16) * 2.56;
         canvas.fillRect(i, 256 - y, 1, y);
       }
 
-      for (var d = -50; d < 50; d += 10) {
-        var y = 128 - (d * 256 / 100) | 0;
+      for (let d = -50; d < 50; d += 10) {
+        let y = 128 - (d * 256 / 100) | 0;
         canvas.fillStyle = "#6c757d";
         canvas.fillRect(20, y, 512, 1);
         canvas.fillStyle = "#ffc107";
         canvas.fillText(d + "dB", 5, y);
       }
       canvas.fillRect(20, 128, 512, 1);
-      for (var f = 2000; f < ctx.sampleRate / 2; f += 2000) {
-        var x = (f * 1024 / ctx.sampleRate) | 0;
+      for (let f = 2000; f < ctx.sampleRate / 2; f += 2000) {
+        let x = (f * 1024 / ctx.sampleRate) | 0;
         canvas.fillStyle = "#6c757d";
         canvas.fillRect(x, 0, 1, 245);
         canvas.fillStyle = "#dc3545";
@@ -203,33 +221,54 @@
 
     window.addEventListener('load', async () => {
       const sound = await LoadSample('./demo.wav');
-      let src = null;
+      const src = ctx.createBufferSource();
 
+      // Draw FFT
+      setInterval(DrawGraph, 10);
+
+      // remove disabled
+      document.getElementById('play').disabled = "";
+      document.getElementById('stop').disabled = "";
+
+      // Play button
       document.getElementById('play').addEventListener('click', () => {
         if (ctx.state == 'suspended')
           ctx.resume();
-        if (src == null) {
-          src = new AudioBufferSourceNode(ctx, { buffer: sound, loop: true });
-          src.connect(analyser).connect(ctx.destination);
+        if (src.buffer == null) {
+          src.buffer = sound;
+          src.loop = true;
+
+          if (document.getElementById('reverb').checked) {
+            // Connect Reverb
+            src.connect(reverb.node);
+            // Connect Output
+            reverb.node.connect(analyser).connect(ctx.destination);
+          } else {
+            // Connect directly
+            src.connect(analyser).connect(ctx.destination);
+          }
           src.start();
         }
       });
 
       document.getElementById('stop').addEventListener('click', () => {
-        if (src) src.stop();
-        src = null;
+        if (src.buffer) src.stop();
       });
 
-
+      // Reverb switch button
       document.getElementById('reverb').onclick = () => {
         if (document.getElementById('reverb').checked) {
-          if (src) src.connect(reverb.node);
-          reverb.node.connect(ctx.destination);
+          if (src.buffer) src.connect(reverb.node);
+          reverb.node.connect(analyser).connect(ctx.destination);
         } else {
-          if (src) src.disconnect(reverb.node);
-          reverb.node.disconnect(ctx.destination);
+          if (src.buffer) src.disconnect(reverb.node);
+          reverb.node.disconnect(analyser).disconnect(ctx.destination);
           src.connect(analyser).connect(ctx.destination);
         }
+      }
+
+      document.getElementById('reverse').onclick = () => {
+        reverb.reverse(document.getElementById('reverse').checked);
       }
 
       document.getElementById('filter').onchange = () => {
@@ -251,9 +290,6 @@
       document.getElementById('mix').onchange = () => {
         reverb.time(document.getElementById('mix').value);
       }
-
-      setInterval(DrawGraph, 100);
-
     })
   </script>
 </body>
