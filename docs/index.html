@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Reverb effect written in JavaScript." />
+  <meta name="author" content="Masashi Yoshikawa" />
+  <!-- ogp -->
+  <meta property="og:title" content="JavaScript Reverb Effect Test" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://logue.github.io/Reverb.js/" />
+  <meta property="og:image" content="https://logue.github.io/Reverb.js/icon.png" />
+  <meta property="og:site_name" content="Logue's Lab" />
+  <meta property="og:description" content="Reverb effect written in JavaScript." />
+  <meta property="fb:app_id" content="129144050466298" />
+  <meta property="article:publisher" content="https://www.facebook.com/logue256" />
+  <meta name="twitter:card" content="Summary" />
+  <meta name="twitter:site" content="@logue256" />
+  <meta name="twitter:title" content="JavaScript Reverb Effect Test" />
+  <meta name="twitter:url" content="https://logue.github.io/Reverb.js/" />
+  <meta name="twitter:description" content="Reverb effect written in JavaScript." />
+  <meta name="twitter:image" content="https://logue.github.io/Reverb.js/icon.png" />
+  <title>Reverb.js Demo</title>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-33600926-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-33600926-1');
+  </script>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/" />
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha256-YLGeXaapI0/5IgZopewRJcFXomhRMlYYjugPLSyNjTY=" crossorigin="anonymous" />
+  <!-- Web Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c|Varela+Round&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.45.1/css/dseg.css"
+    integrity="sha256-0kP9GjBI5CdeL8PdmthxSmNbvRHsfz5Me/r6FK7UVJ4=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" />
+</head>
+
+<body class="d-flex flex-column h-100 pt-5">
+  <header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">Reverb.js</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav ml-auto mar-0">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Demo <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/logue/Reverb.js">Github</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Begin page content -->
+  <main role="main" class="flex-shrink-0 mt-2">
+    <div class="container">
+      <h1>Reverb.js Demo</h1>
+      <button id="play" class="btn btn-primary"><i class="fas fa-play"></i> Play</button>
+      <button id="stop" class="btn btn-secondary"><i class="fas fa-stop"></i> Stop</button>
+      <hr />
+      <div class="custom-control custom-switch">
+        <input id="reverb" type="checkbox" class="custom-control-input">
+        <label class="custom-control-label" for="reverb">Reverb</label>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <div class="form-group">
+            <label for="time">Time</label>
+            <input id="time" type="number" value="1" min="0" class="form-control" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="decay">Decay</label>
+            <input id="decay" type="number" value="0.5" min="0" step="0.05" class="form-control" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="delay">Delay</label>
+            <input id="delay" type="number" value="0.5" min="0" step="0.05" class="form-control" />
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="customCheck1">
+          <label class="custom-control-label" for="customCheck1">Reverse</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="mix">Dry / Wet</label>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Dry</span>
+          </div>
+          <div class="form-control">
+            <input type="range" id="mix" class=" custom-range" min="0" max="1" step="0.05">
+          </div>
+          <div class="input-group-append">
+            <span class="input-group-text">Wet</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <div class="form-group">
+            <label for="filter">Filter Type</label>
+            <select id="filter" class="form-control">
+              <option value="lowpass" selected="selected">lowpass</option>
+              <option value="highpass">highpass</option>
+              <option value="bandpass">bandpass</option>
+              <option value="lowshelf">lowshelf</option>
+              <option value="highshelf">highshelf</option>
+              <option value="peaking">peaking</option>
+              <option value="notch">notch</option>
+              <option value="allpass">allpass</option>
+            </select>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="freq">Frequency</label>
+            <input id="freq" type="number" value="350" min="100" max="20000" class="form-control">
+          </div>
+        </div>
+      </div>
+      <hr />
+      <canvas id="graph" width="512" height="256"></canvas>
+    </div>
+  </main>
+
+  <footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+      <address class="text-muted"><i class="far fa-copyright"></i> 2019 by Logue / MIT License.</address>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
+    integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha256-fzFFyH01cBVPYzl16KT40wqjhgPtq6FFUB6ckN2+GGw=" crossorigin="anonymous"></script>
+  <script src="reverb.min.js"></script>
+  <script>
+    const ctx = new AudioContext();
+    const reverb = new Reverb.default(ctx);
+
+    const LoadSample = (url) => {
+      return new Promise((resolv) => {
+        fetch(url).then((response) => {
+          return response.arrayBuffer();
+        }).then((arraybuf) => {
+          return ctx.decodeAudioData(arraybuf);
+        }).then((buf) => {
+          resolv(buf);
+        })
+      });
+    }
+
+    ///////////////////////// for Graph
+    const analyser = new AnalyserNode(ctx, { smoothingTimeConstant: 0.7, fftSize: 1024 });
+    const canvas = document.getElementById('graph').getContext("2d");
+    const analysedata = new Float32Array(1024);
+    const DrawGraph = () => {
+      analyser.getFloatFrequencyData(analysedata);
+      canvas.fillStyle = "#343a40";
+      canvas.fillRect(0, 0, 512, 256);
+      canvas.fillStyle = "#28a745";
+      for (var i = 0; i < 512; ++i) {
+        var f = ctx.sampleRate * i / 1024;
+        y = 128 + (analysedata[i] + 48.16) * 2.56;
+        canvas.fillRect(i, 256 - y, 1, y);
+      }
+
+      for (var d = -50; d < 50; d += 10) {
+        var y = 128 - (d * 256 / 100) | 0;
+        canvas.fillStyle = "#6c757d";
+        canvas.fillRect(20, y, 512, 1);
+        canvas.fillStyle = "#ffc107";
+        canvas.fillText(d + "dB", 5, y);
+      }
+      canvas.fillRect(20, 128, 512, 1);
+      for (var f = 2000; f < ctx.sampleRate / 2; f += 2000) {
+        var x = (f * 1024 / ctx.sampleRate) | 0;
+        canvas.fillStyle = "#6c757d";
+        canvas.fillRect(x, 0, 1, 245);
+        canvas.fillStyle = "#dc3545";
+        canvas.fillText(f + "Hz", x - 10, 255);
+      }
+    }
+
+    window.addEventListener('load', async () => {
+      const sound = await LoadSample('./demo.wav');
+      let src = null;
+
+      document.getElementById('play').addEventListener('click', () => {
+        if (ctx.state == 'suspended')
+          ctx.resume();
+        if (src == null) {
+          src = new AudioBufferSourceNode(ctx, { buffer: sound, loop: true });
+          src.connect(analyser).connect(ctx.destination);
+          src.start();
+        }
+      });
+
+      document.getElementById('stop').addEventListener('click', () => {
+        if (src) src.stop();
+        src = null;
+      });
+
+
+      document.getElementById('reverb').onclick = () => {
+        if (document.getElementById('reverb').checked) {
+          if (src) src.connect(reverb.node);
+          reverb.node.connect(ctx.destination);
+        } else {
+          if (src) src.disconnect(reverb.node);
+          reverb.node.disconnect(ctx.destination);
+          src.connect(analyser).connect(ctx.destination);
+        }
+      }
+
+      document.getElementById('filter').onchange = () => {
+        reverb.filterType(document.getElementById('filter').value);
+      }
+
+      document.getElementById('time').onchange = () => {
+        reverb.time(document.getElementById('time').value);
+      }
+
+      document.getElementById('decay').onchange = () => {
+        reverb.time(document.getElementById('decay').value);
+      }
+
+      document.getElementById('delay').onchange = () => {
+        reverb.time(document.getElementById('delay').value);
+      }
+
+      document.getElementById('mix').onchange = () => {
+        reverb.time(document.getElementById('mix').value);
+      }
+
+      setInterval(DrawGraph, 100);
+
+    })
+  </script>
+</body>
+
+</html>
