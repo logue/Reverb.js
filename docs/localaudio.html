@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Reverb effect written in JavaScript." />
+  <meta name="author" content="Masashi Yoshikawa" />
+  <!-- ogp -->
+  <meta property="og:title" content="JavaScript Reverb Effect Test" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://logue.github.io/Reverb.js/" />
+  <meta property="og:image"
+    content="https://repository-images.githubusercontent.com/194181712/20bdd780-9995-11e9-8811-42e3b44d1cec" />
+  <meta property="og:site_name" content="Logue's Lab" />
+  <meta property="og:description" content="Reverb effect written in JavaScript." />
+  <meta property="fb:app_id" content="129144050466298" />
+  <meta property="article:publisher" content="https://www.facebook.com/logue256" />
+  <meta name="twitter:card" content="Summary" />
+  <meta name="twitter:site" content="@logue256" />
+  <meta name="twitter:title" content="JavaScript Reverb Effect Test" />
+  <meta name="twitter:url" content="https://logue.github.io/Reverb.js/" />
+  <meta name="twitter:description" content="Reverb effect written in JavaScript." />
+  <meta name="twitter:image"
+    content="https://repository-images.githubusercontent.com/194181712/20bdd780-9995-11e9-8811-42e3b44d1cec" />
+  <title>Reverb.js Demo</title>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-33600926-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-33600926-1');
+  </script>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/" />
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha256-YLGeXaapI0/5IgZopewRJcFXomhRMlYYjugPLSyNjTY=" crossorigin="anonymous" />
+  <!-- Web Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c|Varela+Round&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.45.1/css/dseg.css"
+    integrity="sha256-0kP9GjBI5CdeL8PdmthxSmNbvRHsfz5Me/r6FK7UVJ4=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" />
+  <style>
+    /*<!CDATA[*/
+
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: 'Varela Round', 'Rounded Mplus 1c', sans-serif;
+      margin-bottom: 70px;
+    }
+
+    /*]]>*/
+  </style>
+</head>
+
+<body class="d-flex flex-column h-100 pt-5">
+  <header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">Reverb.js</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav ml-auto mar-0">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Demo <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/logue/Reverb.js">Github</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Begin page content -->
+  <main role="main" class="flex-shrink-0 mt-2">
+    <div class="container">
+      <h1>Reverb.js Demo</h1>
+      <div class="d-flex">
+        <div>
+          <button id="play" class="btn btn-primary" disabled><i class="fas fa-play"></i> Play</button>
+        </div>
+        <div>
+          <button id="stop" class="btn btn-secondary" disabled><i class="fas fa-stop"></i> Stop</button>
+        </div>
+        <div class="custom-file form-control-sm ml-3">
+          <input type="file" class="custom-file-input" id="file" accept="audio/*">
+          <label class="custom-file-label" for="file">Load Audio file
+            <small class="d-none d-sm-inline">(drag and drop file to change audio)</small>
+          </label>
+        </div>
+      </div>
+      <h2>Reverb Control</h2>
+      <div class="custom-control custom-switch">
+        <input id="reverb" type="checkbox" class="custom-control-input">
+        <label class="custom-control-label" for="reverb">Reverb</label>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <div class="form-group">
+            <label for="time">Time</label>
+            <input id="time" type="number" value="1" min="0" class="form-control" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="decay">Decay</label>
+            <input id="decay" type="number" value="0.5" min="0" step="0.05" class="form-control" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="delay">Delay</label>
+            <input id="delay" type="number" value="0.5" min="0" step="0.05" class="form-control" />
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="reverse">
+          <label class="custom-control-label" for="reverse">Reverse</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="mix">Dry / Wet</label>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Dry</span>
+          </div>
+          <div class="form-control">
+            <input type="range" id="mix" class=" custom-range" min="0" max="1" step="0.05">
+          </div>
+          <div class="input-group-append">
+            <span class="input-group-text">Wet</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <div class="form-group">
+            <label for="filter">Filter Type</label>
+            <select id="filter" class="form-control">
+              <option value="lowpass" selected="selected">lowpass</option>
+              <option value="highpass">highpass</option>
+              <option value="bandpass">bandpass</option>
+              <option value="lowshelf">lowshelf</option>
+              <option value="highshelf">highshelf</option>
+              <option value="peaking">peaking</option>
+              <option value="notch">notch</option>
+              <option value="allpass">allpass</option>
+            </select>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="freq">Frequency</label>
+            <input id="freq" type="number" value="350" min="100" max="20000" class="form-control">
+          </div>
+        </div>
+      </div>
+      <h2>Spectrum Analysis</h2>
+      <div class="overflow-auto">
+        <canvas id="canvas" class="d-none"></canvas>
+        <img id="test" class="d-none" />
+        <canvas id="graph"></canvas>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+      <address class="text-muted"><i class="far fa-copyright"></i> 2019 by Logue / MIT License.</address>
+    </div>
+  </footer>
+  <!--script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
+    integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha256-fzFFyH01cBVPYzl16KT40wqjhgPtq6FFUB6ckN2+GGw=" crossorigin="anonymous"></script-->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.106.2/build/three.min.js"
+    integrity="sha256-tAVw6WRAXc3td2Esrjd28l54s3P2y7CDFu1271mu5LE=" crossorigin="anonymous"></script>
+  <script src="reverb.min.js"></script>
+  <script>
+    // Setup Audio Context
+    const AudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Defreeze AudioContext for iOS.
+    document.addEventListener('touchstart', initAudioContext);
+    function initAudioContext() {
+      document.removeEventListener('touchstart', initAudioContext);
+      // wake up AudioContext
+      const emptySource = AudioCtx.createBufferSource();
+      emptySource.start();
+      emptySource.stop();
+    }
+
+    // Audio object
+    const audio = new Audio();
+
+    // Audio Source
+    const AudioSrc = AudioCtx.createMediaElementSource(audio);
+
+    // Analyzer Node
+    const AnalyserNode = AudioCtx.createAnalyser();
+
+    // Setup Reverb Class
+    const reverb = new Reverb.default(AudioCtx);
+
+    // decode audio
+    const LoadSample = async (input) => {
+      if (audio) {
+        audio.pause();
+        audio.src = '';
+      }
+      audio.src = await loadDataUri(input);
+    };
+
+    // Load array buffer
+    const loadDataUri = async (input) => {
+      document.getElementById('play').disabled = "disabled";
+      document.getElementById('stop').disabled = "disabled";
+      return await new Promise(resolve => {
+        if (input instanceof File) {
+          const reader = new FileReader();
+          reader.onload = event => {
+            resolve(event.target.result);
+            document.getElementById('play').disabled = "";
+            document.getElementById('stop').disabled = "";
+          }
+          reader.readAsDataURL(input);
+        } else {
+          fetch(input)
+            .then(response => {
+              return {
+                mime: response.headers.get("content-type"),
+                buffer: response.arrayBuffer()
+              };
+            })
+            .then(res => {
+              // to base64
+              let binary = '';
+              let bytes = [].slice.call(new Uint8Array(res.buffer));
+
+              bytes.forEach((b) => binary += String.fromCharCode(b));
+              const base64 = window.btoa(binary);
+              // prepend data scheme
+              resolve('data:' + res.mime + ';base64;' + base64);
+
+              document.getElementById('play').disabled = "";
+              document.getElementById('stop').disabled = "";
+            });
+        }
+      }).catch(e => alert(e));
+    };
+
+    const handleFileSelect = async (e) => {
+      const file = e.target.files[0];
+      AudioSrc.buffer = await LoadSample(file);
+    }
+
+    // Reverb switch handler
+    const setReverb = () => {
+
+      if (document.getElementById('reverb').checked) {
+        // Connect Reverb
+        AudioSrc.connect(reverb.node);
+        // Connect Output
+        reverb.node.connect(AnalyserNode)
+      } else {
+        // Disconnect Reverb
+        try {
+          AudioSrc.disconnect(reverb.node);
+        } catch (e) { }
+        // Connect directly
+        AudioSrc.connect(AnalyserNode)
+      }
+      AnalyserNode.connect(AudioCtx.destination);
+    }
+
+    /**
+     * Draw Texture Functions
+     **/
+    const PIXEL_RATIO = () => {
+      const ctx = document.createElement('canvas').getContext('2d'),
+        dpr = window.devicePixelRatio || 1,
+        bsr = ctx.webkitBackingStorePixelRatio ||
+          ctx.mozBackingStorePixelRatio ||
+          ctx.msBackingStorePixelRatio ||
+          ctx.oBackingStorePixelRatio ||
+          ctx.backingStorePixelRatio || 1;
+      return dpr / bsr;
+    };
+
+    // Create retina quality canvas
+    const createRetinaCanvas = (w, h, ratio) => {
+      if (!ratio) { ratio = PIXEL_RATIO; }
+      const canvas = document.getElementById('canvas');
+      //const canvas = document.createElement('canvas');
+      canvas.width = w * ratio;
+      canvas.height = h * ratio;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      canvas.getContext('2d').setTransform(ratio, 0, 0, ratio, 0, 0);
+      return canvas;
+    };
+
+    // Spectrum Analysis canvas size
+    const SPRITE_HEIGHT = 256;
+    const SPRITE_WIDTH = 512;
+
+    // Sprite Canvas
+    const spriteCanvas = createRetinaCanvas(SPRITE_WIDTH, SPRITE_HEIGHT);
+
+    // Draw Graph
+    const DrawGraph = () => {
+      const AnalyseData = new Float32Array(1024);
+      AnalyserNode.getFloatFrequencyData(AnalyseData);
+
+      const sprite = spriteCanvas.getContext('2d', { antialias: false });
+
+      // Background
+      //sprite.fillStyle = "#343a40";
+      //sprite.fillRect(0, 0, SPRITE_WIDTH, SPRITE_HEIGHT);
+
+      sprite.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
+
+      // Graph
+      const grad = sprite.createLinearGradient(0, 0, spriteCanvas.width, 0);
+      grad.addColorStop(0, 'rgb(255, 0, 0)');
+      grad.addColorStop(.2, 'rgb(255, 255, 0)');
+      grad.addColorStop(.4, 'rgb(0, 255, 0)');
+      grad.addColorStop(.6, 'rgb(0, 255, 255)');
+      grad.addColorStop(.8, 'rgb(0, 0, 255)');
+      grad.addColorStop(1, 'rgb(255, 0, 255)');
+      sprite.fillStyle = grad;
+      //sprite.fillStyle = document.getElementById('reverb').checked ? "#17a2b8" : "#28a745";
+
+      for (let i = 0; i < spriteCanvas.width; ++i) {
+        const f = AudioCtx.sampleRate * i / 1024;
+        y = 128 + (AnalyseData[i] + 48.16) * 2.56 + 1;
+        sprite.fillRect(i, spriteCanvas.height - y, 1, y);
+      }
+
+      return spriteCanvas.toDataURL();
+    }
+
+
+
+    // Draw Axis
+    const DrawAxis = () => {
+      const sprite = spriteCanvas.getContext('2d', { antialias: false });
+      // y axis (dB)
+      for (let d = -50; d < 50; d += 10) {
+        const y = (SPRITE_HEIGHT / 2) - (d * SPRITE_HEIGHT / 100) | 0;
+        // Line
+        sprite.fillStyle = "#6c757d";
+        sprite.fillRect(20, y, SPRITE_WIDTH, 1);
+        // Label
+        sprite.fillStyle = "#fd7e14";
+        sprite.fillText(d + "dB", 5, y);
+      }
+      sprite.fillStyle = "#ffc107";
+      sprite.fillRect(20, SPRITE_HEIGHT / 2, SPRITE_WIDTH, 1);
+
+      // x axis (frequency)
+      for (let f = 2000; f < AudioCtx.sampleRate / 2; f += 2000) {
+        const x = (f * 1024 / AudioCtx.sampleRate) | 0;
+        // Line
+        sprite.fillStyle = "#6c757d";
+        sprite.fillRect(x, 0, 1, 245);
+        // Label
+        sprite.fillStyle = "#e83e8c";
+        sprite.fillText(f / 1000 + "kHz", (x - 10), 255);
+      }
+
+      return spriteCanvas.toDataURL();
+    }
+
+    // スプライトのデバッグ
+    const debug = (src) => {
+      const canvas = document.getElementById('canvas');
+      canvas.style.width = SPRITE_WIDTH + 'px';
+      canvas.style.height = SPRITE_HEIGHT + 'px';
+      canvas.width = SPRITE_WIDTH;
+      canvas.height = SPRITE_HEIGHT;
+
+      const img = document.getElementById('test');
+      img.style.width = SPRITE_WIDTH + 'px';
+      img.style.height = SPRITE_HEIGHT + 'px';
+      img.src = src;
+      //ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const image = new Image();
+      image.addEventListener("load", () => {
+        canvas.getContext('2d').drawImage(image, 0, 0); // Or at whatever offset you like
+      });
+      image.src = src;
+    }
+
+    /**
+     * 3D Spectrum Analyzer Code
+     */
+
+    // 3D canvas size
+    const CANVAS_WIDTH = 960;
+    const CANVAS_HEIGHT = 540;
+
+    // Create renderer
+    const renderer = new THREE.WebGLRenderer({
+      canvas: document.querySelector('#graph')
+    });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    // Create Scene
+    const scene = new THREE.Scene();
+
+    // Create camera
+    const camera = new THREE.PerspectiveCamera(30, CANVAS_WIDTH / CANVAS_HEIGHT, 1, 2000);
+    // Move Initial camera position (x, y, z)
+    camera.position.set(100, 50, 1000);
+    //const camera = new THREE.OrthographicCamera(-CANVAS_WIDTH, CANVAS_WIDTH, CANVAS_HEIGHT, -CANVAS_HEIGHT, 1, 100000);
+
+    // Append Fog
+    // new THREE.Fog(color, start distance, end distance);
+    scene.fog = new THREE.Fog(0x000000, 1000, 2000);
+
+    //debug(DrawAxis())
+
+    const AxisMesh = new THREE.Mesh(
+      // Plane
+      new THREE.PlaneGeometry(SPRITE_WIDTH, SPRITE_HEIGHT, 5, 5),
+      // Texture
+      new THREE.MeshBasicMaterial({
+        transparent: true,
+        needsUpdate: true,
+        map: new THREE.TextureLoader().load(DrawAxis()),
+        side: THREE.DoubleSide
+      })
+    );
+
+    // Move Mesh object
+    AxisMesh.position.set(0, 0, 0);
+
+    scene.add(AxisMesh);
+
+    let depth = 0;
+    let geometries = [];
+    let materials = [];
+    let textures = [];
+    let meshs = [];
+
+    const MAX_DEPTH = 1024;
+
+    // Loop event
+    const tick = () => {
+
+      // Draw Texture image
+      const sprite = DrawGraph();
+
+      debug(sprite);
+
+      textures[depth] = new THREE.TextureLoader().load(sprite);
+
+      geometries[depth] = new THREE.PlaneGeometry(SPRITE_WIDTH, SPRITE_HEIGHT, 5, 5);
+
+      materials[depth] = new THREE.MeshBasicMaterial({
+        color: 0xCCDDEE,
+        transparent: true,
+        needsUpdate: true,
+        map: textures[depth],
+        side: THREE.DoubleSide
+      });
+
+      // Mesh object 
+      meshs[depth] = new THREE.Mesh(geometries[depth], materials[depth]);
+
+      // Move Mesh object
+      meshs[depth].position.set(0, 0, depth);
+      AxisMesh.position.set(0, 0, depth);
+
+      // Append Mesh object to 3D scene
+      scene.add(meshs[depth]);
+
+      // Render
+      renderer.render(scene, camera);
+
+      // Move Camera
+      camera.position.z = depth + 650;
+      //camera.zoom = 2;
+      camera.updateProjectionMatrix();
+
+      // Look to origin
+      camera.lookAt(new THREE.Vector3(0, 0, depth));
+
+      // Remove old Mesh
+      if (depth > MAX_DEPTH) {
+        scene.remove(meshs[depth - MAX_DEPTH]);
+        //meshs[depth - MAX_DEPTH].dispose();
+        geometries[depth - MAX_DEPTH].dispose();
+        materials[depth - MAX_DEPTH].dispose();
+        textures[depth - MAX_DEPTH].dispose();
+
+        // Manual Gabarge Collection
+        delete geometries[depth - MAX_DEPTH];
+        delete materials[depth - MAX_DEPTH];
+        delete textures[depth - MAX_DEPTH];
+      }
+
+      // incriment depth
+      depth++;
+
+      // Update Animation
+      requestAnimationFrame(tick);
+    };
+
+    // Regist Event
+    window.addEventListener('load', async () => {
+      audio.src = await LoadSample('./demo.wav');
+      // Play button
+      document.getElementById('play').addEventListener('click', async () => {
+        if (AudioCtx.state == 'suspended')
+          AudioCtx.resume();
+        setReverb();
+        audio.play();
+      });
+
+      // Stop button
+      document.getElementById('stop').addEventListener('click', () => {
+        audio.stop();
+      });
+
+      // File form
+      document.getElementById('file').addEventListener('dragover', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+        return false;
+      });
+      document.getElementById('file').addEventListener('drag', handleFileSelect, false);
+      document.getElementById('file').addEventListener('change', handleFileSelect, false);
+
+
+      // Reverb switch button
+      document.getElementById('reverb').addEventListener('click', setReverb);
+      // Reverse checkbox
+      document.getElementById('reverse').addEventListener('click', () =>
+        reverb.reverse(document.getElementById('reverse').checked));
+      // Filter select box
+      document.getElementById('filter').addEventListener('change', () =>
+        reverb.filterType(document.getElementById('filter').value));
+      // Reverb dualation time
+      document.getElementById('time').addEventListener('change', () =>
+        reverb.time(document.getElementById('time').value));
+      // Decay time
+      document.getElementById('decay').addEventListener('change', () =>
+        reverb.decay(document.getElementById('decay').value));
+      // Delay time
+      document.getElementById('delay').addEventListener('change', () =>
+        reverb.delay(document.getElementById('delay').value));
+      // Dry/Wet slider
+      document.getElementById('mix').addEventListener('change', () =>
+        reverb.mix(document.getElementById('mix').value));
+
+      // Execute Animation Thread
+      tick();
+    });
+  </script>
+</body>
+
+</html>
