@@ -35,13 +35,19 @@
   </script>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/" />
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-    integrity="sha256-YLGeXaapI0/5IgZopewRJcFXomhRMlYYjugPLSyNjTY=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+    integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y=" crossorigin="anonymous">
   <!-- Web Fonts -->
   <link href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c|Varela+Round&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.45.1/css/dseg.css"
-    integrity="sha256-0kP9GjBI5CdeL8PdmthxSmNbvRHsfz5Me/r6FK7UVJ4=" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" />
+  <style>
+    /*<!CDATA[*/
+    body {
+      font-family: 'Varela Round', 'Rounded Mplus 1c', sans-serif;
+    }
+
+    /*]]>*/
+  </style>
 </head>
 
 <body class="d-flex flex-column h-100 pt-5">
@@ -70,6 +76,7 @@
   <main role="main" class="flex-shrink-0 mt-2">
     <div class="container">
       <h1>Reverb.js Demo</h1>
+      <p>Refer to the console log for the values.</p>
       <button id="play" class="btn btn-primary" disabled><i class="fas fa-play"></i> Play</button>
       <button id="stop" class="btn btn-secondary" disabled><i class="fas fa-stop"></i> Stop</button>
       <h2>Reverb Control</h2>
@@ -81,19 +88,19 @@
         <div class="col">
           <div class="form-group">
             <label for="time">Time</label>
-            <input id="time" type="number" value="3" min="0" max="50" class="form-control" />
+            <input type="range" class="custom-range" value="3" min="0" max="50" id="time" />
           </div>
         </div>
         <div class="col">
           <div class="form-group">
             <label for="decay">Decay</label>
-            <input id="decay" type="number" value="2" min="0" max="100" class="form-control" />
+            <input type="range" class="custom-range" value="2" min="0" max="100" id="decay" />
           </div>
         </div>
         <div class="col">
           <div class="form-group">
             <label for="delay">Delay</label>
-            <input id="delay" type="number" value="0" min="0" max="100" class="form-control" />
+            <input type="range" class="custom-range" value="0" min="0" max="100" id="delay" />
           </div>
         </div>
       </div>
@@ -101,20 +108,6 @@
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" id="reverse">
           <label class="custom-control-label" for="reverse">Reverse</label>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="mix">Dry / Wet</label>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Dry</span>
-          </div>
-          <div class="form-control">
-            <input type="range" id="mix" class=" custom-range" min="0" max="1" step="0.05">
-          </div>
-          <div class="input-group-append">
-            <span class="input-group-text">Wet</span>
-          </div>
         </div>
       </div>
       <div class="form-row">
@@ -135,8 +128,28 @@
         </div>
         <div class="col">
           <div class="form-group">
-            <label for="freq">Frequency</label>
-            <input id="freq" type="number" value="350" min="100" max="20000" class="form-control">
+            <label for="freq">Filter frequency</label>
+            <input type="range" class="custom-range" value="2500" min="20" max="5000" step="5" id="freq" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="freq">Quality (Q) value</label>
+            <input type="range" class="custom-range" value="1" min=".0001" max="10" step=".0005" id="q" />
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="mix">Dry / Wet</label>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Dry</span>
+          </div>
+          <div class="form-control">
+            <input type="range" id="mix" class=" custom-range" min="0" max="1" step="0.05" value="0.5">
+          </div>
+          <div class="input-group-append">
+            <span class="input-group-text">Wet</span>
           </div>
         </div>
       </div>
@@ -144,6 +157,8 @@
       <div class="overflow-auto">
         <canvas id="graph" width="512" height="256"></canvas>
       </div>
+      <p class="text-right">The sound uses the drum part of <a href="https://soundcloud.com/logue256/autumn-wind"
+          target="_blank"><i class="fab fa-soundcloud"></i> Autmun Wind</a>.</p>
     </div>
   </main>
 
@@ -152,11 +167,7 @@
       <address class="text-muted"><i class="far fa-copyright"></i> 2019 by Logue / MIT License.</address>
     </div>
   </footer>
-  <!--script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
-    integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha256-fzFFyH01cBVPYzl16KT40wqjhgPtq6FFUB6ckN2+GGw=" crossorigin="anonymous"></script-->
-  <script src="../bin/reverb.js"></script>
+  <script src="reverb.js"></script>
   <script>
     // Setup Audio Context
     const AudioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -226,15 +237,18 @@
         const x = (f * 1024 / AudioCtx.sampleRate) | 0;
         // Line
         canvas.fillStyle = "#6c757d";
-        canvas.fillRect(x, 0, 1, 245);
+        canvas.fillRect(x, 0, 1, 246);
         // Label
-        canvas.fillStyle = "#e83e8c";
-        canvas.fillText(f / 1000 + "kHz", (x - 10), 255);
+        if (x % 4 == 0) {
+          canvas.fillStyle = "#e83e8c";
+          canvas.fillText(f / 1000 + "kHz", (x - 10), 255);
+        }
       }
     }
 
     // Reverb switch handler
     const setReverb = () => {
+      AudioSrc.disconnect();
 
       if (document.getElementById('reverb').checked) {
         // Connect Reverb
@@ -278,9 +292,6 @@
       // Reverse checkbox
       document.getElementById('reverse').addEventListener('click', () =>
         reverb.reverse(document.getElementById('reverse').checked));
-      // Filter select box
-      document.getElementById('filter').addEventListener('change', () =>
-        reverb.filterType(document.getElementById('filter').value));
       // Reverb dualation time
       document.getElementById('time').addEventListener('change', () =>
         reverb.time(document.getElementById('time').value));
@@ -290,7 +301,16 @@
       // Delay time
       document.getElementById('delay').addEventListener('change', () =>
         reverb.delay(document.getElementById('delay').value));
-      // Dry/Wet slider
+      // Filter select box
+      document.getElementById('filter').addEventListener('change', () =>
+        reverb.filterType(document.getElementById('filter').value));
+      // Filter frequency
+      document.getElementById('freq').addEventListener('change', () =>
+        reverb.filterFreq(document.getElementById('freq').value));
+      // Filter quality
+      document.getElementById('q').addEventListener('change', () =>
+        reverb.filterQ(document.getElementById('q').value));
+      // Dry/Wet
       document.getElementById('mix').addEventListener('change', () =>
         reverb.mix(document.getElementById('mix').value));
     });

@@ -1,6 +1,6 @@
 {
   "name": "@logue/reverb",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Reverb effect.",
   "main": "/bin/reverb.min.js",
   "bin": {
@@ -29,7 +29,7 @@
   "author": {
     "name": "Logue",
     "email": "logue@hotmail.co.jp",
-    "url": "https://logue.be/"
+    "url": "https://logue.dev/"
   },
   "license": "MIT",
   "bugs": {
@@ -42,14 +42,12 @@
     "@babel/polyfill": "^7.7.0",
     "@babel/preset-env": "^7.7.7",
     "babel-loader": "^8.0.6",
+    "drop-console-webpack-plugin": "^4.0.1",
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.13.0",
+    "fs": "0.0.1-security",
     "webpack": "^4.41.4",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.10.1"
-  },
-  "dependencies": {
-    "drop-console-webpack-plugin": "^3.0.2",
-    "fs": "0.0.1-security"
   }
 }

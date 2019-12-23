@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const fs = require('fs');
 const path = require('path');
+const DropConsoleWebpackPlugin = require('drop-console-webpack-plugin');
 
 const pjson = require('./package.json');
 
