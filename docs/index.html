@@ -79,27 +79,29 @@
       <p>Refer to the console log for the values.</p>
       <button id="play" class="btn btn-primary" disabled><i class="fas fa-play"></i> Play</button>
       <button id="stop" class="btn btn-secondary" disabled><i class="fas fa-stop"></i> Stop</button>
+      <hr />
       <h2>Reverb Control</h2>
       <div class="custom-control custom-switch">
         <input id="reverb" type="checkbox" class="custom-control-input">
         <label class="custom-control-label" for="reverb">Reverb</label>
       </div>
+      <p>Changing these values will regenerate the impulse response each time, but due to its nature, it will take some time to see the effect. It may be helpful to maximize the value of Wet.</p>
       <div class="form-row">
-        <div class="col">
+        <div class="col-md">
           <div class="form-group">
-            <label for="time">Time</label>
+            <label for="time">Time <small>(Room size)</small></label>
             <input type="range" class="custom-range" value="3" min="0" max="50" id="time" />
           </div>
         </div>
-        <div class="col">
+        <div class="col-md">
           <div class="form-group">
-            <label for="decay">Decay</label>
+            <label for="decay">Decay <small>(Hardness of room wall)</small></label>
             <input type="range" class="custom-range" value="2" min="0" max="100" id="decay" />
           </div>
         </div>
-        <div class="col">
+        <div class="col-md">
           <div class="form-group">
-            <label for="delay">Delay</label>
+            <label for="delay">Delay <small>(Delays due to obstacles in front of room walls)</small></label>
             <input type="range" class="custom-range" value="0" min="0" max="100" id="delay" />
           </div>
         </div>
@@ -108,35 +110,6 @@
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" id="reverse">
           <label class="custom-control-label" for="reverse">Reverse</label>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col">
-          <div class="form-group">
-            <label for="filter">Filter Type</label>
-            <select id="filter" class="form-control">
-              <option value="lowpass" selected="selected">lowpass</option>
-              <option value="highpass">highpass</option>
-              <option value="bandpass">bandpass</option>
-              <option value="lowshelf">lowshelf</option>
-              <option value="highshelf">highshelf</option>
-              <option value="peaking">peaking</option>
-              <option value="notch">notch</option>
-              <option value="allpass">allpass</option>
-            </select>
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group">
-            <label for="freq">Filter frequency</label>
-            <input type="range" class="custom-range" value="2500" min="20" max="5000" step="5" id="freq" />
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group">
-            <label for="freq">Quality (Q) value</label>
-            <input type="range" class="custom-range" value="1" min=".0001" max="10" step=".0005" id="q" />
-          </div>
         </div>
       </div>
       <div class="form-group">
@@ -150,6 +123,37 @@
           </div>
           <div class="input-group-append">
             <span class="input-group-text">Wet</span>
+          </div>
+        </div>
+      </div>
+      <h2>Filter for IR</h2>
+      <p>If the value of the filter is allpass, the filtering will be bypassed.</p>
+      <div class="form-row">
+        <div class="col-md">
+          <div class="form-group">
+            <label for="filter">Filter Type</label>
+            <select id="filter" class="form-control">
+              <option value="lowpass" selected="selected">lowpass</option>
+              <option value="highpass">highpass</option>
+              <option value="bandpass">bandpass</option>
+              <option value="lowshelf">lowshelf</option>
+              <option value="highshelf">highshelf</option>
+              <option value="peaking">peaking</option>
+              <option value="notch">notch</option>
+              <option value="allpass">allpass (Through)</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="form-group">
+            <label for="freq">Filter frequency</label>
+            <input type="range" class="custom-range" value="2500" min="20" max="5000" step="5" id="freq" />
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="form-group">
+            <label for="freq">Quality (Q) value</label>
+            <input type="range" class="custom-range" value="1" min=".0001" max="10" step=".0005" id="q" />
           </div>
         </div>
       </div>
@@ -204,44 +208,46 @@
     // Draw FFT to canvas
     // Code taken from https://www.g200kg.com/jp/docs/webaudio/filter.html
     const AnalyserNode = AudioCtx.createAnalyser();
-    const canvas = document.getElementById('graph').getContext("2d");
+    const canvas = document.getElementById('graph');
+    const canvasContext = canvas.getContext("2d");
+
     const analysedata = new Float32Array(1024);
     const DrawGraph = () => {
       AnalyserNode.getFloatFrequencyData(analysedata);
       // Background
-      canvas.fillStyle = "#343a40";
-      canvas.fillRect(0, 0, 512, 256);
+      canvasContext.fillStyle = "#343a40";
+      canvasContext.fillRect(0, 0, canvas.width, canvas.height);
       // FFT Graph
-      canvas.fillStyle = document.getElementById('reverb').checked ? "#17a2b8" : "#28a745";
-      for (let i = 0; i < 512; ++i) {
-        const f = AudioCtx.sampleRate * i / 1024;
-        y = 128 + (analysedata[i] + 48.16) * 2.56;
-        canvas.fillRect(i, 256 - y, 1, y);
+      canvasContext.fillStyle = document.getElementById('reverb').checked ? "#17a2b8" : "#28a745";
+      for (let i = 0; i < canvas.width; ++i) {
+        const f = AudioCtx.sampleRate * i / (canvas.width * 2);
+        y = (canvas.height / 2)  + (analysedata[i] + 48.16) * 2.56;
+        canvasContext.fillRect(i, canvas.height - y, 1, y);
       }
 
       // y axis (dB)
       for (let d = -50; d < 50; d += 10) {
-        const y = 128 - (d * 256 / 100) | 0;
+        const y = (canvas.height / 2) - (d * canvas.height / 100) | 0;
         // Line
-        canvas.fillStyle = "#6c757d";
-        canvas.fillRect(20, y, 512, 1);
+        canvasContext.fillStyle = "#6c757d";
+        canvasContext.fillRect(20, y, canvas.width, 1);
         // Label
-        canvas.fillStyle = "#fd7e14";
-        canvas.fillText(d + "dB", 5, y);
+        canvasContext.fillStyle = "#fd7e14";
+        canvasContext.fillText(d + "dB", 5, y);
       }
-      canvas.fillStyle = "#ffc107";
-      canvas.fillRect(20, 128, 512, 1);
+      canvasContext.fillStyle = "#ffc107";
+      canvasContext.fillRect(20, (canvas.height / 2), canvas.width, 1);
 
       // x axis (frequency)
-      for (let f = 2000; f < AudioCtx.sampleRate / 2; f += 2000) {
-        const x = (f * 1024 / AudioCtx.sampleRate) | 0;
+      for (let f = 2200; f < AudioCtx.sampleRate / 2; f += 2000) {
+        const x = (f * (canvas.width * 2) / AudioCtx.sampleRate) | 0;
         // Line
-        canvas.fillStyle = "#6c757d";
-        canvas.fillRect(x, 0, 1, 246);
+        canvasContext.fillStyle = "#6c757d";
+        canvasContext.fillRect(x, 0, 1, (canvas.height - 10) );
         // Label
         if (x % 4 == 0) {
-          canvas.fillStyle = "#e83e8c";
-          canvas.fillText(f / 1000 + "kHz", (x - 10), 255);
+          canvasContext.fillStyle = "#e83e8c";
+          canvasContext.fillText(f / 1000 + "kHz", (x - 10), canvas.height-1);
         }
       }
     }

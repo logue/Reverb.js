@@ -2,8 +2,8 @@ import Meta from './meta';
 /**
  * JS reverb effect class
  *
- * @author      Logue <logue@hotmail.co.jp>
- * @copyright   2019 Masashi Yoshikawa <https://logue.dev/> All rights reserved.
+ * @author    Logue <logue@hotmail.co.jp>
+ * @copyright 2019 Masashi Yoshikawa <https://logue.dev/> All rights reserved.
  * @license   MIT
  * @see       {@link https://github.com/logue/Reverb.js}
  *            {@link https://github.com/web-audio-components/simple-reverb}
@@ -271,7 +271,7 @@ export default class Reverb {
       }
 
       /** @type {number} 平方根を利用した減衰曲線 */
-      const pow = Math.pow(1 - n / length, this._decay);
+      const pow = (1 - n / length) ** this._decay;
       impulseL[i] = this.getNoise(pow);
       impulseR[i] = this.getNoise(pow);
     }
@@ -282,14 +282,13 @@ export default class Reverb {
 
     this.convolverNode.buffer = impulse;
   }
-  
   /**
    * Generate white noise
    * @param {number} rate Attenuation rate
    * @return {number}
    * @private
    */
-  getNoise(rate){
+  getNoise(rate) {
     // TODO: 他のカラードノイズを指定できるように
     return (Math.random() * 2 - 1) * rate;
   }
