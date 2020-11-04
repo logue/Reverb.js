@@ -88,8 +88,6 @@ export default class Reverb {
       this.convolverNode.disconnect(this.filterNode);
       // フィルタノードをウェットレベルから切断
       this.filterNode.disconnect(this.wetGainNode);
-      // 入力ノードを畳み込みノードから切断
-      sourceNode.disconnect(this.convolverNode);
     }
     // 接続済みフラグを解除
     this.isConnected = false;
