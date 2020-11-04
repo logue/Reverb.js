@@ -1,6 +1,6 @@
 {
   "name": "@logue/reverb",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Reverb effect.",
   "main": "/bin/reverb.min.js",
   "bin": {
@@ -14,7 +14,13 @@
     "dev": "webpack --mode development",
     "prod": "webpack --mode production --env.production",
     "start": "webpack-dev-server --color --mode development",
-    "fix": "eslint --fix ./src"
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm.cmd run compile",
+    "pretest": "npm.cmd run compile",
+    "posttest": "npm.cmd run lint"
   },
   "repository": {
     "type": "git",
@@ -37,17 +43,70 @@
   },
   "homepage": "https://github.com/logue/reverb.js#readme",
   "devDependencies": {
-    "@babel/cli": "^7.7.7",
-    "@babel/core": "^7.7.7",
-    "@babel/polyfill": "^7.7.0",
-    "@babel/preset-env": "^7.7.7",
-    "babel-loader": "^8.0.6",
-    "eslint": "^6.8.0",
-    "eslint-config-google": "^0.13.0",
+    "@types/node": "^14.11.2",
+    "@types/webpack": "^4.41.24",
+    "@types/terser-webpack-plugin": "^5.0.2",
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
+    "@typescript-eslint/parser": "^4.6.1",
+    "eslint": "^7.10.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "fs": "0.0.1-security",
-    "terser-webpack-plugin": "^2.3.1",
-    "webpack": "^4.41.4",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1"
+    "gts": "^3.0.2",
+    "prettier": "^2.1.2",
+    "source-map-loader": "^1.1.2",
+    "terser-webpack-plugin": "^4.2.3",
+    "ts-loader": "^8.0.8",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/gts/",
+    "overrides": [
+      {
+        "files": [
+          "webpack.config.ts"
+        ],
+        "rules": {
+          "node/no-unpublished-import": "off"
+        }
+      }
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "htmlWhitespaceSensitivity": "ignore",
+          "semi": true,
+          "singleQuote": true,
+          "trailingComma": "es5",
+          "bracketSpacing": false,
+          "printWidth": 80
+        }
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "node_modules/*",
+    "docs/*",
+    "bin/*"
+  ],
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "npm lint",
+      "git add"
+    ]
   }
 }

@@ -1,90 +1,66 @@
-import Meta from './meta';
+import Meta from './Meta';
+import {Option, optionDefaults} from './OptionInterface';
+
 /**
  * JS reverb effect class
  *
  * @author    Logue <logue@hotmail.co.jp>
- * @copyright 2019 Masashi Yoshikawa <https://logue.dev/> All rights reserved.
+ * @copyright 2019-2020 Masashi Yoshikawa <https://logue.dev/> All rights reserved.
  * @license   MIT
  * @see       {@link https://github.com/logue/Reverb.js}
  *            {@link https://github.com/web-audio-components/simple-reverb}
  */
 export default class Reverb {
+  /** @type {string} バージョン */
+  public version: string;
+  /** @type {Date} ビルド日時 */
+  public build: Date;
+  /** @type {AudioContext} AudioContext */
+  public ctx: AudioContext;
+  /** @type {GainNode} ウェットレベル */
+  public wetGainNode: GainNode;
+  /** @type {GainNode} ドライレベル */
+  public dryGainNode: GainNode;
+  /** @type {BiquadFilterNode} インパルス応答用フィルタ */
+  public filterNode: BiquadFilterNode;
+  /** @type {ConvolverNode} 畳み込みノード */
+  public convolverNode: ConvolverNode;
+  /** @type {GainNode} 出力ノード */
+  public outputNode: GainNode;
+  /** @type {Option} 変数 */
+  private _options: Option;
+  /** @type {boolean} 接続済みフラグ */
+  public isConnected: boolean;
+
   /**
    * constructor
    * @param {AudioContext} ctx
-   * @param {{
-   *   decay: (number|undefined),
-   *   delay: (number|undefined),
-   *   filterFreq: (number|undefined),
-   *   filterQ: (number|undefined),
-   *   filterType: (string|undefined),
-   *   mix: (number|undefined),
-   *   reverse: (boolean|undefined),
-   *   time: (number|undefined)
-   * }} options
+   * @param {Option} options
    */
-  constructor(ctx, options = {}) {
-    /** @type {number} バージョン */
+  constructor(ctx: AudioContext, options: Option) {
+    // バージョン情報など
     this.version = Meta.version;
-    /** @type {Date} ビルド日時 */
-    this.build = Meta.date;
-    /** @type {AudioContext} */
+    this.build = new Date(Meta.date);
+    // デフォルト値をマージ
     this.ctx = ctx;
-    /** @type {GainNode} ウェットレベル */
+    this._options = {...optionDefaults, ...options};
+    // 初期化
     this.wetGainNode = this.ctx.createGain();
-    /** @type {GainNode} ドライレベル */
     this.dryGainNode = this.ctx.createGain();
-    /** @type {BiquadFilterNode} インパルス応答用フィルタ */
     this.filterNode = this.ctx.createBiquadFilter();
-    /** @type {ConvolverNode} 畳み込みノード */
     this.convolverNode = this.ctx.createConvolver();
-    /** @type {GainNode} 出力ノード */
     this.outputNode = this.ctx.createGain();
-
-    // デフォルト値
-    /** @type {number} ディケイ */
-    this._decay = options.decay | 0 || 5;
-    /** @type {number} ディレイ */
-    this._delay = options.delay | 0 || 0;
-    /** @type {boolean} レスポンス応答を反転 */
-    this._reverse = options.reverse || false;
-    /** @type {number} レスポンス応答の時間（秒） */
-    this._time = options.time | 0 || 3;
-    /** @type {BiquadFilterNode|null} フィルタの種類 */
-    this._filterType = options.filterType || 'lowpass';
-    /** @type {number} フィルタ周波数(Hz) */
-    this._freq = options.filterFreq | 0 || 2200;
-    /** @type {number} フィルタ品質 */
-    this._q = options.filterQ | 0 || 1;
-    /** @type {number} ドライ／ウェット比 */
-    this._mix = options.mix || 0.5;
-
-    // 値をセット
-    this.time(this._time);
-    this.delay(this._delay);
-    this.decay(this._decay);
-    this.reverse(this._reverse);
-
-    // エフェクタに反映
-    this.filterType(this._filterType);
-    this.filterFreq(this._freq);
-    this.filterQ(this._q);
-
-    this.mix(this._mix);
-
-    /** @type {bool} 接続済みフラグ */
     this.isConnected = false;
-
+    // インパルス応答を生成
     this.buildImpulse();
   }
 
   /**
    * connect
-   * @param {GainNode} sourceNode
-   * @return {GainNode}
+   * @param {AudioNode} sourceNode
+   * @return {AudioNode}
    */
-  connect(sourceNode) {
-    this.isConnected = true;
+  public connect(sourceNode: AudioNode): AudioNode {
     // 畳み込みノードをウェットレベルに接続
     this.convolverNode.connect(this.filterNode);
     // フィルタノードをウェットレベルに接続
@@ -95,29 +71,29 @@ export default class Reverb {
     sourceNode.connect(this.dryGainNode).connect(this.outputNode);
     // ウェットレベルを出力ノードに接続
     sourceNode.connect(this.wetGainNode).connect(this.outputNode);
+    // 接続済みフラグを立てる
+    this.isConnected = true;
+
     return this.outputNode;
   }
 
   /**
    * disconnect
-   * @param {GainNode} sourceNode
-   * @return {GainNode}
+   * @param {AudioNode} sourceNode
+   * @return {AudioNode}
    */
-  disconnect(sourceNode) {
-    // 初期状態で接続されていない可能性があるためエラーを消す
-    try {
+  public disconnect(sourceNode: AudioNode): AudioNode {
+    if (this.isConnected) {
       // 畳み込みノードをウェットレベルから切断
       this.convolverNode.disconnect(this.filterNode);
       // フィルタノードをウェットレベルから切断
       this.filterNode.disconnect(this.wetGainNode);
       // 入力ノードを畳み込みノードから切断
       sourceNode.disconnect(this.convolverNode);
-      // ドライレベルを出力ノードから切断
-      sourceNode.disconnect(this.dryGainNode).disconnect(this.outputNode);
-      // ウェットレベルを出力ノードから切断
-      sourceNode.disconnect(this.wetGainNode).disconnect(this.outputNode);
-    } catch (e) { }
+    }
+    // 接続済みフラグを解除
     this.isConnected = false;
+
     return sourceNode;
   }
 
@@ -125,27 +101,27 @@ export default class Reverb {
    * Mixing Dry and Wet Level.
    * @param {number} mix
    */
-  mix(mix) {
+  public mix(mix: number) {
     if (!this.inRange(mix, 0, 1)) {
       console.warn('Dry/Wet level must be between 0 to 1.');
       return;
     }
-    this._mix = mix;
-    this.dryGainNode.gain.value = (1 - this._mix);
-    this.wetGainNode.gain.value = this._mix;
-    console.info(`Set dry/wet level to ${mix * 100}%`);
+    this._options.mix = mix;
+    this.dryGainNode.gain.value = 1 - this._options.mix;
+    this.wetGainNode.gain.value = this._options.mix;
+    console.debug(`Set dry/wet level to ${mix * 100}%`);
   }
 
   /**
    * Set Impulse Response time length (second)
    * @param {number} value
    */
-  time(value) {
+  public time(value: number) {
     if (!this.inRange(value, 1, 50)) {
       console.warn('Time length of inpulse response must be less than 50sec.');
       return;
     }
-    this._time = value;
+    this._options.time = value;
     this.buildImpulse();
     console.info(`Set inpulse response time length to ${value}sec.`);
   }
@@ -154,75 +130,75 @@ export default class Reverb {
    * Impulse response decay rate.
    * @param {number} value
    */
-  decay(value) {
+  public decay(value: number) {
     if (!this.inRange(value, 0, 100)) {
       console.warn('Inpulse Response decay level must be less than 100.');
       return;
     }
-    this._decay = value;
+    this._options.decay = value;
     this.buildImpulse();
-    console.info(`Set inpulse response decay level to ${value}.`);
+    console.debug(`Set inpulse response decay level to ${value}.`);
   }
 
   /**
    * Impulse response delay time. (NOT deley effect)
    * @param {number} value
    */
-  delay(value) {
+  public delay(value: number) {
     if (!this.inRange(value, 0, 100)) {
       console.warn('Inpulse Response delay time must be less than 100.');
       return;
     }
-    this._delay = value;
+    this._options.delay = value;
     this.buildImpulse();
-    console.info(`Set inpulse response delay time to ${value}sec.`);
+    console.debug(`Set inpulse response delay time to ${value}sec.`);
   }
 
   /**
    * Reverse the impulse response.
    * @param {boolean} reverse
    */
-  reverse(reverse) {
-    this._reverse = reverse;
+  public reverse(reverse: boolean) {
+    this._options.reverse = reverse;
     this.buildImpulse();
-    console.info(`Inpulse response is ${reverse ? '' : 'not '}reversed.`);
+    console.debug(`Inpulse response is ${reverse ? '' : 'not '}reversed.`);
   }
 
   /**
    * Filter type.
-   * @param {BiquadFilterNode|null} type
+   * @param {BiquadFilterType} type
    */
-  filterType(type) {
-    this.filterNode.type = this._filterType = type;
-    console.info(`Set filter type to ${type}`);
+  public filterType(type: BiquadFilterType) {
+    this.filterNode.type = this._options.filterType = type;
+    console.debug(`Set filter type to ${type}`);
   }
 
   /**
    * Filter frequency.
    * @param {number} freq
    */
-  filterFreq(freq) {
+  public filterFreq(freq: number) {
     if (!this.inRange(freq, 20, 5000)) {
       console.warn('Filter frequrncy must be between 20 and 5000.');
       return;
     }
-    this._freq = freq;
-    this.filterNode.frequency.value = this._freq;
-    console.info(`Set filter frequency to ${freq}Hz.`);
+    this._options.filterFreq = freq;
+    this.filterNode.frequency.value = this._options.filterFreq;
+    console.debug(`Set filter frequency to ${freq}Hz.`);
   }
 
   /**
    * Filter quality.
    * @param {number} q
    */
-  filterQ(q) {
+  public filterQ(q: number) {
     if (!this.inRange(q, 0, 10)) {
       console.warn('Filter quality value must be between 0 and 1.');
       return;
     }
-    this._q = q;
-    this.filterNode.Q.value = this._q;
-    console.info(`Set filter quality to ${q}.`);
+    this._options.filterQ = q;
+    this.filterNode.Q.value = this._options.filterQ;
+    console.debug(`Set filter quality to ${q}.`);
   }
 
   /**
@@ -233,8 +209,8 @@ export default class Reverb {
    * @param {number} max Maximum value
    * @return {bool}
    */
-  inRange(x, min, max) {
-    return ((x - min) * (x - max) <= 0);
+  private inRange(x: number, min: number, max: number) {
+    return (x - min) * (x - max) <= 0;
   }
 
   /**
@@ -242,20 +218,21 @@ export default class Reverb {
    * from the module parameters.
    * @private
    */
-  buildImpulse() {
+  private buildImpulse() {
     // インパルス応答生成ロジック
+
     /** @type {number} サンプリングレート */
-    const rate = this.ctx.sampleRate;
+    const rate: number = this.ctx.sampleRate;
     /** @type {number} インパルス応答の演奏時間 */
-    const length = Math.max(rate * this._time, 1);
+    const length: number = Math.max(rate * this._options.time, 1);
     /** @type {number} インパルス応答が始まるまでの遅延時間 */
-    const delayDuration = rate * this._delay;
+    const delayDuration: number = rate * this._options.delay;
     /** @type {AudioBuffer} インパルス応答バッファ（今の所ステレオのみ） */
-    const impulse = this.ctx.createBuffer(2, length, rate);
+    const impulse: AudioBuffer = this.ctx.createBuffer(2, length, rate);
     /** @type {Array<number>|ArrayBufferView} 左チャンネル */
-    const impulseL = new Float32Array(length);
+    const impulseL: Float32Array = new Float32Array(length);
     /** @type {Array<number>|ArrayBufferView} 右チャンネル*/
-    const impulseR = new Float32Array(length);
+    const impulseR: Float32Array = new Float32Array(length);
 
     for (let i = 0; i < length; i++) {
       /** @type {number} */
@@ -265,13 +242,15 @@ export default class Reverb {
         // Delay Effect
         impulseL[i] = 0;
         impulseR[i] = 0;
-        n = this._reverse ? length - (i - delayDuration) : i - delayDuration;
+        n = this._options.reverse
+          ? length - (i - delayDuration)
+          : i - delayDuration;
       } else {
-        n = this._reverse ? length - i : i;
+        n = this._options.reverse ? length - i : i;
       }
 
       /** @type {number} 平方根を利用した減衰曲線 */
-      const pow = (1 - n / length) ** this._decay;
+      const pow: number = (1 - n / length) ** this._options.decay;
       impulseL[i] = this.getNoise(pow);
       impulseR[i] = this.getNoise(pow);
     }
@@ -288,8 +267,8 @@ export default class Reverb {
    * @return {number}
    * @private
    */
-  getNoise(rate) {
+  private getNoise(rate: number): number {
     // TODO: 他のカラードノイズを指定できるように
     return (Math.random() * 2 - 1) * rate;
   }
-};
+}
