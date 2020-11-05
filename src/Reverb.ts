@@ -1,5 +1,5 @@
 import Meta from './Meta';
-import {Option, optionDefaults} from './OptionInterface';
+import OptionInterface from './interfaces/OptionInterface';
 
 /**
  * JS reverb effect class
@@ -12,38 +12,39 @@ import {Option, optionDefaults} from './OptionInterface';
  */
 export default class Reverb {
   /** @type {string} バージョン */
-  public version: string;
-  /** @type {Date} ビルド日時 */
-  public build: Date;
+  public readonly version: string;
+  /** @type {string} ビルド日時 */
+  public readonly build: string;
   /** @type {AudioContext} AudioContext */
-  public ctx: AudioContext;
-  /** @type {GainNode} ウェットレベル */
-  public wetGainNode: GainNode;
-  /** @type {GainNode} ドライレベル */
-  public dryGainNode: GainNode;
+  private readonly ctx: AudioContext;
+  /** @type {GainNode} ウェットレベル（エフェクターをかけたレベル） */
+  private readonly wetGainNode: GainNode;
+  /** @type {GainNode} ドライレベル（原音レベル） */
+  private readonly dryGainNode: GainNode;
   /** @type {BiquadFilterNode} インパルス応答用フィルタ */
-  public filterNode: BiquadFilterNode;
+  private readonly filterNode: BiquadFilterNode;
   /** @type {ConvolverNode} 畳み込みノード */
-  public convolverNode: ConvolverNode;
+  private readonly convolverNode: ConvolverNode;
   /** @type {GainNode} 出力ノード */
-  public outputNode: GainNode;
+  private readonly outputNode: GainNode;
   /** @type {Option} 変数 */
-  private _options: Option;
+  private readonly _options: OptionInterface;
   /** @type {boolean} 接続済みフラグ */
-  public isConnected: boolean;
+  private isConnected: boolean;
 
   /**
    * constructor
-   * @param {AudioContext} ctx
-   * @param {Option} options
+   * @param {AudioContext} ctx Root AudioContext
+   * @param {OptionInterface} options Configure
    */
-  constructor(ctx: AudioContext, options: Option) {
+  constructor(ctx: AudioContext, options: OptionInterface) {
     // バージョン情報など
     this.version = Meta.version;
-    this.build = new Date(Meta.date);
-    // デフォルト値をマージ
+    this.build = Meta.date;
+    // マスターのAudioContextを取得
     this.ctx = ctx;
-    this._options = {...optionDefaults, ...options};
+    // デフォルト値をマージ
+    this._options = {...optionDefaults, ...options} as const;
     // 初期化
     this.wetGainNode = this.ctx.createGain();
     this.dryGainNode = this.ctx.createGain();
@@ -57,7 +58,7 @@ export default class Reverb {
 
   /**
    * connect
-   * @param {AudioNode} sourceNode
+   * @param {AudioNode} sourceNode リバーブエフェクトをかけたいノード
    * @return {AudioNode}
    */
   public connect(sourceNode: AudioNode): AudioNode {
@@ -79,10 +80,11 @@ export default class Reverb {
 
   /**
    * disconnect
-   * @param {AudioNode} sourceNode
+   * @param {AudioNode} sourceNode リバーブエフェクトをかけたいノード
    * @return {AudioNode}
    */
   public disconnect(sourceNode: AudioNode): AudioNode {
+    // 初期状態ではノードがつながっていないためエラーになる
     if (this.isConnected) {
       // 畳み込みノードをウェットレベルから切断
       this.convolverNode.disconnect(this.filterNode);
@@ -92,22 +94,22 @@ export default class Reverb {
     // 接続済みフラグを解除
     this.isConnected = false;
 
+    // そのままノードを返す（他のAPIに似せるため）
     return sourceNode;
   }
 
   /**
-   * Mixing Dry and Wet Level.
+   * Dry/Wet ratio
    * @param {number} mix
    */
   public mix(mix: number) {
     if (!this.inRange(mix, 0, 1)) {
-      console.warn('Dry/Wet level must be between 0 to 1.');
-      return;
+      throw new RangeError('Reverb.js: Dry/Wet ratio must be between 0 to 1.');
     }
     this._options.mix = mix;
     this.dryGainNode.gain.value = 1 - this._options.mix;
     this.wetGainNode.gain.value = this._options.mix;
-    console.debug(`Set dry/wet level to ${mix * 100}%`);
+    console.debug(`Reverb.js: Set dry/wet ratio to ${mix * 100}%`);
   }
 
   /**
@@ -116,12 +118,13 @@ export default class Reverb {
    */
   public time(value: number) {
     if (!this.inRange(value, 1, 50)) {
-      console.warn('Time length of inpulse response must be less than 50sec.');
-      return;
+      throw new RangeError(
+        'Reverb.js: Time length of inpulse response must be less than 50sec.'
+      );
     }
     this._options.time = value;
     this.buildImpulse();
-    console.info(`Set inpulse response time length to ${value}sec.`);
+    console.info(`Reverb.js: Set inpulse response time length to ${value}sec.`);
   }
 
   /**
@@ -130,12 +133,13 @@ export default class Reverb {
    */
   public decay(value: number) {
     if (!this.inRange(value, 0, 100)) {
-      console.warn('Inpulse Response decay level must be less than 100.');
-      return;
+      throw new RangeError(
+        'Reverb.js: Inpulse Response decay level must be less than 100.'
+      );
     }
     this._options.decay = value;
     this.buildImpulse();
-    console.debug(`Set inpulse response decay level to ${value}.`);
+    console.debug(`Reverb.js: Set inpulse response decay level to ${value}.`);
   }
 
   /**
@@ -144,12 +148,13 @@ export default class Reverb {
    */
   public delay(value: number) {
     if (!this.inRange(value, 0, 100)) {
-      console.warn('Inpulse Response delay time must be less than 100.');
-      return;
+      throw new RangeError(
+        'Reverb.js: Inpulse Response delay time must be less than 100.'
+      );
     }
     this._options.delay = value;
     this.buildImpulse();
-    console.debug(`Set inpulse response delay time to ${value}sec.`);
+    console.debug(`Reverb.js: Set inpulse response delay time to ${value}sec.`);
   }
 
   /**
@@ -159,7 +164,9 @@ export default class Reverb {
   public reverse(reverse: boolean) {
     this._options.reverse = reverse;
     this.buildImpulse();
-    console.debug(`Inpulse response is ${reverse ? '' : 'not '}reversed.`);
+    console.debug(
+      `Reverb.js: Inpulse response is ${reverse ? '' : 'not '}reversed.`
+    );
   }
 
   /**
@@ -177,8 +184,9 @@ export default class Reverb {
    */
   public filterFreq(freq: number) {
     if (!this.inRange(freq, 20, 5000)) {
-      console.warn('Filter frequrncy must be between 20 and 5000.');
-      return;
+      throw new RangeError(
+        'Reverb.js: Filter frequrncy must be between 20 and 5000.'
+      );
     }
     this._options.filterFreq = freq;
     this.filterNode.frequency.value = this._options.filterFreq;
@@ -191,8 +199,9 @@ export default class Reverb {
    */
   public filterQ(q: number) {
     if (!this.inRange(q, 0, 10)) {
-      console.warn('Filter quality value must be between 0 and 1.');
-      return;
+      throw new RangeError(
+        'Reverb.js: Filter quality value must be between 0 and 10.'
+      );
     }
     this._options.filterQ = q;
     this.filterNode.Q.value = this._options.filterQ;
@@ -233,7 +242,7 @@ export default class Reverb {
     const impulseR: Float32Array = new Float32Array(length);
 
     for (let i = 0; i < length; i++) {
-      /** @type {number} */
+      /** @type {number} 減衰率 */
       let n = 0;
 
       if (i < delayDuration) {
@@ -270,3 +279,17 @@ export default class Reverb {
     return (Math.random() * 2 - 1) * rate;
   }
 }
+
+/**
+ * デフォルト値
+ */
+const optionDefaults: OptionInterface = {
+  decay: 5,
+  delay: 0,
+  reverse: false,
+  time: 3,
+  filterType: 'lowpass',
+  filterFreq: 2200,
+  filterQ: 1,
+  mix: 0.5,
+};

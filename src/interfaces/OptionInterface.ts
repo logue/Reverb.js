@@ -1,7 +1,7 @@
 /**
  * オプションのインターフェース
  */
-export interface Option extends Object {
+export default interface OptionInterface {
   /** @type {number?} ディケイ */
   decay: number;
   /** @type {number?} ディレイ */
@@ -19,17 +19,3 @@ export interface Option extends Object {
   /** @type {number?} レスポンス応答の時間（秒） */
   time: number;
 }
-
-/**
- * デフォルト値
- */
-export const optionDefaults: Option = {
-  decay: 5,
-  delay: 0,
-  reverse: false,
-  time: 3,
-  filterType: 'lowpass',
-  filterFreq: 2200,
-  filterQ: 1,
-  mix: 0.5,
-};
