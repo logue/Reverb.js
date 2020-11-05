@@ -259,8 +259,8 @@ export default class Reverb {
 
       /** @type {number} 平方根を利用した減衰曲線 */
       const pow: number = (1 - n / length) ** this._options.decay;
-      impulseL[i] = this.getNoise(pow);
-      impulseR[i] = this.getNoise(pow);
+      impulseL[i] = this.getNoise() * pow;
+      impulseR[i] = this.getNoise() * pow;
     }
 
     // インパルス応答のバッファに生成したWaveTableを代入
@@ -275,9 +275,9 @@ export default class Reverb {
    * @return {number}
    * @private
    */
-  private getNoise(rate: number): number {
+  private getNoise(): number {
     // TODO: 他のカラードノイズを指定できるように
-    return (Math.random() * 2 - 1) * rate;
+    return Math.random() * 2 - 1;
   }
 }
 

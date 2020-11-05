@@ -73,15 +73,6 @@ module.exports = (env = defaultEnvironment) => {
     module: {
       rules: [
         {
-          test: /\.js/,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: 'source-map-loader',
-            },
-          ],
-        },
-        {
           test: /\.tsx?$/,
           loader: 'ts-loader',
         },
@@ -89,7 +80,7 @@ module.exports = (env = defaultEnvironment) => {
     },
     resolve: {
       modules: [`${__dirname}/src`, 'node_modules'],
-      extensions: ['webpack.ts', '.ts', '.tsx', '.js'],
+      extensions: ['webpack.ts', '.ts', '.tsx'],
     },
     plugins: [
       new webpack.BannerPlugin({
