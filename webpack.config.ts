@@ -56,7 +56,7 @@ module.exports = (env = defaultEnvironment) => {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
-            ecma: 2020,
+            ecma: 5,
             compress: {drop_console: true},
             output: {
               comments: false,

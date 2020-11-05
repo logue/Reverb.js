@@ -37,7 +37,7 @@ export default class Reverb {
    * @param {AudioContext} ctx Root AudioContext
    * @param {OptionInterface} options Configure
    */
-  constructor(ctx: AudioContext, options: OptionInterface) {
+  constructor(ctx: AudioContext, options: OptionInterface | undefined) {
     // バージョン情報など
     this.version = Meta.version;
     this.build = Meta.date;
@@ -51,6 +51,7 @@ export default class Reverb {
     this.filterNode = this.ctx.createBiquadFilter();
     this.convolverNode = this.ctx.createConvolver();
     this.outputNode = this.ctx.createGain();
+    // 接続済みフラグを落とす
     this.isConnected = false;
     // インパルス応答を生成
     this.buildImpulse();
@@ -58,7 +59,7 @@ export default class Reverb {
 
   /**
    * connect
-   * @param {AudioNode} sourceNode リバーブエフェクトをかけたいノード
+   * @param {AudioNode} sourceNode 原音ノード
    * @return {AudioNode}
    */
   public connect(sourceNode: AudioNode): AudioNode {
@@ -80,10 +81,10 @@ export default class Reverb {
 
   /**
    * disconnect
-   * @param {AudioNode} sourceNode リバーブエフェクトをかけたいノード
+   * @param {AudioNode} sourceNode 原音のノード
    * @return {AudioNode}
    */
-  public disconnect(sourceNode: AudioNode): AudioNode {
+  public disconnect(sourceNode: AudioNode | undefined): AudioNode | undefined {
     // 初期状態ではノードがつながっていないためエラーになる
     if (this.isConnected) {
       // 畳み込みノードをウェットレベルから切断
