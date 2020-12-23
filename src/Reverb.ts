@@ -103,7 +103,7 @@ export default class Reverb {
    * Dry/Wet ratio
    * @param {number} mix
    */
-  public mix(mix: number) {
+  public mix(mix: number): void {
     if (!this.inRange(mix, 0, 1)) {
       throw new RangeError('Reverb.js: Dry/Wet ratio must be between 0 to 1.');
     }
@@ -117,7 +117,7 @@ export default class Reverb {
    * Set Impulse Response time length (second)
    * @param {number} value
    */
-  public time(value: number) {
+  public time(value: number): void {
     if (!this.inRange(value, 1, 50)) {
       throw new RangeError(
         'Reverb.js: Time length of inpulse response must be less than 50sec.'
@@ -132,7 +132,7 @@ export default class Reverb {
    * Impulse response decay rate.
    * @param {number} value
    */
-  public decay(value: number) {
+  public decay(value: number): void {
     if (!this.inRange(value, 0, 100)) {
       throw new RangeError(
         'Reverb.js: Inpulse Response decay level must be less than 100.'
@@ -147,7 +147,7 @@ export default class Reverb {
    * Impulse response delay time. (NOT deley effect)
    * @param {number} value
    */
-  public delay(value: number) {
+  public delay(value: number): void {
     if (!this.inRange(value, 0, 100)) {
       throw new RangeError(
         'Reverb.js: Inpulse Response delay time must be less than 100.'
@@ -162,7 +162,7 @@ export default class Reverb {
    * Reverse the impulse response.
    * @param {boolean} reverse
    */
-  public reverse(reverse: boolean) {
+  public reverse(reverse: boolean): void {
     this._options.reverse = reverse;
     this.buildImpulse();
     console.debug(
@@ -174,7 +174,7 @@ export default class Reverb {
    * Filter type.
    * @param {BiquadFilterType} type
    */
-  public filterType(type: BiquadFilterType) {
+  public filterType(type: BiquadFilterType): void {
     this.filterNode.type = this._options.filterType = type;
     console.debug(`Set filter type to ${type}`);
   }
@@ -183,7 +183,7 @@ export default class Reverb {
    * Filter frequency.
    * @param {number} freq
    */
-  public filterFreq(freq: number) {
+  public filterFreq(freq: number): void {
     if (!this.inRange(freq, 20, 5000)) {
       throw new RangeError(
         'Reverb.js: Filter frequrncy must be between 20 and 5000.'
@@ -198,7 +198,7 @@ export default class Reverb {
    * Filter quality.
    * @param {number} q
    */
-  public filterQ(q: number) {
+  public filterQ(q: number): void {
     if (!this.inRange(q, 0, 10)) {
       throw new RangeError(
         'Reverb.js: Filter quality value must be between 0 and 10.'
@@ -217,7 +217,7 @@ export default class Reverb {
    * @param {number} max Maximum value
    * @return {bool}
    */
-  private inRange(x: number, min: number, max: number) {
+  private inRange(x: number, min: number, max: number): boolean {
     return (x - min) * (x - max) <= 0;
   }
 
@@ -226,23 +226,23 @@ export default class Reverb {
    * from the module parameters.
    * @private
    */
-  private buildImpulse() {
+  private buildImpulse(): void {
     // インパルス応答生成ロジック
 
     /** @type {number} サンプリングレート */
     const rate: number = this.ctx.sampleRate;
     /** @type {number} インパルス応答の演奏時間 */
-    const length: number = Math.max(rate * this._options.time, 1);
+    const duration: number = Math.max(rate * this._options.time, 1);
     /** @type {number} インパルス応答が始まるまでの遅延時間 */
     const delayDuration: number = rate * this._options.delay;
     /** @type {AudioBuffer} インパルス応答バッファ（今の所ステレオのみ） */
-    const impulse: AudioBuffer = this.ctx.createBuffer(2, length, rate);
+    const impulse: AudioBuffer = this.ctx.createBuffer(2, duration, rate);
     /** @type {Array<number>|ArrayBufferView} 左チャンネル */
-    const impulseL: Float32Array = new Float32Array(length);
+    const impulseL: Float32Array = new Float32Array(duration);
     /** @type {Array<number>|ArrayBufferView} 右チャンネル*/
-    const impulseR: Float32Array = new Float32Array(length);
+    const impulseR: Float32Array = new Float32Array(duration);
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < duration; i++) {
       /** @type {number} 減衰率 */
       let n = 0;
 
@@ -251,14 +251,14 @@ export default class Reverb {
         impulseL[i] = 0;
         impulseR[i] = 0;
         n = this._options.reverse
-          ? length - (i - delayDuration)
+          ? duration - (i - delayDuration)
           : i - delayDuration;
       } else {
-        n = this._options.reverse ? length - i : i;
+        n = this._options.reverse ? duration - i : i;
       }
 
       /** @type {number} 平方根を利用した減衰曲線 */
-      const pow: number = (1 - n / length) ** this._options.decay;
+      const pow: number = (1 - n / duration) ** this._options.decay;
       impulseL[i] = this.getNoise() * pow;
       impulseR[i] = this.getNoise() * pow;
     }

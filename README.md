@@ -1,8 +1,12 @@
 # Reverb.js
 
+[![npm version](https://badge.fury.io/js/%40logue%2Freverb.svg)](https://badge.fury.io/js/%40logue%2Freverb)
+[![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
+
 Append reverb effect to audio source.
 
 This script is originally a spin out of [sf2synth.js](https://github.com/logue/smfplayer.js)'s reverb effect.
+
 
 ## Sample
 

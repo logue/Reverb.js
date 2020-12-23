@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as webpack from 'webpack';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as TerserPlugin from 'terser-webpack-plugin';
+import {Configuration} from 'webpack';
 
 // バージョン情報など
 const pjson = require('./package.json');
@@ -22,18 +24,12 @@ export default meta;
 `
 );
 
-const defaultEnvironment = {
-  production: false,
-  watch: false,
-  analyze: false,
-};
-
-module.exports = (env = defaultEnvironment) => {
-  const isProduction: boolean = env && env.production;
+module.exports = (env: any, argv: any): Configuration => {
+  const isProduction: boolean = argv.mode === 'production';
   const banner = `${pjson.name} v${pjson.version} | ${pjson.author.name} | license: ${pjson.license} | build: ${build}`;
 
   return {
-    mode: env,
+    mode: isProduction ? 'production' : 'development',
     target: 'node',
     devtool: !isProduction ? 'source-map' : false,
     devServer: {
@@ -56,7 +52,7 @@ module.exports = (env = defaultEnvironment) => {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
-            ecma: 5,
+            ecma: 2020,
             compress: {drop_console: true},
             output: {
               comments: false,
