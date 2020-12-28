@@ -1,0 +1,14 @@
+{
+  "extends": "./node_modules/gts/",
+  "overrides": [
+    {
+      "files": [
+        "webpack.config.ts"
+      ],
+      "rules": {
+        "node/no-unpublished-import": "off"
+      }
+    }
+  ],
+  "rules": {}
+}

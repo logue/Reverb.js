@@ -1,8 +1,12 @@
 # Reverb.js
 
+[![npm version](https://badge.fury.io/js/%40logue%2Freverb.svg)](https://badge.fury.io/js/%40logue%2Freverb)
+[![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
+
 Append reverb effect to audio source.
 
 This script is originally a spin out of [sf2synth.js](https://github.com/logue/smfplayer.js)'s reverb effect.
+
 
 ## Sample
 
@@ -13,6 +17,7 @@ This script is originally a spin out of [sf2synth.js](https://github.com/logue/s
 
 ```js
 const reverb = new Reverb.default(ctx, {
+  noise: 0,                 // Inpulse Response Noise algorithm (0: White noise, 1: Pink noise, 2: Brown noise) 
   decay: 5,                 // Amount of IR (Inpulse Response) decay. 0~100
   delay: 0,                 // Delay time o IR. (NOT delay effect) 0~100 [sec] 
   filterFreq: 2200,         // Filter frequency. 20~5000 [Hz]
