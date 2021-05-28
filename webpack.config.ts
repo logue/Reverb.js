@@ -2,8 +2,18 @@
 import * as webpack from 'webpack';
 import * as path from 'path';
 import * as fs from 'fs';
-import * as TerserPlugin from 'terser-webpack-plugin';
-import {Configuration} from 'webpack';
+import TerserPlugin from 'terser-webpack-plugin';
+import WebpackDevServer from 'webpack-dev-server';
+
+declare module 'webpack' {
+  interface Configuration {
+    /**
+     * Can be used to configure the behaviour of webpack-dev-server when
+     * the webpack config is passed to webpack-dev-server CLI.
+     */
+    devServer?: WebpackDevServer.Configuration;
+  }
+}
 
 // バージョン情報など
 const pjson = require('./package.json');
@@ -24,7 +34,7 @@ export default meta;
 `
 );
 
-module.exports = (env: any, argv: any): Configuration => {
+module.exports = (env: any, argv: any): webpack.Configuration => {
   const isProduction: boolean = argv.mode === 'production';
   const banner = `${pjson.name} v${pjson.version} | ${pjson.author.name} | license: ${pjson.license} | build: ${build}`;
 
@@ -52,7 +62,7 @@ module.exports = (env: any, argv: any): Configuration => {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
-            ecma: 2020,
+            ecma: 2016,
             compress: {drop_console: true},
             output: {
               comments: false,

@@ -6,37 +6,37 @@ import {NoiseType} from './NoiseType';
  * JS reverb effect class
  *
  * @author    Logue <logue@hotmail.co.jp>
- * @copyright 2019-2020 Masashi Yoshikawa <https://logue.dev/> All rights reserved.
+ * @copyright 2019-2021 Masashi Yoshikawa <https://logue.dev/> All rights reserved.
  * @license   MIT
  * @see       {@link https://github.com/logue/Reverb.js}
  *            {@link https://github.com/web-audio-components/simple-reverb}
  */
 export default class Reverb {
-  /** @type {string} バージョン */
+  /** バージョン */
   public readonly version: string;
-  /** @type {string} ビルド日時 */
+  /** ビルド日時 */
   public readonly build: string;
-  /** @type {AudioContext} AudioContext */
+  /** AudioContext */
   private readonly ctx: AudioContext;
-  /** @type {GainNode} ウェットレベル（エフェクターをかけたレベル） */
+  /** ウェットレベル（エフェクターをかけたレベル） */
   private readonly wetGainNode: GainNode;
-  /** @type {GainNode} ドライレベル（原音レベル） */
+  /** ドライレベル（原音レベル） */
   private readonly dryGainNode: GainNode;
-  /** @type {BiquadFilterNode} インパルス応答用フィルタ */
+  /** インパルス応答用フィルタ */
   private readonly filterNode: BiquadFilterNode;
-  /** @type {ConvolverNode} 畳み込みノード */
+  /** 畳み込みノード */
   private readonly convolverNode: ConvolverNode;
-  /** @type {GainNode} 出力ノード */
+  /** 出力ノード */
   private readonly outputNode: GainNode;
-  /** @type {Option} 変数 */
+  /** 変数 */
   private readonly _options: OptionInterface;
-  /** @type {boolean} 接続済みフラグ */
+  /** 接続済みフラグ */
   private isConnected: boolean;
 
   /**
    * constructor
-   * @param {AudioContext} ctx Root AudioContext
-   * @param {OptionInterface} options Configure
+   * @param ctx Root AudioContext
+   * @param options Configure
    */
   constructor(ctx: AudioContext, options: OptionInterface | undefined) {
     // バージョン情報など
@@ -60,8 +60,7 @@ export default class Reverb {
 
   /**
    * connect
-   * @param {AudioNode} sourceNode 原音ノード
-   * @return {AudioNode}
+   * @param sourceNode 原音ノード
    */
   public connect(sourceNode: AudioNode): AudioNode {
     // 畳み込みノードをウェットレベルに接続
@@ -82,8 +81,7 @@ export default class Reverb {
 
   /**
    * disconnect
-   * @param {AudioNode} sourceNode 原音のノード
-   * @return {AudioNode}
+   * @param sourceNode 原音のノード
    */
   public disconnect(sourceNode: AudioNode | undefined): AudioNode | undefined {
     // 初期状態ではノードがつながっていないためエラーになる
@@ -102,7 +100,7 @@ export default class Reverb {
 
   /**
    * Dry/Wet ratio
-   * @param {number} mix
+   * @param mix
    */
   public mix(mix: number): void {
     if (!this.inRange(mix, 0, 1)) {
@@ -116,7 +114,7 @@ export default class Reverb {
 
   /**
    * Set Impulse Response time length (second)
-   * @param {number} value
+   * @param value
    */
   public time(value: number): void {
     if (!this.inRange(value, 1, 50)) {
@@ -131,7 +129,7 @@ export default class Reverb {
 
   /**
    * Impulse response decay rate.
-   * @param {number} value
+   * @param value
    */
   public decay(value: number): void {
     if (!this.inRange(value, 0, 100)) {
@@ -146,7 +144,7 @@ export default class Reverb {
 
   /**
    * Impulse response delay time. (NOT deley effect)
-   * @param {number} value
+   * @param value
    */
   public delay(value: number): void {
     if (!this.inRange(value, 0, 100)) {
@@ -161,7 +159,7 @@ export default class Reverb {
 
   /**
    * Reverse the impulse response.
-   * @param {boolean} reverse
+   * @param reverse
    */
   public reverse(reverse: boolean): void {
     this._options.reverse = reverse;
@@ -173,7 +171,7 @@ export default class Reverb {
 
   /**
    * Filter type.
-   * @param {BiquadFilterType} type
+   * @param type
    */
   public filterType(type: BiquadFilterType): void {
     this.filterNode.type = this._options.filterType = type;
@@ -182,7 +180,7 @@ export default class Reverb {
 
   /**
    * Filter frequency.
-   * @param {number} freq
+   * @param freq
    */
   public filterFreq(freq: number): void {
     if (!this.inRange(freq, 20, 5000)) {
@@ -197,7 +195,7 @@ export default class Reverb {
 
   /**
    * Filter quality.
-   * @param {number} q
+   * @param q
    */
   public filterQ(q: number): void {
     if (!this.inRange(q, 0, 10)) {
@@ -223,10 +221,10 @@ export default class Reverb {
   /**
    * return true if in range, otherwise false
    * @private
-   * @param {number} x Target value
-   * @param {number} min Minimum value
-   * @param {number} max Maximum value
-   * @return {bool}
+   * @param x Target value
+   * @param min Minimum value
+   * @param max Maximum value
+   * @return
    */
   private inRange(x: number, min: number, max: number): boolean {
     return (x - min) * (x - max) <= 0;
@@ -240,17 +238,17 @@ export default class Reverb {
   private buildImpulse(): void {
     // インパルス応答生成ロジック
 
-    /** @type {number} サンプリングレート */
+    /** サンプリングレート */
     const rate: number = this.ctx.sampleRate;
-    /** @type {number} インパルス応答の演奏時間 */
+    /** インパルス応答の演奏時間 */
     const duration: number = Math.max(rate * this._options.time, 1);
-    /** @type {number} インパルス応答が始まるまでの遅延時間 */
+    /** インパルス応答が始まるまでの遅延時間 */
     const delayDuration: number = rate * this._options.delay;
-    /** @type {AudioBuffer} インパルス応答バッファ（今の所ステレオのみ） */
+    /** インパルス応答バッファ（今の所ステレオのみ） */
     const impulse: AudioBuffer = this.ctx.createBuffer(2, duration, rate);
-    /** @type {Array<number>|ArrayBufferView} 左チャンネル */
+    /** 左チャンネル */
     const impulseL: Float32Array = new Float32Array(duration);
-    /** @type {Array<number>|ArrayBufferView} 右チャンネル*/
+    /** 右チャンネル*/
     const impulseR: Float32Array = new Float32Array(duration);
 
     /** 一時計算用 */
