@@ -2,8 +2,8 @@
  * メタ情報インターフェース
  */
 export default interface MetaInterface {
-  /** @type {string} バージョン */
+  /** @type バージョン */
   version: string;
-  /** @type {string} ビルド日時 */
+  /** @type ビルド日時 */
   date: string;
 }
