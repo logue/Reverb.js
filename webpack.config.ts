@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as webpack from 'webpack';
+import webpack = require('webpack');
 import * as path from 'path';
 import * as fs from 'fs';
 import TerserPlugin from 'terser-webpack-plugin';
-import WebpackDevServer from 'webpack-dev-server';
+import WebpackDevServer = require('webpack-dev-server');
 
 declare module 'webpack' {
   interface Configuration {
@@ -43,8 +43,12 @@ module.exports = (env: any, argv: any): webpack.Configuration => {
     target: 'node',
     devtool: !isProduction ? 'source-map' : false,
     devServer: {
-      contentBase: 'docs',
+      static: {
+        directory: 'docs',
+        watch: true,
+      },
       open: false,
+      hot: false,
     },
     entry: {
       reverb: './src/Reverb.ts',
