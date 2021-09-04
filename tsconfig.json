@@ -5,6 +5,7 @@
     "module": "commonjs",
     "outDir": "build",
     "rootDir": ".",
+    "skipLibCheck": true,
     "lib": [
       "dom"
     ],

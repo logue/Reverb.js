@@ -3,7 +3,7 @@ import webpack = require('webpack');
 import * as path from 'path';
 import * as fs from 'fs';
 import TerserPlugin from 'terser-webpack-plugin';
-import WebpackDevServer = require('webpack-dev-server');
+import WebpackDevServer from 'webpack-dev-server';
 
 declare module 'webpack' {
   interface Configuration {
