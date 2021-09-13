@@ -1,25 +1,25 @@
 import {NoiseType} from '../NoiseType';
 
 /**
- * オプションのインターフェース
+ * Reverb Option
  */
 export default interface OptionInterface {
-  /** @type ノイズ種別 */
+  /** Types of impulse response noise generation algorithms */
   noise: NoiseType;
-  /** @type ディケイ */
+  /** Decay */
   decay: number;
-  /** @type ディレイ */
+  /** Delay until impulse response is generated */
   delay: number;
-  /** @type フィルタ周波数(Hz) */
+  /** Filter frequency applied to impulse response[Hz] */
   filterFreq: number;
-  /** @type フィルタ品質 */
+  /** Filter quality for impulse response */
   filterQ: number;
-  /** @type {BiquadFilterType?} フィルタの種類 */
+  /** Filter type for impulse response */
   filterType: BiquadFilterType;
-  /** @type ドライ／ウェット比 */
+  /** Dry/Wet ratio */
   mix: number;
-  /** @type レスポンス応答を反転 */
+  /** Invert the impulse response */
   reverse: boolean;
-  /** @type レスポンス応答の時間（秒） */
+  /** Impulse response length */
   time: number;
 }

@@ -12,25 +12,25 @@ import {NoiseType} from './NoiseType';
  *            {@link https://github.com/web-audio-components/simple-reverb}
  */
 export default class Reverb {
-  /** バージョン */
+  /** Version strings */
   public readonly version: string;
-  /** ビルド日時 */
+  /** Build date */
   public readonly build: string;
   /** AudioContext */
   private readonly ctx: AudioContext;
-  /** ウェットレベル（エフェクターをかけたレベル） */
+  /** Wet Level (Reverberated node) */
   private readonly wetGainNode: GainNode;
-  /** ドライレベル（原音レベル） */
+  /** Dry Level (Original sound node) */
   private readonly dryGainNode: GainNode;
-  /** インパルス応答用フィルタ */
+  /** Impulse response filter */
   private readonly filterNode: BiquadFilterNode;
-  /** 畳み込みノード */
+  /** Convolution node for applying impulse response */
   private readonly convolverNode: ConvolverNode;
-  /** 出力ノード */
+  /** Output nodse */
   private readonly outputNode: GainNode;
-  /** 変数 */
+  /** Option */
   private readonly _options: OptionInterface;
-  /** 接続済みフラグ */
+  /** Connected flag */
   private isConnected: boolean;
 
   /**
@@ -59,10 +59,14 @@ export default class Reverb {
   }
 
   /**
-   * connect
-   * @param sourceNode 原音ノード
+   * Connect the node for the reverb effect to the original sound node.
+   * @param sourceNode Input source node
    */
   public connect(sourceNode: AudioNode): AudioNode {
+    if (this.isConnected) {
+      // 接続済みだった場合そのまま出力ノードを返す
+      return this.outputNode;
+    }
     // 畳み込みノードをウェットレベルに接続
     this.convolverNode.connect(this.filterNode);
     // フィルタノードをウェットレベルに接続
@@ -80,8 +84,8 @@ export default class Reverb {
   }
 
   /**
-   * disconnect
-   * @param sourceNode 原音のノード
+   * Disconnect the reverb node
+   * @param sourceNode Input source node
    */
   public disconnect(sourceNode: AudioNode | undefined): AudioNode | undefined {
     // 初期状態ではノードがつながっていないためエラーになる
@@ -143,8 +147,8 @@ export default class Reverb {
   }
 
   /**
-   * Impulse response delay time. (NOT deley effect)
-   * @param value
+   * Delay before reverberation starts
+   * @param value time[ms]
    */
   public delay(value: number): void {
     if (!this.inRange(value, 0, 100)) {
@@ -170,7 +174,7 @@ export default class Reverb {
   }
 
   /**
-   * Filter type.
+   * Filter for impulse response
    * @param type
    */
   public filterType(type: BiquadFilterType): void {
@@ -179,7 +183,7 @@ export default class Reverb {
   }
 
   /**
-   * Filter frequency.
+   * Filter frequency applied to impulse response
    * @param freq
    */
   public filterFreq(freq: number): void {
