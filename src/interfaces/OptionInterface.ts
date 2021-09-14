@@ -22,4 +22,6 @@ export default interface OptionInterface {
   reverse: boolean;
   /** Impulse response length */
   time: number;
+  /** Prevents multiple effectors from being connected. */
+  once: boolean;
 }

@@ -56,6 +56,8 @@ export default class Reverb {
     this.isConnected = false;
     // インパルス応答を生成
     this.buildImpulse();
+    // トライ／ウェットノードの量を調整
+    this.mix(this._options.mix);
   }
 
   /**
@@ -63,8 +65,9 @@ export default class Reverb {
    * @param sourceNode Input source node
    */
   public connect(sourceNode: AudioNode): AudioNode {
-    if (this.isConnected) {
-      // 接続済みだった場合そのまま出力ノードを返す
+    if (this.isConnected && this._options.once) {
+      // 接続済みだった場合、フラグを落としてそのまま出力ノードを返す
+      this.isConnected = false;
       return this.outputNode;
     }
     // 畳み込みノードをウェットレベルに接続
@@ -77,8 +80,6 @@ export default class Reverb {
     sourceNode.connect(this.dryGainNode).connect(this.outputNode);
     // ウェットレベルを出力ノードに接続
     sourceNode.connect(this.wetGainNode).connect(this.outputNode);
-    // トライ／ウェットノードの量を調整
-    this.mix(this._options.mix);
     // 接続済みフラグを立てる
     this.isConnected = true;
 
@@ -276,12 +277,6 @@ export default class Reverb {
       }
 
       switch (this._options.noise) {
-        default:
-        case NoiseType.WHITE:
-          // White Noise
-          impulseL[i] = Reverb.whiteNoise();
-          impulseR[i] = Reverb.whiteNoise();
-          break;
         case NoiseType.PINK:
           // ピンクノイズ生成処理
           // http://noisehack.com/generate-noise-web-audio-api/
@@ -329,6 +324,12 @@ export default class Reverb {
           impulseL[i] *= 3.5;
           impulseR[i] *= 3.5;
           break;
+        case NoiseType.WHITE:
+        default:
+          // White Noise
+          impulseL[i] = Reverb.whiteNoise();
+          impulseR[i] = Reverb.whiteNoise();
+          break;
       }
       // 音を減衰させる
       impulseL[i] *= (1 - n / duration) ** this._options.decay;
@@ -363,4 +364,5 @@ const optionDefaults: OptionInterface = {
   filterFreq: 2200,
   filterQ: 1,
   mix: 0.5,
+  once: false,
 };

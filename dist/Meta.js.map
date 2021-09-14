@@ -1,1 +1,1 @@
-{"version":3,"file":"Meta.js","sourceRoot":"","sources":["../src/Meta.ts"],"names":[],"mappings":";;AAEA,mDAAmD;AACnD,MAAM,IAAI,GAAkB;IAC1B,OAAO,EAAE,OAAO;IAChB,IAAI,EAAE,0BAA0B;CACjC,CAAC;AACF,kBAAe,IAAI,CAAC"}
+{"version":3,"file":"Meta.js","sourceRoot":"","sources":["../src/Meta.ts"],"names":[],"mappings":";;AAEA,mDAAmD;AACnD,MAAM,IAAI,GAAkB;IAC1B,OAAO,EAAE,SAAS;IAClB,IAAI,EAAE,0BAA0B;CACjC,CAAC;AACF,kBAAe,IAAI,CAAC"}

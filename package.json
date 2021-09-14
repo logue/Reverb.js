@@ -1,6 +1,6 @@
 {
   "name": "@logue/reverb",
-  "version": "0.4.4",
+  "version": "0.4.4.1",
   "description": "Reverb effect.",
   "main": "bin/reverb.min.js",
   "module": "dist/Reverb.js",

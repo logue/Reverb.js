@@ -58,14 +58,17 @@ class Reverb {
         this.isConnected = false;
         // インパルス応答を生成
         this.buildImpulse();
+        // トライ／ウェットノードの量を調整
+        this.mix(this._options.mix);
     }
     /**
      * Connect the node for the reverb effect to the original sound node.
      * @param sourceNode Input source node
      */
     connect(sourceNode) {
-        if (this.isConnected) {
-            // 接続済みだった場合そのまま出力ノードを返す
+        if (this.isConnected && this._options.once) {
+            // 接続済みだった場合、フラグを落としてそのまま出力ノードを返す
+            this.isConnected = false;
             return this.outputNode;
         }
         // 畳み込みノードをウェットレベルに接続
@@ -78,8 +81,6 @@ class Reverb {
         sourceNode.connect(this.dryGainNode).connect(this.outputNode);
         // ウェットレベルを出力ノードに接続
         sourceNode.connect(this.wetGainNode).connect(this.outputNode);
-        // トライ／ウェットノードの量を調整
-        this.mix(this._options.mix);
         // 接続済みフラグを立てる
         this.isConnected = true;
         return this.outputNode;
@@ -247,12 +248,6 @@ class Reverb {
                 n = this._options.reverse ? duration - i : i;
             }
             switch (this._options.noise) {
-                default:
-                case NoiseType_1.NoiseType.WHITE:
-                    // White Noise
-                    impulseL[i] = Reverb.whiteNoise();
-                    impulseR[i] = Reverb.whiteNoise();
-                    break;
                 case NoiseType_1.NoiseType.PINK:
                     // ピンクノイズ生成処理
                     // http://noisehack.com/generate-noise-web-audio-api/
@@ -295,6 +290,12 @@ class Reverb {
                     impulseL[i] *= 3.5;
                     impulseR[i] *= 3.5;
                     break;
+                case NoiseType_1.NoiseType.WHITE:
+                default:
+                    // White Noise
+                    impulseL[i] = Reverb.whiteNoise();
+                    impulseR[i] = Reverb.whiteNoise();
+                    break;
             }
             // 音を減衰させる
             impulseL[i] *= (1 - n / duration) ** this._options.decay;
@@ -327,5 +328,6 @@ const optionDefaults = {
     filterFreq: 2200,
     filterQ: 1,
     mix: 0.5,
+    once: false,
 };
 //# sourceMappingURL=Reverb.js.map
