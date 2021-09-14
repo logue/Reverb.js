@@ -1,13 +1,16 @@
 {
   "name": "@logue/reverb",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Reverb effect.",
-  "main": "./bin/reverb.min.js",
+  "main": "bin/reverb.min.js",
+  "module": "dist/Reverb.js",
+  "types": "dist/Reverb.d.ts",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
     "build": "webpack --mode production",
+    "build:esm": "tsc --module es2015",
     "dev": "webpack --mode development",
     "serve": "webpack serve --mode development --color --progress",
     "lint": "gts lint ./src/**/*.{js,ts}",
@@ -39,20 +42,20 @@
   },
   "homepage": "https://github.com/logue/reverb.js#readme",
   "devDependencies": {
-    "@types/terser-webpack-plugin": "^5.0.4",
+    "@types/terser-webpack-plugin": "^5.2.0",
     "@types/webpack": "^5.28.0",
     "@types/webpack-dev-server": "^4.1.0",
     "gts": "^3.1.0",
     "hosted-git-info": "^4.0.2",
     "lint-staged": "^11.1.2",
-    "terser-webpack-plugin": "^5.2.3",
+    "terser-webpack-plugin": "^5.2.4",
     "ts-loader": "^9.2.5",
     "ts-node": "^10.2.1",
     "tsconfig-paths": "^3.11.0",
-    "typescript": "^4.4.2",
-    "webpack": "^5.52.0",
+    "typescript": "^4.4.3",
+    "webpack": "^5.52.1",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.1.0"
+    "webpack-dev-server": "^4.2.1"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

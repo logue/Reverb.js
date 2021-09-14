@@ -77,6 +77,8 @@ export default class Reverb {
     sourceNode.connect(this.dryGainNode).connect(this.outputNode);
     // ウェットレベルを出力ノードに接続
     sourceNode.connect(this.wetGainNode).connect(this.outputNode);
+    // トライ／ウェットノードの量を調整
+    this.mix(this._options.mix);
     // 接続済みフラグを立てる
     this.isConnected = true;
 
@@ -352,11 +354,11 @@ export default class Reverb {
  * デフォルト値
  */
 const optionDefaults: OptionInterface = {
-  noise: 1,
-  decay: 5,
+  noise: NoiseType.WHITE,
+  decay: 2,
   delay: 0,
   reverse: false,
-  time: 3,
+  time: 1.1,
   filterType: 'lowpass',
   filterFreq: 2200,
   filterQ: 1,

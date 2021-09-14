@@ -1,16 +1,30 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig.json",
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
-    "esModuleInterop": true,
+    "declaration": true,
+    "declarationMap": true,
     "module": "commonjs",
-    "outDir": "build",
-    "rootDir": ".",
-    "skipLibCheck": true,
+    "outDir": "dist",
+    "sourceMap": true,
     "lib": [
       "dom"
     ],
     "target": "esnext",
+    /* Checks */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
+  "files": [
+    "src/Reverb.ts"
+  ],
   "include": [
     "src/**/*.ts",
     "test/**/*.ts"
