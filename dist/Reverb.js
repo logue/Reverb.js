@@ -323,7 +323,7 @@ const optionDefaults = {
     decay: 2,
     delay: 0,
     reverse: false,
-    time: 1.1,
+    time: 2,
     filterType: 'lowpass',
     filterFreq: 2200,
     filterQ: 1,

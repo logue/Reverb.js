@@ -74,63 +74,64 @@
       <button id="play" class="btn btn-primary" disabled>
         <em class="bi bi-play"></em> Play
       </button>
-      <button id="stop" class="btn btn-secondary" disabled>
-        <em class="bi bi-stop"></em> Stop
-      </button>
       <hr />
       <h2>Reverb Control</h2>
-      <div class="form-check form-switch">
-        <input id="reverb" type="checkbox" class="form-check-input" />
-        <label class="form-check-label" for="reverb">Reverb</label>
-      </div>
       <p>
         Changing these values will regenerate the impulse response each time,
         but due to its nature, it will take some time to see the effect. It
         may be helpful to maximize the value of Wet.
       </p>
-      <div class="row">
-        <div class="col-md">
-          <label for="time" class="form-label">Time <small>(Room size)</small></label>
-          <input type="range" class="form-range" title="1.1" value="1.1" min="0" max="50" id="time" />
+      <div class="form-check form-switch">
+        <input id="reverb" type="checkbox" class="form-check-input" />
+        <label class="form-check-label" for="reverb">Reverb</label>
+      </div>
+      <div>
+        Inpulse Response Noise algorithm:
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="noise" id="white" value="0" checked />
+          <label class="form-check-label" for="white">White Noise</label>
         </div>
-        <div class="col-md">
-          <label for="decay" class="form-label">Decay <small>(Hardness of room wall)</small></label>
-          <input type="range" class="form-range" title="2" value="2" min="0" max="100" id="decay" />
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="noise" id="pink" value="1" />
+          <label class="form-check-label" for="pink">Pink Noise</label>
         </div>
-        <div class="col-md">
-          <label for="delay" class="form-label">Delay
-            <small>(Delays due to obstacles in front of room walls)</small></label>
-          <input type="range" class="form-range" title="0" value="0" min="0" max="100" id="delay" />
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="noise" id="brown" value="2" />
+          <label class="form-check-label" for="brown">Brown Noise</label>
         </div>
       </div>
+      <div class="form-check form-switch">
+        <input type="checkbox" class="form-check-input" id="reverse" />
+        <label class="form-check-label" for="reverse">Reverse Inpulse Response</label>
+      </div>
+      <hr />
       <div class="row">
         <div class="col-md">
-          <label for="mix" class="form-label">Dry / Wet</label>
-          <div class="d-flex mb-3">
-            <div>Dry</div>
-            <input type="range" id="mix" class="form-range" min="0" max="1" step="0.05" value="0.5" />
-            <div>Wet</div>
+          <label for="time" class="form-label" aria-describedby="time-help">Time</label>
+          <input type="range" class="form-range" title="1.1" value="2" min="0" max="50" id="time" />
+          <div id="time-help" class="form-text">Room size</div>
+        </div>
+        <div class="col-md">
+          <label for="decay" class="form-label">Decay</label>
+          <input type="range" class="form-range" title="2" value="2" min="0" max="100" id="decay" />
+          <div id="decay-help" class="form-text">
+            Hardness of room wall size
           </div>
         </div>
-        <fieldset class="col-md">
-          <legend>Inpulse Response Noise algorithm</legend>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="noise" id="white" value="0" checked />
-            <label class="form-check-label" for="white">White Noise</label>
+        <div class="col-md">
+          <label for="delay" class="form-label">Delay</label>
+          <input type="range" class="form-range" title="0" value="0" min="0" max="100" id="delay" />
+          <div id="delay-help" class="form-text">
+            Delays due to obstacles in front of room walls
           </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="noise" id="pink" value="1" />
-            <label class="form-check-label" for="pink">Pink Noise</label>
+        </div>
+        <div class="col-md">
+          <label for="mix" class="form-label">Dry / Wet</label>
+          <input type="range" id="mix" class="form-range" min="0" max="1" step="0.05" value="0.5" title="0.5" />
+          <div id="delay-help" class="form-text">
+            Closer to the original sound or closer to the effector
           </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="noise" id="brown" value="2" />
-            <label class="form-check-label" for="brown">Brown Noise</label>
-          </div>
-          <div class="form-check form-switch">
-            <input type="checkbox" class="form-check-input" id="reverse" />
-            <label class="form-check-label" for="reverse">Reverse</label>
-          </div>
-        </fieldset>
+        </div>
       </div>
       <h2>Filter for IR</h2>
       <p>
@@ -140,7 +141,7 @@
         <div class="col-md">
           <label for="filter" class="form-label">Filter Type</label>
           <select id="filter" class="form-select">
-            <option value="lowpass" selected="selected">lowpass</option>
+            <option value="lowpass" selected="selected">lowpass (Default)</option>
             <option value="highpass">highpass</option>
             <option value="bandpass">bandpass</option>
             <option value="lowshelf">lowshelf</option>
@@ -152,11 +153,11 @@
         </div>
         <div class="col-md">
           <label for="freq" class="form-label">Filter frequency</label>
-          <input type="range" class="form-range" value="2500" min="20" max="5000" step="5" id="freq" />
+          <input type="range" class="form-range" value="2500" min="20" max="5000" step="5" id="freq" title="2500" />
         </div>
         <div class="col-md">
           <label for="freq" class="form-label">Quality (Q) value</label>
-          <input type="range" class="form-range" value="1" min=".0001" max="10" step=".0005" id="q" />
+          <input type="range" class="form-range" value="1" min=".0001" max="10" step=".0005" id="q" title="1" />
         </div>
       </div>
       <h2>FFT</h2>
@@ -205,7 +206,7 @@
     const AudioSrc = AudioCtx.createBufferSource();
 
     // Load audio file and decode asyncly.
-    const LoadSample = url => {
+    const LoadSample = async url => {
       return new Promise(resolve => {
         fetch(url)
           .then(response => response.arrayBuffer())
@@ -290,26 +291,34 @@
       // Draw FFT
       setInterval(DrawGraph, 10);
 
-      // remove disabled
-      document.getElementById('play').disabled = '';
-      document.getElementById('stop').disabled = '';
-
       // Play button
-      document.getElementById('play').addEventListener('click', () => {
-        if (AudioCtx.state == 'suspended') AudioCtx.resume();
-        if (AudioSrc.buffer == null) {
-          AudioSrc.buffer = sound;
-          AudioSrc.loop = true;
+      document.getElementById('play').addEventListener(
+        'click',
+        event => {
+          if (event.target != event.currentTarget)
+            return;
 
-          setReverb();
-          AudioSrc.start();
-        }
-      });
+          if (AudioSrc.buffer == null) {
+            AudioSrc.buffer = sound;
+            AudioSrc.loop = true;
 
-      // Stop button
-      document.getElementById('stop').addEventListener('click', () => {
-        if (AudioSrc.buffer) AudioSrc.stop();
-      });
+            setReverb();
+            AudioSrc.start();
+          }
+
+          if (AudioCtx.state === 'running') {
+            AudioCtx.suspend().then(() => {
+
+              event.target.innerHTML = '<em class="bi bi-play"></em> Play';
+            });
+          } else if (AudioCtx.state === 'suspended') {
+            AudioCtx.resume().then(() => {
+              event.target.innerHTML = '<em class="bi bi-pause"></em> Pause';
+            });
+          }
+        },
+        false
+      );
 
       // Reverb switch button
       document.getElementById('reverb').addEventListener('click', setReverb);
@@ -358,6 +367,9 @@
         .forEach(dom =>
           dom.addEventListener('click', e => reverb.setNoise(e.target.value))
         );
+
+      // remove disabled
+      document.getElementById('play').disabled = '';
     });
   </script>
 </body>
