@@ -1,93 +1,70 @@
-# vue-codemirror6
+# Reverb.js
 
-A component for using [CodeMirror6](https://codemirror.net/6/) with Vue. Unlike [surmon-china's vue-codemirror](https://github.com/surmon-china/vue-codemirror), it is for CodeMirror6.
+[![npm version](https://badge.fury.io/js/%40logue%2Freverb.svg)](https://badge.fury.io/js/%40logue%2Freverb)
+
+Append reverb effect to audio source.
+
+This script is originally a spin out of [sf2synth.js](https://github.com/logue/smfplayer.js)'s reverb effect.
+
+## Sample
+
+* <https://logue.dev/Reverb.js/>
+* <https://logue.dev/Reverb.js/localaudio.html>
+
+## Syntax
+
+```js
+const reverb = new Reverb(ctx, {
+  noise: 0,                 // Inpulse Response Noise algorithm (0: White noise, 1: Pink noise, 2: Brown noise)
+  decay: 5,                 // Amount of IR (Inpulse Response) decay. 0~100
+  delay: 0,                 // Delay time o IR. (NOT delay effect) 0~100 [sec]
+  filterFreq: 2200,         // Filter frequency. 20~5000 [Hz]
+  filterQ: 1,               // Filter quality. 0~10
+  filterType: 'lowpass',    // Filter type. 'bandpass' etc. See https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode/type .
+  mix: 0.5,                 // Dry (Original Sound) and Wet (Effected sound) raito. 0~1
+  reverse: false,           // Reverse IR.
+  time: 3                   // Time length of IR. 0~50 [sec]
+});
+```
 
 ## Usage
 
-When using as a Markdown editor on Vuetify.
+```js
+// Setup Audio Context
+const ctx = new (window.AudioContext || window.webkitAudioContext)();
 
-```vue
-<template>
-  <codemirror
-    v-model="value"
-    :lang="lang"
-    :phrases="phreses"
-    :extensions="extensions"
-    :dark="$vuetify.theme.dark"
-  />
-</template>
-
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-
-// Load component
-import CodeMirror from 'vue-codemirror6';
-
-// CodeMirror extensions
-import { basicSetup } from '@codemirror/basic-setup';
-import { LanguageSupport } from '@codemirror/language';
-import { markdown } from '@codemirror/lang-markdown';
-
-@Component({ components: { CodeMirror } })
-export default class Home extends Vue {
-  /** text */
-  value: string;
-
-  /**
-   * CodeMirror Language
-   *
-   * @see {@link https://codemirror.net/6/docs/ref/#language|@codemirror/language}
-   */
-  lang: LanguageSupport = markdown();
-
-  /**
-   * Internationalization Config
-   *
-   * @see {@link https://codemirror.net/6/examples/translate/|Example: Internationalization}
-   */
-  phrases: Record<string, string> = {
-    // @codemirror/view
-    'Control character': '制御文字',
-    // @codemirror/fold
-    'Folded lines': '折り畳まれた行',
-    'Unfolded lines': '折り畳める行',
-    to: '行き先',
-    'folded code': '折り畳まれたコード',
-    unfold: '折り畳む解除',
-    'Fold line': '行を折り畳む',
-    'Unfold line': '行の折り畳む解除',
-    // @codemirror/search
-    'Go to line': '行き先の行',
-    go: 'OK',
-    Find: '検索',
-    Replace: '置き換え',
-    next: '▼',
-    previous: '▲',
-    all: 'すべて',
-    'match case': '一致条件',
-    regexp: '正規表現',
-    replace: '置き換え',
-    'replace all': 'すべてを置き換え',
-    close: '閉じる',
-    'current match': '現在の一致',
-    'on line': 'した行',
-    // @codemirror/lint
-    Diagnostics: 'エラー',
-    'No diagnostics': 'エラーなし',
-  }
-
-  /**
-   * CodeMirror Extensions
-   *
-   * @see {@link:https://codemirror.net/6/docs/ref/#state.Extension|Extending Editor State}
-   */
-  extensions: [
-    /** @see {@link:https://codemirror.net/6/docs/ref/#basic-setup|basic-setup} */
-    basicSetup
-  ]
+// iOS fix.
+document.addEventListener('touchstart', initAudioContext);
+function initAudioContext() {
+  document.removeEventListener('touchstart', initAudioContext);
+  // wake up AudioContext
+  const emptySource = ctx.createBufferSource();
+  emptySource.start();
+  emptySource.stop();
 }
+
+// Setup Reverb Class
+const reverb = new Reverb(ctx, {});
+
+// put Audio data to audio buffer source
+const sourceNode = ctx.createBufferSource();
+sourceNode.buffer = [AudioBuffer];
+
+// Connect Reverb
+reverb.connect(sourceNode);
+sourceNode.connect(ctx.destination);
+
+// fire
+sourceNode.play();
 ```
 
-## LICENSE
+## Reference
+
+* [Web Audio API](https://www.w3.org/TR/webaudio/)
+  * [Web Audio API日本語訳](https://g200kg.github.io/web-audio-api-ja/)
+* [コンボルバーの使い方](https://www.g200kg.com/jp/docs/webaudio/convolver.html)
+* [WebAudioの闇](https://qiita.com/zprodev/items/7fcd8335d7e8e613a01f)
+
+## License
 
 [MIT](LICENSE)
