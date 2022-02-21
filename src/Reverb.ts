@@ -1,21 +1,20 @@
 import Meta from './Meta';
-import OptionInterface from './interfaces/OptionInterface';
-import {NoiseType} from './NoiseType';
+import type OptionInterface from './interfaces/OptionInterface';
+import Noise, { type NoiseType } from './NoiseType';
 
 /**
  * JS reverb effect class
  *
- * @author    Logue <logue@hotmail.co.jp>
- * @copyright 2019-2021 Masashi Yoshikawa <https://logue.dev/> All rights reserved.
- * @license   MIT
- * @see       {@link https://github.com/logue/Reverb.js}
- *            {@link https://github.com/web-audio-components/simple-reverb}
+ * @license MIT
+ * @author Logue {@link logue@hotmail.co.jp}
+ * @copyright 2019-2022 Masashi Yoshikawa {@link https://logue.dev/} All rights reserved.
+ * @see {@link https://github.com/logue/Reverb.js}
  */
 export default class Reverb {
   /** Version strings */
-  public readonly version: string;
+  readonly version: string;
   /** Build date */
-  public readonly build: string;
+  readonly build: string;
   /** AudioContext */
   private readonly ctx: AudioContext;
   /** Wet Level (Reverberated node) */
@@ -34,9 +33,10 @@ export default class Reverb {
   private isConnected: boolean;
 
   /**
-   * constructor
-   * @param ctx Root AudioContext
-   * @param options Configure
+   * Constructor
+   *
+   * @param ctx - Root AudioContext
+   * @param options - Configure
    */
   constructor(ctx: AudioContext, options: OptionInterface | undefined) {
     // バージョン情報など
@@ -45,7 +45,7 @@ export default class Reverb {
     // マスターのAudioContextを取得
     this.ctx = ctx;
     // デフォルト値をマージ
-    this._options = {...optionDefaults, ...options} as const;
+    this._options = { ...optionDefaults, ...options } as const;
     // 初期化
     this.wetGainNode = this.ctx.createGain();
     this.dryGainNode = this.ctx.createGain();
@@ -62,7 +62,8 @@ export default class Reverb {
 
   /**
    * Connect the node for the reverb effect to the original sound node.
-   * @param sourceNode Input source node
+   *
+   * @param sourceNode - Input source node
    */
   public connect(sourceNode: AudioNode): AudioNode {
     if (this.isConnected && this._options.once) {
@@ -88,7 +89,8 @@ export default class Reverb {
 
   /**
    * Disconnect the reverb node
-   * @param sourceNode Input source node
+   *
+   * @param sourceNode - Input source node
    */
   public disconnect(sourceNode: AudioNode | undefined): AudioNode | undefined {
     // 初期状態ではノードがつながっていないためエラーになる
@@ -107,7 +109,8 @@ export default class Reverb {
 
   /**
    * Dry/Wet ratio
-   * @param mix
+   *
+   * @param mix - Ratio (0~1)
    */
   public mix(mix: number): void {
     if (!this.inRange(mix, 0, 1)) {
@@ -121,7 +124,8 @@ export default class Reverb {
 
   /**
    * Set Impulse Response time length (second)
-   * @param value
+   *
+   * @param value - IR length
    */
   public time(value: number): void {
     if (!this.inRange(value, 1, 50)) {
@@ -136,7 +140,8 @@ export default class Reverb {
 
   /**
    * Impulse response decay rate.
-   * @param value
+   *
+   * @param value - Decay value
    */
   public decay(value: number): void {
     if (!this.inRange(value, 0, 100)) {
@@ -151,7 +156,8 @@ export default class Reverb {
 
   /**
    * Delay before reverberation starts
-   * @param value time[ms]
+   *
+   * @param value - Time[ms]
    */
   public delay(value: number): void {
     if (!this.inRange(value, 0, 100)) {
@@ -166,7 +172,8 @@ export default class Reverb {
 
   /**
    * Reverse the impulse response.
-   * @param reverse
+   *
+   * @param reverse - Reverse IR
    */
   public reverse(reverse: boolean): void {
     this._options.reverse = reverse;
@@ -178,7 +185,8 @@ export default class Reverb {
 
   /**
    * Filter for impulse response
-   * @param type
+   *
+   * @param type - Filiter Type
    */
   public filterType(type: BiquadFilterType): void {
     this.filterNode.type = this._options.filterType = type;
@@ -187,7 +195,8 @@ export default class Reverb {
 
   /**
    * Filter frequency applied to impulse response
-   * @param freq
+   *
+   * @param freq - Frequency
    */
   public filterFreq(freq: number): void {
     if (!this.inRange(freq, 20, 5000)) {
@@ -202,7 +211,8 @@ export default class Reverb {
 
   /**
    * Filter quality.
-   * @param q
+   *
+   * @param q - Quality
    */
   public filterQ(q: number): void {
     if (!this.inRange(q, 0, 10)) {
@@ -217,7 +227,8 @@ export default class Reverb {
 
   /**
    * Inpulse Response Noise algorithm.
-   * @param type
+   *
+   * @param type - IR noise algorithm type.
    */
   public setNoise(type: NoiseType) {
     this._options.noise = type;
@@ -226,22 +237,17 @@ export default class Reverb {
   }
 
   /**
-   * return true if in range, otherwise false
-   * @private
-   * @param x Target value
-   * @param min Minimum value
-   * @param max Maximum value
-   * @return
+   * Return true if in range, otherwise false
+   *
+   * @param x - Target value
+   * @param min - Minimum value
+   * @param max - Maximum value
    */
   private inRange(x: number, min: number, max: number): boolean {
     return (x - min) * (x - max) <= 0;
   }
 
-  /**
-   * Utility function for building an impulse response
-   * from the module parameters.
-   * @private
-   */
+  /** Utility function for building an impulse response from the module parameters. */
   private buildImpulse(): void {
     // インパルス応答生成ロジック
 
@@ -255,15 +261,15 @@ export default class Reverb {
     const impulse: AudioBuffer = this.ctx.createBuffer(2, duration, rate);
     /** 左チャンネル */
     const impulseL: Float32Array = new Float32Array(duration);
-    /** 右チャンネル*/
+    /** 右チャンネル */
     const impulseR: Float32Array = new Float32Array(duration);
 
     /** 一時計算用 */
     const b = [0, 0, 0, 0, 0, 0, 0];
 
     for (let i = 0; i < duration; i++) {
-      /** @type {number} 減衰率 */
-      let n = 0;
+      /** 減衰率 */
+      let n: number = 0;
 
       if (i < delayDuration) {
         // Delay Effect
@@ -277,7 +283,7 @@ export default class Reverb {
       }
 
       switch (this._options.noise) {
-        case NoiseType.PINK:
+        case Noise.PINK:
           // ピンクノイズ生成処理
           // http://noisehack.com/generate-noise-web-audio-api/
           b[0] = 0.99886 * b[0] + Reverb.whiteNoise() * 0.0555179;
@@ -313,7 +319,7 @@ export default class Reverb {
 
           b[6] = Reverb.whiteNoise() * 0.115926;
           break;
-        case NoiseType.BROWN:
+        case Noise.BROWN:
           // ブラウンノイズ生成処理
           impulseL[i] = (b[0] + 0.02 * Reverb.whiteNoise()) / 1.02;
           b[0] = impulseL[i];
@@ -324,7 +330,7 @@ export default class Reverb {
           impulseL[i] *= 3.5;
           impulseR[i] *= 3.5;
           break;
-        case NoiseType.WHITE:
+        case Noise.WHITE:
         default:
           // White Noise
           impulseL[i] = Reverb.whiteNoise();
@@ -342,20 +348,16 @@ export default class Reverb {
 
     this.convolverNode.buffer = impulse;
   }
-  /**
-   * Generate white noise
-   */
+  /** Generate white noise */
   private static whiteNoise(): number {
     // TODO: この乱数は本当に偏り無いのだろうか？
     return Math.random() * 2 - 1;
   }
 }
 
-/**
- * デフォルト値
- */
+/** デフォルト値 */
 const optionDefaults: OptionInterface = {
-  noise: NoiseType.WHITE,
+  noise: Noise.WHITE,
   decay: 2,
   delay: 0,
   reverse: false,

@@ -1,32 +1,35 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig.json",
-  "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationMap": true,
-    "module": "commonjs",
-    "outDir": "dist",
-    "sourceMap": true,
-    "lib": [
-      "dom"
-    ],
-    "target": "esnext",
-    /* Checks */
-    "strict": true,
+    "declarationDir": "types",
+    "esModuleInterop": true,
+    "emitDeclarationOnly": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "newLine": "lf",
+    "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "resolveJsonModule": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "sourceMap": true,
+    "strict": true,
+    "target": "esnext",
+    "types": ["vite/client", "node"],
+    "useDefineForClassFields": false
   },
-  "files": [
-    "src/Reverb.ts"
-  ],
-  "include": [
-    "src/**/*.ts",
-    "test/**/*.ts"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
 }

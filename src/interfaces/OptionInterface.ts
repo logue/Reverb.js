@@ -1,8 +1,6 @@
-import {NoiseType} from '../NoiseType';
+import { NoiseType } from '../NoiseType';
 
-/**
- * Reverb Option
- */
+/** Reverb Option */
 export default interface OptionInterface {
   /** Types of impulse response noise generation algorithms */
   noise: NoiseType;

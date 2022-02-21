@@ -1,6 +1,4 @@
-/**
- * Meta Information Interface
- */
+/** Meta Information Interface */
 export default interface MetaInterface {
   /** Version */
   version: string;

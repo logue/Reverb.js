@@ -56,62 +56,58 @@
 
       gtag('config', 'UA-33600926-1');
     </script>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/" />
     <!-- Bootstrap core CSS -->
     <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
-      integrity="sha256-93wNFzm2GO3EoByj9rKZCwGjAJAwr0nujPaOgwUt8ZQ="
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
-    <!-- Web Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c|Varela+Round&display=swap"
-      rel="stylesheet"
-    />
     <link
       rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+      integrity="sha256-rzXMaro05QBd53CZ36ctTBp3FdKN3Ow0P0gDHcjLCLw="
+      crossorigin="anonymous"
     />
-    <style>
-      /*<!CDATA[*/
-      body {
-        font-family: 'Varela Round', 'Rounded Mplus 1c', sans-serif;
-      }
-
-      /*]]>*/
-    </style>
   </head>
 
-  <body class="d-flex flex-column h-100 pt-5">
+  <body class="d-flex flex-column h-100">
     <header>
-      <!-- Fixed navbar -->
-      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="#">Reverb.js</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarCollapse"
-          aria-controls="navbarCollapse"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-          <ul class="navbar-nav ml-auto mar-0">
-            <li class="nav-item active">
-              <a class="nav-link" href="#"
-                >Demo <span class="sr-only">(current)</span></a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/logue/Reverb.js"
-                >Github</a
-              >
-            </li>
-          </ul>
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid d-flex justify-content-between">
+          <a class="navbar-brand" href="#">Reverb.js</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarCollapse"
+            aria-controls="navbarCollapse"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse flex-grow-0" id="navbarCollapse">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="./">Demo</a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  aria-current="page"
+                  href="./localaudio.html"
+                >
+                  LocalAudio Demo
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://github.com/logue/Reverb.js">
+                  <em class="bi bi-github"></em>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </nav>
     </header>
@@ -120,148 +116,91 @@
     <main role="main" class="flex-shrink-0 mt-2">
       <div class="container">
         <h1>Reverb.js Demo</h1>
-        <div class="d-flex">
-          <div>
-            <button id="play" class="btn btn-primary" disabled>
-              <i class="fas fa-play"></i> Play
-            </button>
-          </div>
-          <div>
-            <button id="stop" class="btn btn-secondary" disabled>
-              <i class="fas fa-stop"></i> Stop
-            </button>
-          </div>
-          <div class="custom-file form-control-sm ml-3">
-            <input
-              type="file"
-              class="custom-file-input"
-              id="file"
-              accept="audio/*"
-            />
-            <label class="custom-file-label" for="file"
-              >Load Audio file
-              <small class="d-none d-sm-inline"
-                >(drag and drop file to change audio)</small
-              >
-            </label>
-          </div>
+        <div>
+          <label for="file" class="form-label">Load Audio file</label>
+          <input type="file" class="form-control" id="file" accept="audio/*" />
+        </div>
+        <div class="my-3">
+          <button id="play" class="btn btn-primary" disabled>
+            <em class="bi bi-play"></em>
+            Play
+          </button>
+          <button id="stop" class="btn btn-secondary" disabled>
+            <em class="bi bi-stop"></em>
+            Stop
+          </button>
         </div>
         <h2>Reverb Control</h2>
-        <div class="custom-control custom-switch">
-          <input id="reverb" type="checkbox" class="custom-control-input" />
-          <label class="custom-control-label" for="reverb">Reverb</label>
+        <div class="form-check form-switch">
+          <input id="reverb" type="checkbox" class="form-check-input" />
+          <label class="form-check-label" for="reverb">Reverb</label>
         </div>
-        <div class="form-row">
-          <div class="col">
-            <div class="form-group">
-              <label for="time">Time</label>
-              <input
-                type="range"
-                class="custom-range"
-                value="3"
-                min="0"
-                max="50"
-                id="time"
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="decay">Decay</label>
-              <input
-                type="range"
-                class="custom-range"
-                value="2"
-                min="0"
-                max="100"
-                id="decay"
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="delay">Delay</label>
-              <input
-                type="range"
-                class="custom-range"
-                value="0"
-                min="0"
-                max="100"
-                id="delay"
-              />
-            </div>
-          </div>
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="reverse" />
+          <label class="form-check-label" for="reverse">
+            Reverse Inpulse Response
+          </label>
         </div>
-        <div class="form-group">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="reverse" />
-            <label class="custom-control-label" for="reverse">Reverse</label>
+        <div class="row">
+          <div class="col-md">
+            <label for="time" class="form-label" aria-describedby="time-help">
+              Time
+            </label>
+            <input
+              type="range"
+              class="form-range"
+              title="1.1"
+              value="2"
+              min="0"
+              max="50"
+              id="time"
+            />
+            <div id="time-help" class="form-text">Room size</div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="col">
-            <div class="form-group">
-              <label for="filter">Filter Type</label>
-              <select id="filter" class="form-control">
-                <option value="lowpass" selected="selected">lowpass</option>
-                <option value="highpass">highpass</option>
-                <option value="bandpass">bandpass</option>
-                <option value="lowshelf">lowshelf</option>
-                <option value="highshelf">highshelf</option>
-                <option value="peaking">peaking</option>
-                <option value="notch">notch</option>
-                <option value="allpass">allpass</option>
-              </select>
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="freq">Filter frequency</label>
-              <input
-                type="range"
-                class="custom-range"
-                value="2500"
-                min="20"
-                max="5000"
-                step="5"
-                id="freq"
-              />
+          <div class="col-md">
+            <label for="decay" class="form-label">Decay</label>
+            <input
+              type="range"
+              class="form-range"
+              title="2"
+              value="2"
+              min="0"
+              max="100"
+              id="decay"
+            />
+            <div id="decay-help" class="form-text">
+              Hardness of room wall size
             </div>
           </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="freq">Quality (Q) value</label>
-              <input
-                type="range"
-                class="custom-range"
-                value="1"
-                min=".0001"
-                max="10"
-                step=".0005"
-                id="q"
-              />
+          <div class="col-md">
+            <label for="delay" class="form-label">Delay</label>
+            <input
+              type="range"
+              class="form-range"
+              title="0"
+              value="0"
+              min="0"
+              max="100"
+              id="delay"
+            />
+            <div id="delay-help" class="form-text">
+              Delays due to obstacles in front of room walls
             </div>
           </div>
-        </div>
-        <div class="form-group">
-          <label for="mix">Dry / Wet</label>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Dry</span>
-            </div>
-            <div class="form-control">
-              <input
-                type="range"
-                id="mix"
-                class="custom-range"
-                min="0"
-                max="1"
-                step="0.05"
-                value="0.5"
-              />
-            </div>
-            <div class="input-group-append">
-              <span class="input-group-text">Wet</span>
+          <div class="col-md">
+            <label for="mix" class="form-label">Dry / Wet</label>
+            <input
+              type="range"
+              id="mix"
+              class="form-range"
+              min="0"
+              max="1"
+              step="0.05"
+              value="0.5"
+              title="0.5"
+            />
+            <div id="delay-help" class="form-text">
+              Closer to the original sound or closer to the effector
             </div>
           </div>
         </div>
@@ -277,7 +216,7 @@
     <footer class="footer mt-auto py-3 bg-light">
       <div class="container">
         <address class="text-muted">
-          <i class="far fa-copyright"></i> 2019 by Logue / MIT License.
+          &copy; 2019, 2022 by Logue / MIT License.
         </address>
       </div>
     </footer>
@@ -290,7 +229,7 @@
       integrity="sha256-A2ofbc4qfSfxXRlxuONE0Bj7ulHxEAIiYk537fvbkJU="
       crossorigin="anonymous"
     ></script>
-    <script src="reverb.js"></script>
+    <script src="reverb.umd.js"></script>
     <script>
       // Setup Audio Context
       const AudioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -315,7 +254,7 @@
       const AnalyserNode = AudioCtx.createAnalyser();
 
       // Setup Reverb Class
-      const reverb = new Reverb.default(AudioCtx);
+      const reverb = new Reverb(AudioCtx);
 
       // decode audio
       const LoadSample = async input => {
@@ -382,9 +321,7 @@
         AnalyserNode.connect(AudioCtx.destination);
       };
 
-      /**
-       * Draw Texture Functions
-       **/
+      /** Draw Texture Functions */
       const PIXEL_RATIO = () => {
         const ctx = document.createElement('canvas').getContext('2d'),
           dpr = window.devicePixelRatio || 1,
@@ -425,7 +362,7 @@
         const AnalyseData = new Float32Array(1024);
         AnalyserNode.getFloatFrequencyData(AnalyseData);
 
-        const sprite = spriteCanvas.getContext('2d', {antialias: false});
+        const sprite = spriteCanvas.getContext('2d', { antialias: false });
 
         // Background
         //sprite.fillStyle = "#343a40";
@@ -455,7 +392,7 @@
 
       // Draw Axis
       const DrawAxis = () => {
-        const sprite = spriteCanvas.getContext('2d', {antialias: false});
+        const sprite = spriteCanvas.getContext('2d', { antialias: false });
         // y axis (dB)
         for (let d = -50; d < 50; d += 10) {
           const y = (SPRITE_HEIGHT / 2 - (d * SPRITE_HEIGHT) / 100) | 0;
@@ -504,9 +441,7 @@
         image.src = src;
       };
 
-      /**
-       * 3D Spectrum Analyzer Code
-       */
+      /** 3D Spectrum Analyzer Code */
 
       // 3D canvas size
       const CANVAS_WIDTH = 960;

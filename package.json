@@ -1,30 +1,23 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@logue/reverb",
-  "version": "0.4.6",
+  "version": "0.5.0",
   "description": "Reverb effect.",
-  "main": "bin/reverb.min.js",
-  "module": "dist/Reverb.js",
-  "types": "dist/Reverb.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "main": "./dist/reverb.umd.js",
+  "module": "./dist/reverb.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/reverb.es.js",
+      "require": "./dist/reverb.umd.js"
+    }
+  },
+  "types": "./types/Reverb.d.ts",
   "directories": {
     "doc": "docs"
-  },
-  "scripts": {
-    "build": "webpack --mode production",
-    "build:esm": "tsc --module es2015",
-    "dev": "webpack --mode development",
-    "serve": "webpack serve --mode development --color --progress",
-    "lint": "gts lint ./src/**/*.{js,ts}",
-    "clean": "gts clean",
-    "compile": "tsc",
-    "fix": "gts fix ./src/**/*.{js,ts}",
-    "prepare": "npm.cmd run compile",
-    "pretest": "npm.cmd run compile",
-    "posttest": "npm.cmd run lint"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/logue/reverb.js.git"
   },
   "keywords": [
     "webaudio",
@@ -37,34 +30,55 @@
     "email": "logue@hotmail.co.jp",
     "url": "https://logue.dev/"
   },
-  "license": "MIT",
+  "homepage": "https://github.com/logue/Reverb.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:logue/Reverb.js.git"
+  },
   "bugs": {
-    "url": "https://github.com/logue/reverb.js/issues"
+    "url": "https://github.com/logue/Reverb.js/issues"
   },
-  "homepage": "https://github.com/logue/reverb.js#readme",
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "MIT",
+  "sideEffects": false,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "build:clean": "rimraf dist",
+    "lint": "eslint . --fix --cache --cache-location ./node_modules/.vite/vite-plugin-eslint && prettier . --write",
+    "prepare": "husky install"
+  },
   "devDependencies": {
-    "@types/node": "^16.11.6",
-    "@types/webpack": "^5.28.0",
-    "@types/webpack-dev-server": "^4.3.1",
-    "gts": "^3.1.0",
-    "hosted-git-info": "^4.0.2",
-    "lint-staged": "^11.2.6",
-    "terser-webpack-plugin": "^5.2.4",
-    "ts-loader": "^9.2.6",
-    "ts-node": "^10.4.0",
-    "tsconfig-paths": "^3.11.0",
-    "typescript": "^4.4.4",
-    "webpack": "^5.61.0",
-    "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.4.0"
+    "@types/node": "^17.0.18",
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-tsdoc": "^0.2.14",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.4",
+    "prettier": "^2.5.1",
+    "prettier-plugin-jsdoc": "^0.3.30",
+    "prettier-plugin-md-nocjsp": "^1.2.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.5.5",
+    "vite": "^2.8.4",
+    "vite-plugin-eslint": "^1.3.0"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "npm lint",
-      "git add"
-    ]
+    "*.{js,ts,json,htm,html}": "eslint --fix --cache --cache-location ./node_modules/.vite/vite-plugin-eslint",
+    "*": "prettier -w -u"
   }
 }

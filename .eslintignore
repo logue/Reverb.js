@@ -1,4 +1,4 @@
-node_modules/*
-build/*
-docs/*
-bin/*
+.husky/
+.vscode/
+dist/
+docs/
