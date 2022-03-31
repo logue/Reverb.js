@@ -1,7 +1,5 @@
 node_modules
 .DS_Store
 *.local
-.eslintcache
-.stylelintcache
 dist
-types
+/src/Meta.ts
