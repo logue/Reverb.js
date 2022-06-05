@@ -7,7 +7,7 @@
     "declarationMap": true,
     "declarationDir": "dist",
     "esModuleInterop": true,
-    "emitDeclarationOnly": true,
+    "emitDeclarationOnly": false,
     "experimentalDecorators": true,
     "importHelpers": true,
     "isolatedModules": true,

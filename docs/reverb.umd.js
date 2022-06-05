@@ -1,4 +1,4 @@
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):(e="undefined"!=typeof globalThis?globalThis:e||self).Reverb=t()}(this,(function(){"use strict";const e="0.5.1",t="2022-03-31T15:43:45.718Z",i="white",s="pink",o="brown";
+!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):(e="undefined"!=typeof globalThis?globalThis:e||self).Reverb=t()}(this,(function(){"use strict";const e="0.5.3",t="2022-06-05T00:53:37.175Z",i="white",s="pink",o="brown";
 /**
    * JS reverb effect class
    *

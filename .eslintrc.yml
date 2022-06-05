@@ -8,12 +8,10 @@ extends:
   - plugin:import/recommended
   - plugin:@typescript-eslint/eslint-recommended
   - plugin:import/typescript
-  - prettier
   - eslint-config-prettier
 plugins:
-  - prettier
-  - eslint-plugin-tsdoc
-  - '@typescript-eslint'
+  - jsdoc
+  - tsdoc
 parser: '@typescript-eslint/parser'
 parserOptions:
   ecmaVersion: latest
@@ -24,9 +22,15 @@ rules:
   new-cap: off
   no-invalid-this: off
   no-unused-vars: warn
-  prettier/prettier: error
   require-jsdoc: warn
   valid-jsdoc: off
+  import/no-named-as-default: off
+  jsdoc/require-param-type: off
+  jsdoc/require-param: ['off', { enableRootFixer: false }]
+  jsdoc/require-returns-description: off
+  jsdoc/require-returns-type: off
+  jsdoc/require-returns: off
+  tsdoc/syntax: warn
 settings:
   import/resolver:
     typescript: {}
