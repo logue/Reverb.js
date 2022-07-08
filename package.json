@@ -1,29 +1,15 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@logue/reverb",
-  "version": "0.5.3",
-  "description": "Reverb effect.",
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/reverb.umd.js",
-  "module": "./dist/reverb.es.js",
-  "exports": {
-    ".": {
-      "import": "./dist/reverb.es.js",
-      "require": "./dist/reverb.umd.js"
-    }
-  },
-  "types": "./dist/Reverb.d.ts",
-  "directories": {
-    "doc": "docs"
-  },
+  "version": "0.5.4",
+  "description": "JavaScript Reverb effect class",
   "keywords": [
     "webaudio",
     "convolver",
     "effect",
     "reverb"
   ],
+  "license": "MIT",
   "author": {
     "name": "Logue",
     "email": "logue@hotmail.co.jp",
@@ -37,12 +23,26 @@
   "bugs": {
     "url": "https://github.com/logue/Reverb.js/issues"
   },
+  "directories": {
+    "doc": "docs"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/reverb.umd.js",
+  "module": "./dist/reverb.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/reverb.es.js",
+      "require": "./dist/reverb.umd.js"
+    }
+  },
+  "types": "./dist/Reverb.d.ts",
   "engines": {
-    "node": ">=16.15.0",
+    "node": ">=16.16.0",
     "yarn": ">=1.22.4"
   },
   "packageManager": "yarn@3.2.1",
-  "license": "MIT",
   "sideEffects": false,
   "scripts": {
     "dev": "vite",
@@ -52,28 +52,26 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.24.2",
-    "@types/eslint": "^8.4.2",
-    "@types/node": "^17.0.39",
-    "@typescript-eslint/eslint-plugin": "^5.27.0",
-    "@typescript-eslint/parser": "^5.27.0",
-    "eslint": "^8.17.0",
+    "@types/node": "^18.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
+    "eslint": "^8.19.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-alias": "^1.1.2",
-    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-import-resolver-typescript": "^3.2.4",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsdoc": "^39.3.2",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-jsdoc": "^39.3.3",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-tsdoc": "^0.2.16",
     "husky": "^8.0.1",
-    "lint-staged": "^13.0.0",
-    "optionator": "^0.9.1",
-    "prettier": "^2.6.2",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
-    "typescript": "^4.7.3",
-    "vite": "^2.9.9",
-    "vite-plugin-checker": "^0.4.6"
+    "typescript": "^4.7.4",
+    "vite": "^2.9.14",
+    "vite-plugin-banner": "^0.3.0",
+    "vite-plugin-checker": "^0.4.8"
   },
   "husky": {
     "hooks": {
@@ -83,5 +81,8 @@
   "lint-staged": {
     "*.{js,ts,json,htm,html}": "eslint --fix --cache --cache-location ./node_modules/.vite/vite-plugin-eslint",
     "*": "prettier -w -u"
+  },
+  "resolutions": {
+    "prettier": "^2.7.1"
   }
 }

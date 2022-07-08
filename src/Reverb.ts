@@ -4,11 +4,6 @@ import Noise, { type NoiseType } from './NoiseType';
 
 /**
  * JS reverb effect class
- *
- * @license MIT
- * @author Logue {@link logue@hotmail.co.jp}
- * @copyright 2019-2022 Masashi Yoshikawa {@link https://logue.dev/} All rights reserved.
- * @see {@link https://github.com/logue/Reverb.js}
  */
 export default class Reverb {
   /** Version strings */
@@ -119,7 +114,7 @@ export default class Reverb {
     this._options.mix = mix;
     this.dryGainNode.gain.value = 1 - this._options.mix;
     this.wetGainNode.gain.value = this._options.mix;
-    console.debug(`Reverb.js: Set dry/wet ratio to ${mix * 100}%`);
+    // console.debug(`Reverb.js: Set dry/wet ratio to ${mix * 100}%`);
   }
 
   /**
@@ -135,7 +130,7 @@ export default class Reverb {
     }
     this._options.time = value;
     this.buildImpulse();
-    console.info(`Reverb.js: Set inpulse response time length to ${value}sec.`);
+    // console.info(`Reverb.js: Set inpulse response time length to ${value}sec.`);
   }
 
   /**
@@ -151,7 +146,7 @@ export default class Reverb {
     }
     this._options.decay = value;
     this.buildImpulse();
-    console.debug(`Reverb.js: Set inpulse response decay level to ${value}.`);
+    // console.debug(`Reverb.js: Set inpulse response decay level to ${value}.`);
   }
 
   /**
@@ -167,7 +162,7 @@ export default class Reverb {
     }
     this._options.delay = value;
     this.buildImpulse();
-    console.debug(`Reverb.js: Set inpulse response delay time to ${value}sec.`);
+    // console.debug(`Reverb.js: Set inpulse response delay time to ${value}sec.`);
   }
 
   /**
@@ -178,9 +173,9 @@ export default class Reverb {
   public reverse(reverse: boolean): void {
     this._options.reverse = reverse;
     this.buildImpulse();
-    console.debug(
-      `Reverb.js: Inpulse response is ${reverse ? '' : 'not '}reversed.`
-    );
+    // console.debug(
+    //   `Reverb.js: Inpulse response is ${reverse ? '' : 'not '}reversed.`
+    // );
   }
 
   /**
@@ -190,7 +185,7 @@ export default class Reverb {
    */
   public filterType(type: BiquadFilterType): void {
     this.filterNode.type = this._options.filterType = type;
-    console.debug(`Set filter type to ${type}`);
+    // console.debug(`Set filter type to ${type}`);
   }
 
   /**
@@ -206,7 +201,7 @@ export default class Reverb {
     }
     this._options.filterFreq = freq;
     this.filterNode.frequency.value = this._options.filterFreq;
-    console.debug(`Set filter frequency to ${freq}Hz.`);
+    // console.debug(`Set filter frequency to ${freq}Hz.`);
   }
 
   /**
@@ -233,7 +228,7 @@ export default class Reverb {
   public setNoise(type: NoiseType) {
     this._options.noise = type;
     this.buildImpulse();
-    console.debug(`Set Noise type to ${type}.`);
+    // console.debug(`Set Noise type to ${type}.`);
   }
 
   /**
