@@ -1,7 +1,7 @@
 # Reverb.js
 
 [![jsdelivr CDN](https://data.jsdelivr.com/v1/package/npm/@logue/reverb/badge)](https://www.jsdelivr.com/package/npm/@logue/reverb)
-[![NPM Downloads](https://img.shields.io/npm/dm/vuetify-swatches.svg?style=flat)](https://www.npmjs.com/package/@logue/reverb)
+[![NPM Downloads](https://img.shields.io/npm/dm/@logue/reverb.svg?style=flat)](https://www.npmjs.com/package/@logue/reverb)
 [![Open in unpkg](https://img.shields.io/badge/Open%20in-unpkg-blue)](https://uiwjs.github.io/npm-unpkg/#/pkg/@logue/reverb/file/README.md)
 [![npm version](https://img.shields.io/npm/v/@logue/reverb.svg)](https://www.npmjs.com/package/@logue/reverb)
 [![Open in Gitpod](https://shields.io/badge/Open%20in-Gitpod-green?logo=Gitpod)](https://gitpod.io/#https://github.com/logue/Reverb.js)
