@@ -363,3 +363,10 @@ const optionDefaults: OptionInterface = {
   mix: 0.5,
   once: false,
 };
+
+// For CDN.
+// @ts-ignore
+if (!window.Reverb) {
+  // @ts-ignore
+  window.Reverb = Reverb;
+}
