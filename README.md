@@ -19,15 +19,32 @@ This script is originally a spin out of [sf2synth.js](https://github.com/logue/s
 
 ```js
 const reverb = new Reverb(ctx, {
-  noise: 0, // Inpulse Response Noise algorithm (0: White noise, 1: Pink noise, 2: Brown noise)
-  decay: 5, // Amount of IR (Inpulse Response) decay. 0~100
-  delay: 0, // Delay time o IR. (NOT delay effect) 0~100 [sec]
-  filterFreq: 2200, // Filter frequency. 20~5000 [Hz]
-  filterQ: 1, // Filter quality. 0~10
-  filterType: 'lowpass', // Filter type. 'bandpass' etc. See https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode/type .
-  mix: 0.5, // Dry (Original Sound) and Wet (Effected sound) raito. 0~1
-  reverse: false, // Reverse IR.
-  time: 3, // Time length of IR. 0~50 [sec]
+  /**
+   * IR (Inpulse Response) colord noise algorithm (BLUE, GREEN, PINK, RED, VIOLET, WHITE)
+   * @see {@link https://en.wikipedia.org/wiki/Colors_of_noise}
+   */
+  noise: Noise.WHITE,
+  /** IR noise power multiplier */
+  power: 2,
+  /** Amount of IR decay. 0~100 */
+  decay: 5,
+  /** Delay time o IR. (NOT delay effect) 0~100 [sec] */
+  delay: 0,
+  /** Filter frequency. 20~5000 [Hz] */
+  filterFreq: 2200,
+  /** Filter Q. 0~10 */
+  filterQ: 1,
+  /**
+   * Filter type. 'bandpass' etc.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode/type}
+   */
+  filterType: 'lowpass',
+  /** Dry (Original Sound) and Wet (Effected sound) raito. 0~1 */
+  mix: 0.5,
+  /** Reverse IR. */
+  reverse: false,
+  /** Time length of IR. 0~50 [sec] */
+  time: 3,
 });
 ```
 

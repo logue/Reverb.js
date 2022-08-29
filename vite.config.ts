@@ -44,6 +44,7 @@ const config: UserConfig = {
     lib: {
       entry: path.resolve(__dirname, 'src/Reverb.ts'),
       name: 'Reverb',
+      formats: ['es', 'umd', 'iife'],
       fileName: format => `reverb.${format}.js`,
     },
     target: 'es2021',

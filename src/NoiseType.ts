@@ -1,12 +1,11 @@
 /** Impulse response noise generation algorithm */
-const Noise = {
-  /** White noise */
-  WHITE: 'white',
-  /** Pink noise */
+const Noise: Record<string, string> = {
+  BLUE: 'blue',
+  GREEN: 'green',
   PINK: 'pink',
-  /** Brown Noise */
-  BROWN: 'brown',
-  // BLUE: 'blue',
+  RED: 'red',
+  VIOLET: 'violet',
+  WHITE: 'white',
 } as const;
 
 /** Noise Type */

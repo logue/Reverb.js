@@ -4,6 +4,8 @@ import { NoiseType } from '../NoiseType';
 export default interface OptionInterface {
   /** Types of impulse response noise generation algorithms */
   noise: NoiseType;
+  /** IR Power */
+  power: number;
   /** Decay */
   decay: number;
   /** Delay until impulse response is generated */
