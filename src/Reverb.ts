@@ -223,6 +223,16 @@ export default class Reverb {
   }
 
   /**
+   * set IR noise power multiplier.
+   *
+   * @param p - Power
+   */
+  public power(p: number): void {
+    this.options.power = p;
+    this.buildImpulse();
+  }
+
+  /**
    * Inpulse Response Noise algorithm.
    *
    * @param type - IR noise algorithm type.
@@ -282,9 +292,9 @@ export default class Reverb {
     /** 右チャンネル */
     const impulseR: Float32Array = new Float32Array(duration);
     /** 左チャンネルのオーディオソース */
-    const noiseL: number[] = [...take<number>(duration, this.noise(1))];
+    const noiseL: number[] = this.getNoise(duration);
     /** 右チャンネルのオーディオソース */
-    const noiseR: number[] = [...take<number>(duration, this.noise(1))];
+    const noiseR: number[] = this.getNoise(duration);
 
     for (let i = 0; i < duration; i++) {
       /** 減衰率 */
@@ -300,12 +310,9 @@ export default class Reverb {
       } else {
         n = this.options.reverse ? duration - i : i;
       }
-      // 元の音（ノイズ）を入れる
-      impulseL[i] = 1 + noiseL[i] * this.options.power;
-      impulseR[i] = 1 + noiseR[i] * this.options.power;
-      // 音を減衰させる
-      impulseL[i] *= (1 - n / duration) ** this.options.decay;
-      impulseR[i] *= (1 - n / duration) ** this.options.decay;
+      // 元の音（ノイズ）を時間経過とともに減衰させる
+      impulseL[i] = noiseL[i] * (1 - n / duration) ** this.options.decay;
+      impulseR[i] = noiseR[i] * (1 - n / duration) ** this.options.decay;
     }
 
     // インパルス応答のバッファに生成したWaveTableを代入
@@ -313,6 +320,16 @@ export default class Reverb {
     impulse.getChannelData(1).set(impulseR);
 
     this.convolverNode.buffer = impulse;
+  }
+  /**
+   * Noise source
+   *
+   * @param duration - length of IR.
+   */
+  private getNoise(duration: number): number[] {
+    return [...take<number>(duration, this.noise())].map(
+      x => x * this.options.power
+    );
   }
 }
 

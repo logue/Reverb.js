@@ -154,66 +154,94 @@
               <em class="bi bi-box-arrow-up-right"></em>
             </a>
           </p>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="noise"
-              id="blue"
-              value="blue"
-            />
-            <label class="form-check-label" for="blue">Blue Noise</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="noise"
-              id="green"
-              value="green"
-            />
-            <label class="form-check-label" for="green">Green Noise</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="noise"
-              id="pink"
-              value="pink"
-            />
-            <label class="form-check-label" for="pink">Pink Noise</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="noise"
-              id="red"
-              value="red"
-            />
-            <label class="form-check-label" for="red">Red (Brown) Noise</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="noise"
-              id="violet"
-              value="violet"
-            />
-            <label class="form-check-label" for="violet">Violet Noise</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="noise"
-              id="white"
-              value="0"
-              checked
-            />
-            <label class="form-check-label" for="white">White Noise</label>
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="noise"
+                  id="blue"
+                  value="blue"
+                />
+                <label class="form-check-label" for="blue">Blue Noise</label>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="noise"
+                  id="green"
+                  value="green"
+                />
+                <label class="form-check-label" for="green">Green Noise</label>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="noise"
+                  id="pink"
+                  value="pink"
+                />
+                <label class="form-check-label" for="pink">Pink Noise</label>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="noise"
+                  id="red"
+                  value="red"
+                />
+                <label class="form-check-label" for="red">
+                  Red (Brown) Noise
+                </label>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="noise"
+                  id="violet"
+                  value="violet"
+                />
+                <label class="form-check-label" for="violet">
+                  Violet Noise
+                </label>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="noise"
+                  id="white"
+                  value="0"
+                  checked
+                />
+                <label class="form-check-label" for="white">White Noise</label>
+              </div>
+            </div>
+            <div class="col-auto">
+              <label for="power" class="form-label">IR power multiplier</label>
+              <input
+                type="number"
+                class="form-control"
+                id="power"
+                value="2"
+                min="0"
+              />
+            </div>
           </div>
         </fieldset>
         <hr />
@@ -771,6 +799,11 @@
           .forEach(dom =>
             dom.addEventListener('click', e => reverb.setNoise(e.target.value))
           );
+        // IR Power multiply
+        document.getElementById('power').addEventListener('change', e => {
+          reverb.power(e.target.value);
+          e.target.title = e.target.value;
+        });
 
         // Execute Animation Thread
         tick();

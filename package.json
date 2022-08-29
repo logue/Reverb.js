@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@logue/reverb",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JavaScript Reverb effect class",
   "keywords": [
     "webaudio",

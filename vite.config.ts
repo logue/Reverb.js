@@ -51,7 +51,7 @@ const config: UserConfig = {
     minify: 'esbuild',
   },
   esbuild: {
-    drop: ['console'],
+    // drop: ['console'],
   },
 };
 
