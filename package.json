@@ -10,6 +10,7 @@
     "reverb"
   ],
   "license": "MIT",
+  "type": "module",
   "author": {
     "name": "Logue",
     "email": "logue@hotmail.co.jp",
@@ -29,14 +30,13 @@
   "files": [
     "dist"
   ],
-  "main": "dist/reverb.umd.js",
-  "module": "dist/reverb.es.js",
-  "browser": "dist/reverb.iife.js",
+  "main": "dist/Reverb.umd.js",
+  "module": "dist/Reverb.es.js",
   "types": "dist/Reverb.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/reverb.es.js",
-      "require": "./dist/reverb.umd.js"
+      "import": "./dist/Reverb.es.js",
+      "require": "./dist/Reverb.umd.js"
     }
   },
   "engines": {
@@ -52,10 +52,14 @@
     "lint": "eslint . --fix --cache --cache-location ./node_modules/.vite/vite-plugin-eslint && prettier . --write",
     "prepare": "husky install"
   },
+  "dependencies": {
+    "@thi.ng/colored-noise": "^0.3.16",
+    "@thi.ng/transducers": "^8.3.13"
+  },
   "devDependencies": {
-    "@types/node": "^18.7.13",
-    "@typescript-eslint/eslint-plugin": "^5.35.1",
-    "@typescript-eslint/parser": "^5.35.1",
+    "@types/node": "^18.7.14",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
     "eslint": "^8.23.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.5.0",
@@ -69,7 +73,7 @@
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
-    "typescript": "^4.7.4",
+    "typescript": "^4.8.2",
     "vite": "^3.0.9",
     "vite-plugin-banner": "^0.4.0",
     "vite-plugin-checker": "^0.5.0"
@@ -85,9 +89,5 @@
   },
   "resolutions": {
     "prettier": "^2.7.1"
-  },
-  "dependencies": {
-    "@thi.ng/colored-noise": "^0.3.16",
-    "@thi.ng/transducers": "^8.3.13"
   }
 }

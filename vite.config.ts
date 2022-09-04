@@ -5,28 +5,31 @@ import path from 'path';
 import fs from 'fs';
 const pkg = require('./package.json');
 
-// https://vitejs.dev/config/
-const config: UserConfig = {
-  // https://vitejs.dev/config/#server-options
-  server: {
-    fs: {
-      // Allow serving files from one level up to the project root
-      allow: ['..'],
-    },
-  },
-  plugins: [
-    // vite-plugin-checker
-    // https://github.com/fi3ework/vite-plugin-checker
-    checker({
-      typescript: true,
-      vueTsc: false,
-      eslint: {
-        lintCommand: 'eslint',
+// Export vite config
+export default defineConfig(async ({ command }): Promise<UserConfig> => {
+  // Hook production build.
+  // https://vitejs.dev/config/
+  const config: UserConfig = {
+    // https://vitejs.dev/config/#server-options
+    server: {
+      fs: {
+        // Allow serving files from one level up to the project root
+        allow: ['..'],
       },
-    }),
-    // vite-plugin-banner
-    // https://github.com/chengpeiquan/vite-plugin-banner
-    banner(`/**
+    },
+    plugins: [
+      // vite-plugin-checker
+      // https://github.com/fi3ework/vite-plugin-checker
+      checker({
+        typescript: true,
+        vueTsc: false,
+        eslint: {
+          lintCommand: 'eslint',
+        },
+      }),
+      // vite-plugin-banner
+      // https://github.com/chengpeiquan/vite-plugin-banner
+      banner(`/**
  * ${pkg.name}
  *
  * @description ${pkg.description}
@@ -37,27 +40,30 @@ const config: UserConfig = {
  * @see {@link ${pkg.homepage}}
  */
 `),
-  ],
-  // Build Options
-  // https://vitejs.dev/config/#build-options
-  build: {
-    lib: {
-      entry: path.resolve(__dirname, 'src/Reverb.ts'),
-      name: 'Reverb',
-      formats: ['es', 'umd', 'iife'],
-      fileName: format => `reverb.${format}.js`,
+    ],
+    // Build Options
+    // https://vitejs.dev/config/#build-options
+    build: {
+      lib: {
+        entry: path.resolve(__dirname, 'src/Reverb.ts'),
+        name: 'Reverb',
+        formats: ['es', 'umd', 'iife'],
+        fileName: format => `Reverb.${format}.js`,
+      },
+      rollupOptions: {
+        // make sure to externalize deps that shouldn't be bundled
+        // into your library
+        output: {
+          exports: 'named',
+        },
+      },
+      target: 'es2021',
+      minify: 'esbuild',
     },
-    target: 'es2021',
-    minify: 'esbuild',
-  },
-  esbuild: {
-    // drop: ['console'],
-  },
-};
-
-// Export vite config
-export default defineConfig(async ({ command }): Promise<UserConfig> => {
-  // Hook production build.
+    esbuild: {
+      drop: command === 'serve' ? [] : ['console'],
+    },
+  };
   // Write meta data.
   fs.writeFileSync(
     path.resolve(path.join(__dirname, 'src/Meta.ts')),

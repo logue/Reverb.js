@@ -50,7 +50,7 @@ export default class Reverb {
     this.outputNode = this.ctx.createGain();
     // 接続済みフラグを落とす
     this.isConnected = false;
-    this.setNoise(Noise.WHITE);
+    this.setNoise(this.options.noise);
     // インパルス応答を生成
     this.buildImpulse();
     // トライ／ウェットノードの量を調整
@@ -111,12 +111,12 @@ export default class Reverb {
    */
   public mix(mix: number): void {
     if (!this.inRange(mix, 0, 1)) {
-      throw new RangeError('Reverb.js: Dry/Wet ratio must be between 0 to 1.');
+      throw new RangeError('[Reverb.js] Dry/Wet ratio must be between 0 to 1.');
     }
     this.options.mix = mix;
     this.dryGainNode.gain.value = 1 - this.options.mix;
     this.wetGainNode.gain.value = this.options.mix;
-    // console.debug(`Reverb.js: Set dry/wet ratio to ${mix * 100}%`);
+    console.debug(`[Reverb.js] Set dry/wet ratio to ${mix * 100}%`);
   }
 
   /**
@@ -127,12 +127,14 @@ export default class Reverb {
   public time(value: number): void {
     if (!this.inRange(value, 1, 50)) {
       throw new RangeError(
-        'Reverb.js: Time length of inpulse response must be less than 50sec.'
+        '[Reverb.js] Time length of inpulse response must be less than 50sec.'
       );
     }
     this.options.time = value;
     this.buildImpulse();
-    // console.info(`Reverb.js: Set inpulse response time length to ${value}sec.`);
+    console.debug(
+      `[Reverb.js] Set inpulse response time length to ${value}sec.`
+    );
   }
 
   /**
@@ -143,12 +145,12 @@ export default class Reverb {
   public decay(value: number): void {
     if (!this.inRange(value, 0, 100)) {
       throw new RangeError(
-        'Reverb.js: Inpulse Response decay level must be less than 100.'
+        '[Reverb.js] Inpulse Response decay level must be less than 100.'
       );
     }
     this.options.decay = value;
     this.buildImpulse();
-    // console.debug(`Reverb.js: Set inpulse response decay level to ${value}.`);
+    console.debug(`[Reverb.js] Set inpulse response decay level to ${value}.`);
   }
 
   /**
@@ -159,12 +161,14 @@ export default class Reverb {
   public delay(value: number): void {
     if (!this.inRange(value, 0, 100)) {
       throw new RangeError(
-        'Reverb.js: Inpulse Response delay time must be less than 100.'
+        '[Reverb.js] Inpulse Response delay time must be less than 100.'
       );
     }
     this.options.delay = value;
     this.buildImpulse();
-    // console.debug(`Reverb.js: Set inpulse response delay time to ${value}sec.`);
+    console.debug(
+      `[Reverb.js] Set inpulse response delay time to ${value}sec.`
+    );
   }
 
   /**
@@ -175,9 +179,9 @@ export default class Reverb {
   public reverse(reverse: boolean): void {
     this.options.reverse = reverse;
     this.buildImpulse();
-    // console.debug(
-    //   `Reverb.js: Inpulse response is ${reverse ? '' : 'not '}reversed.`
-    // );
+    console.debug(
+      `[Reverb.js] Inpulse response is ${reverse ? '' : 'not '}reversed.`
+    );
   }
 
   /**
@@ -187,7 +191,7 @@ export default class Reverb {
    */
   public filterType(type: BiquadFilterType): void {
     this.filterNode.type = this.options.filterType = type;
-    // console.debug(`Set filter type to ${type}`);
+    console.debug(`[Reverb.js] Set filter type to ${type}`);
   }
 
   /**
@@ -196,14 +200,14 @@ export default class Reverb {
    * @param freq - Frequency
    */
   public filterFreq(freq: number): void {
-    if (!this.inRange(freq, 20, 5000)) {
+    if (!this.inRange(freq, 20, 20000)) {
       throw new RangeError(
-        'Reverb.js: Filter frequrncy must be between 20 and 5000.'
+        '[Reverb.js] Filter frequrncy must be between 20 and 20000.'
       );
     }
     this.options.filterFreq = freq;
     this.filterNode.frequency.value = this.options.filterFreq;
-    // console.debug(`Set filter frequency to ${freq}Hz.`);
+    console.debug(`[Reverb.js] Set filter frequency to ${freq}Hz.`);
   }
 
   /**
@@ -214,12 +218,12 @@ export default class Reverb {
   public filterQ(q: number): void {
     if (!this.inRange(q, 0, 10)) {
       throw new RangeError(
-        'Reverb.js: Filter quality value must be between 0 and 10.'
+        '[Reverb.js] Filter quality value must be between 0 and 10.'
       );
     }
     this.options.filterQ = q;
     this.filterNode.Q.value = this.options.filterQ;
-    // console.debug(`Set filter quality to ${q}.`);
+    console.debug(`[Reverb.js] Set filter Q to ${q}.`);
   }
 
   /**
@@ -230,6 +234,7 @@ export default class Reverb {
   public power(p: number): void {
     this.options.power = p;
     this.buildImpulse();
+    console.debug(`[Reverb.js] Set IR power multiplier to ${p}.`);
   }
 
   /**
@@ -261,7 +266,7 @@ export default class Reverb {
         break;
     }
     this.buildImpulse();
-    // console.debug(`Set Noise type to ${type}.`);
+    console.debug(`[Reverb.js] Set IR generator source noise type to ${type}.`);
   }
 
   /**
@@ -347,6 +352,8 @@ const optionDefaults: OptionInterface = {
   mix: 0.5,
   once: false,
 };
+
+export { Noise, type NoiseType, type OptionInterface };
 
 // For CDN.
 // @ts-ignore
