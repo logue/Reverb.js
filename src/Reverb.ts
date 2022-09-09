@@ -353,8 +353,6 @@ const optionDefaults: OptionInterface = {
   once: false,
 };
 
-export { Noise, type NoiseType, type OptionInterface };
-
 // For CDN.
 // @ts-ignore
 if (!window.Reverb) {

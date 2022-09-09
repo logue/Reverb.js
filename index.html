@@ -56,8 +56,8 @@
     <!-- Bootstrap core CSS -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
-      integrity="sha256-7ZWbZUAi97rkirk4DcEp4GWDPkWpRMcNaEyXGsNXjLg="
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+      integrity="sha256-KTPJY0ik6ufLv48oDKCYFYaptcCX75UrmWytfSjy+tA="
       crossorigin="anonymous"
     />
     <link
@@ -378,108 +378,113 @@
       import Reverb from './src/Reverb';
 
       document.getElementById('play').setAttribute('disabled', 'disabled');
-      // Setup Audio Context
-      const AudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-      // Defreeze AudioContext for iOS.
-      document.addEventListener('touchstart', initAudioContext);
-      function initAudioContext() {
-        document.removeEventListener('touchstart', initAudioContext);
-        // wake up AudioContext
-        const emptySource = AudioCtxtx.createBufferSource();
-        emptySource.start();
-        emptySource.stop();
-      }
-
-      // Setup Reverb Class
-      const reverb = new Reverb(AudioCtx);
-      console.info(
-        `Reverb.js loaded. (version: ${Reverb.version} / build: ${Reverb.build})`
-      );
-      const AudioSrc = AudioCtx.createBufferSource();
-
-      // Load audio file and decode asyncly.
-      const LoadSample = async url => {
-        return new Promise(resolve => {
-          fetch(url)
-            .then(response => response.arrayBuffer())
-            .then(arraybuf =>
-              AudioCtx.decodeAudioData(
-                arraybuf,
-                buffer => {
-                  document.getElementById('play').removeAttribute('disabled');
-                  resolve(buffer);
-                },
-                e => alert(e)
-              )
-            )
-            .catch(e => alert(e));
-        });
-      };
-
-      // Draw FFT to canvas
-      // Code taken from https://www.g200kg.com/jp/docs/webaudio/filter.html
-      const AnalyserNode = AudioCtx.createAnalyser();
-      const canvas = document.getElementById('graph');
-      const canvasContext = canvas.getContext('2d');
-
-      const analysedata = new Float32Array(1024);
-      const DrawGraph = () => {
-        AnalyserNode.getFloatFrequencyData(analysedata);
-        // Background
-        canvasContext.fillStyle = '#343a40';
-        canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-        // FFT Graph
-        canvasContext.fillStyle = document.getElementById('reverb').checked
-          ? '#17a2b8'
-          : '#28a745';
-        for (let i = 0; i < canvas.width; ++i) {
-          const f = (AudioCtx.sampleRate * i) / (canvas.width * 2);
-          const y = canvas.height / 2 + (analysedata[i] + 48.16) * 2.56;
-          canvasContext.fillRect(i, canvas.height - y, 1, y);
-        }
-
-        // y axis (dB)
-        for (let d = -50; d < 50; d += 10) {
-          const y = (canvas.height / 2 - (d * canvas.height) / 100) | 0;
-          // Line
-          canvasContext.fillStyle = '#6c757d';
-          canvasContext.fillRect(20, y, canvas.width, 1);
-          // Label
-          canvasContext.fillStyle = '#fd7e14';
-          canvasContext.fillText(d + 'dB', 5, y);
-        }
-        canvasContext.fillStyle = '#ffc107';
-        canvasContext.fillRect(20, canvas.height / 2, canvas.width, 1);
-
-        // x axis (frequency)
-        for (let f = 2200; f < AudioCtx.sampleRate / 2; f += 2000) {
-          const x = ((f * (canvas.width * 2)) / AudioCtx.sampleRate) | 0;
-          // Line
-          canvasContext.fillStyle = '#6c757d';
-          canvasContext.fillRect(x, 0, 1, canvas.height - 10);
-          // Label
-          if (x % 4 == 0) {
-            canvasContext.fillStyle = '#e83e8c';
-            canvasContext.fillText(f / 1000 + 'kHz', x - 10, canvas.height - 1);
-          }
-        }
-      };
-
-      // Reverb switch handler
-      const setReverb = () => {
-        AudioSrc.disconnect();
-
-        if (document.getElementById('reverb').checked) {
-          // Connect Reverb
-          reverb.connect(AudioSrc).connect(AnalyserNode);
-        } else {
-          reverb.disconnect(AudioSrc).connect(AnalyserNode);
-        }
-        AnalyserNode.connect(AudioCtx.destination);
-      };
 
       window.addEventListener('load', async () => {
+        // Setup Audio Context
+        const AudioCtx = new window.AudioContext();
+
+        // Defreeze AudioContext for iOS.
+        document.addEventListener('touchstart', initAudioContext);
+        function initAudioContext() {
+          document.removeEventListener('touchstart', initAudioContext);
+          // wake up AudioContext
+          const emptySource = AudioCtx.createBufferSource();
+          emptySource.start();
+          emptySource.stop();
+        }
+
+        // Setup Reverb Class
+        const reverb = new Reverb(AudioCtx);
+        console.info(
+          `Reverb.js loaded. (version: ${Reverb.version} / build: ${Reverb.build})`
+        );
+        const AudioSrc = AudioCtx.createBufferSource();
+
+        // Load audio file and decode asyncly.
+        const LoadSample = async url => {
+          return new Promise(resolve => {
+            fetch(url)
+              .then(response => response.arrayBuffer())
+              .then(arraybuf =>
+                AudioCtx.decodeAudioData(
+                  arraybuf,
+                  buffer => {
+                    document.getElementById('play').removeAttribute('disabled');
+                    resolve(buffer);
+                  },
+                  e => alert(e)
+                )
+              )
+              .catch(e => alert(e));
+          });
+        };
+
+        // Draw FFT to canvas
+        // Code taken from https://www.g200kg.com/jp/docs/webaudio/filter.html
+        const AnalyserNode = AudioCtx.createAnalyser();
+        const canvas = document.getElementById('graph');
+        const canvasContext = canvas.getContext('2d');
+
+        const analysedata = new Float32Array(1024);
+        const DrawGraph = () => {
+          AnalyserNode.getFloatFrequencyData(analysedata);
+          // Background
+          canvasContext.fillStyle = '#343a40';
+          canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+          // FFT Graph
+          canvasContext.fillStyle = document.getElementById('reverb').checked
+            ? '#17a2b8'
+            : '#28a745';
+          for (let i = 0; i < canvas.width; ++i) {
+            const f = (AudioCtx.sampleRate * i) / (canvas.width * 2);
+            const y = canvas.height / 2 + (analysedata[i] + 48.16) * 2.56;
+            canvasContext.fillRect(i, canvas.height - y, 1, y);
+          }
+
+          // y axis (dB)
+          for (let d = -50; d < 50; d += 10) {
+            const y = (canvas.height / 2 - (d * canvas.height) / 100) | 0;
+            // Line
+            canvasContext.fillStyle = '#6c757d';
+            canvasContext.fillRect(20, y, canvas.width, 1);
+            // Label
+            canvasContext.fillStyle = '#fd7e14';
+            canvasContext.fillText(d + 'dB', 5, y);
+          }
+          canvasContext.fillStyle = '#ffc107';
+          canvasContext.fillRect(20, canvas.height / 2, canvas.width, 1);
+
+          // x axis (frequency)
+          for (let f = 2200; f < AudioCtx.sampleRate / 2; f += 2000) {
+            const x = ((f * (canvas.width * 2)) / AudioCtx.sampleRate) | 0;
+            // Line
+            canvasContext.fillStyle = '#6c757d';
+            canvasContext.fillRect(x, 0, 1, canvas.height - 10);
+            // Label
+            if (x % 4 == 0) {
+              canvasContext.fillStyle = '#e83e8c';
+              canvasContext.fillText(
+                f / 1000 + 'kHz',
+                x - 10,
+                canvas.height - 1
+              );
+            }
+          }
+        };
+
+        // Reverb switch handler
+        const setReverb = () => {
+          AudioSrc.disconnect();
+
+          if (document.getElementById('reverb').checked) {
+            // Connect Reverb
+            reverb.connect(AudioSrc).connect(AnalyserNode);
+          } else {
+            reverb.disconnect(AudioSrc).connect(AnalyserNode);
+          }
+          AnalyserNode.connect(AudioCtx.destination);
+        };
+
         const sound = await LoadSample('./docs/demo.flac');
 
         // Draw FFT

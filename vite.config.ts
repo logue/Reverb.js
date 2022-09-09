@@ -50,6 +50,7 @@ export default defineConfig(async ({ command }): Promise<UserConfig> => {
         formats: ['es', 'umd', 'iife'],
         fileName: format => `Reverb.${format}.js`,
       },
+      /*
       rollupOptions: {
         // make sure to externalize deps that shouldn't be bundled
         // into your library
@@ -57,6 +58,7 @@ export default defineConfig(async ({ command }): Promise<UserConfig> => {
           exports: 'named',
         },
       },
+      */
       target: 'es2021',
       minify: 'esbuild',
     },
