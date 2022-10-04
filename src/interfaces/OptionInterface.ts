@@ -1,4 +1,5 @@
-import Noise, { NoiseType } from '../NoiseType';
+import Noise, { type NoiseType } from '../NoiseType';
+
 import type { INorm } from '@thi.ng/random';
 import { SYSTEM } from '@thi.ng/random/system';
 

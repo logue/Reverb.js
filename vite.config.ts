@@ -1,3 +1,4 @@
+import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, type UserConfig } from 'vite';
 import checker from 'vite-plugin-checker';
 import banner from 'vite-plugin-banner';
@@ -6,7 +7,7 @@ import fs from 'fs';
 const pkg = require('./package.json');
 
 // Export vite config
-export default defineConfig(async ({ command }): Promise<UserConfig> => {
+export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
   // Hook production build.
   // https://vitejs.dev/config/
   const config: UserConfig = {
@@ -50,15 +51,35 @@ export default defineConfig(async ({ command }): Promise<UserConfig> => {
         formats: ['es', 'umd', 'iife'],
         fileName: format => `Reverb.${format}.js`,
       },
-      /*
       rollupOptions: {
-        // make sure to externalize deps that shouldn't be bundled
-        // into your library
+        plugins: [
+          mode === 'analyze'
+            ? // rollup-plugin-visualizer
+              // https://github.com/btd/rollup-plugin-visualizer
+              visualizer({
+                open: true,
+                filename: 'dist/stats.html',
+                gzipSize: true,
+                brotliSize: true,
+              })
+            : undefined,
+        ],
+        /*
+        external: [
+          '@thi.ng/colored-noise',
+          '@thi.ng/random',
+          '@thi.ng/transducers',
+        ],
+        */
         output: {
           exports: 'named',
+          globals: {
+            '@thi.ng/colored-noise': 'colordNoise',
+            '@thi.ng/random': 'random',
+            '@thi.ng/transducers': 'transducers',
+          },
         },
       },
-      */
       target: 'es2022',
       minify: 'esbuild',
     },

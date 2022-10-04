@@ -1,10 +1,11 @@
-import Meta from './Meta';
-import type OptionInterface from './interfaces/OptionInterface';
-import type { INorm } from '@thi.ng/random';
-import Noise, { type NoiseType } from './NoiseType';
-import { take } from '@thi.ng/transducers';
-import { blue, green, pink, red, violet, white } from '@thi.ng/colored-noise';
 import { defaults } from './interfaces/OptionInterface';
+import Meta from './Meta';
+import Noise, { type NoiseType } from './NoiseType';
+import type OptionInterface from './interfaces/OptionInterface';
+
+import { blue, green, pink, red, violet, white } from '@thi.ng/colored-noise';
+import { take } from '@thi.ng/transducers';
+import type { INorm } from '@thi.ng/random';
 
 /**
  * Reverb effect class
@@ -24,7 +25,7 @@ export default class Reverb {
   private readonly filterNode: BiquadFilterNode;
   /** Convolution node for applying impulse response */
   private readonly convolverNode: ConvolverNode;
-  /** Output nodse */
+  /** Output gain node */
   private readonly outputNode: GainNode;
   /** Option */
   private readonly options: OptionInterface;
@@ -335,7 +336,7 @@ export default class Reverb {
     /** 右チャンネルのオーディオソース */
     const noiseR: number[] = this.getNoise(duration);
 
-    console.log(noiseL);
+    // console.log(noiseL);
 
     for (let i = 0; i < duration; i++) {
       /** 減衰率 */

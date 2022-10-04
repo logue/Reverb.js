@@ -45,6 +45,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc --declaration --emitDeclarationOnly",
+    "build:analyze": "vite build --mode analyze && tsc --declaration --emitDeclarationOnly ",
     "build:clean": "rimraf dist",
     "lint": "eslint . --fix --cache --cache-location ./node_modules/.vite/vite-plugin-eslint && prettier . --write",
     "prepare": "husky install"
@@ -70,6 +71,7 @@
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
+    "rollup-plugin-visualizer": "^5.8.2",
     "typescript": "^4.8.4",
     "vite": "^3.1.4",
     "vite-plugin-banner": "^0.5.0",
