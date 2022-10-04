@@ -56,8 +56,8 @@
     <!-- Bootstrap core CSS -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
-      integrity="sha256-KTPJY0ik6ufLv48oDKCYFYaptcCX75UrmWytfSjy+tA="
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      integrity="sha256-IUOUHAPazai08QFs7W4MbzTlwEWFo7z/4zw8YmxEiko="
       crossorigin="anonymous"
     />
     <link
@@ -132,220 +132,277 @@
             Reverse Inpulse Response
           </label>
         </div>
-        <fieldset>
-          <legend>Inpulse Response Noise algorithm</legend>
-          <p class="small">
+        <section class="mb-3">
+          <h3>Impulse response generation algorithm settings</h3>
+          <p>
             <a
-              href="https://en.wikipedia.org/wiki/Colors_of_noise"
+              href="https://github.com/thi-ng/umbrella/tree/develop/packages/colored-noise"
               target="_blank"
             >
-              What is colord noise?
+              @thi.ng/colored-noise
               <em class="bi bi-box-arrow-up-right"></em>
             </a>
+            is used for random noise generation process used for impulse
+            response generation. These settings are the parameters of the noise
+            generation process.
           </p>
-          <div class="row align-items-center">
-            <div class="col-auto">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="noise"
-                  id="blue"
-                  value="blue"
-                />
-                <label class="form-check-label" for="blue">Blue Noise</label>
+          <fieldset>
+            <legend>Noise algorithm</legend>
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="blue"
+                    value="blue"
+                  />
+                  <label class="form-check-label" for="blue">Blue Noise</label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="green"
+                    value="green"
+                  />
+                  <label class="form-check-label" for="green">
+                    Green Noise
+                  </label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="pink"
+                    value="pink"
+                  />
+                  <label class="form-check-label" for="pink">Pink Noise</label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="red"
+                    value="red"
+                  />
+                  <label class="form-check-label" for="red">
+                    Red (Brown) Noise
+                  </label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="violet"
+                    value="violet"
+                  />
+                  <label class="form-check-label" for="violet">
+                    Violet Noise
+                  </label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="white"
+                    value="0"
+                    checked
+                  />
+                  <label class="form-check-label" for="white">
+                    White Noise
+                  </label>
+                </div>
               </div>
             </div>
-            <div class="col-auto">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="noise"
-                  id="green"
-                  value="green"
-                />
-                <label class="form-check-label" for="green">Green Noise</label>
-              </div>
-            </div>
-            <div class="col-auto">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="noise"
-                  id="pink"
-                  value="pink"
-                />
-                <label class="form-check-label" for="pink">Pink Noise</label>
-              </div>
-            </div>
-            <div class="col-auto">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="noise"
-                  id="red"
-                  value="red"
-                />
-                <label class="form-check-label" for="red">
-                  Red (Brown) Noise
-                </label>
-              </div>
-            </div>
-            <div class="col-auto">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="noise"
-                  id="violet"
-                  value="violet"
-                />
-                <label class="form-check-label" for="violet">
-                  Violet Noise
-                </label>
-              </div>
-            </div>
-            <div class="col-auto">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="noise"
-                  id="white"
-                  value="0"
-                  checked
-                />
-                <label class="form-check-label" for="white">White Noise</label>
-              </div>
-            </div>
-            <div class="col-auto">
-              <label for="power" class="form-label">IR power multiplier</label>
+            <p class="small">
+              <a
+                href="https://en.wikipedia.org/wiki/Colors_of_noise"
+                target="_blank"
+              >
+                What is colord noise?
+                <em class="bi bi-box-arrow-up-right"></em>
+              </a>
+            </p>
+          </fieldset>
+          <div class="row">
+            <div class="col-md">
+              <label for="peaks" class="form-label">Random noise peaks</label>
               <input
                 type="number"
                 class="form-control"
-                id="power"
+                id="peaks"
                 value="2"
-                step="0.05"
+                step="1"
                 min="0"
+                max="64"
+              />
+              <div id="scale-help" class="form-text">
+                The number of frequency band peaks when generating noise. This
+                value is ignored for white noise.
+              </div>
+            </div>
+            <div class="col-md">
+              <label for="scale" class="form-label">Random noise scales</label>
+              <input
+                type="number"
+                class="form-control"
+                id="scale"
+                value="2"
+                step="1"
+                min="0"
+                max="64"
+              />
+            </div>
+            <div class="col-md">
+              <label for="randomAlgorithm" class="form-label">
+                Random Generator
+              </label>
+              <select id="randomAlgorithm" class="form-select" disabled>
+                <option value="SYSTEM" selected="selected">
+                  SYSTEM (Default)
+                </option>
+                <option value="CRYPTO">CRYPTO</option>
+              </select>
+            </div>
+          </div>
+        </section>
+        <section class="mb-3">
+          <h3>Impulse response setting</h3>
+          <p>
+            Generate damped sound from the generated noise and make it an
+            impulse response. These are its settings.
+          </p>
+          <div class="row">
+            <div class="col-md">
+              <label for="time" class="form-label" aria-describedby="time-help">
+                Time
+              </label>
+              <input
+                type="range"
+                class="form-range"
+                title="1.1"
+                value="2"
+                min="0"
+                max="50"
+                id="time"
+              />
+              <div id="time-help" class="form-text">Room size</div>
+            </div>
+            <div class="col-md">
+              <label for="decay" class="form-label">Decay</label>
+              <input
+                type="range"
+                class="form-range"
+                title="2"
+                value="2"
+                min="0"
+                max="100"
+                id="decay"
+              />
+              <div id="decay-help" class="form-text">
+                Hardness of room wall size
+              </div>
+            </div>
+            <div class="col-md">
+              <label for="delay" class="form-label">Delay</label>
+              <input
+                type="range"
+                class="form-range"
+                title="0"
+                value="0"
+                min="0"
+                max="100"
+                id="delay"
+              />
+              <div id="delay-help" class="form-text">
+                Delays due to obstacles in front of room walls
+              </div>
+            </div>
+            <div class="col-md">
+              <label for="mix" class="form-label">Dry / Wet</label>
+              <input
+                type="range"
+                id="mix"
+                class="form-range"
+                min="0"
+                max="1"
+                step="0.05"
+                value="0.5"
+                title="0.5"
+              />
+              <div id="delay-help" class="form-text">
+                Closer to the original sound or closer to the effector
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="mb-3">
+          <h3>Filter for Impulse response</h3>
+          <p>
+            If the value of the filter is allpass, the filtering will be
+            bypassed.
+          </p>
+          <div class="row">
+            <div class="col-md">
+              <label for="filter" class="form-label">Filter Type</label>
+              <select id="filter" class="form-select">
+                <option value="lowpass" selected="selected">
+                  lowpass (Default)
+                </option>
+                <option value="highpass">highpass</option>
+                <option value="bandpass">bandpass</option>
+                <option value="lowshelf">lowshelf</option>
+                <option value="highshelf">highshelf</option>
+                <option value="peaking">peaking</option>
+                <option value="notch">notch</option>
+                <option value="allpass">allpass (Through)</option>
+              </select>
+            </div>
+            <div class="col-md">
+              <label for="freq" class="form-label">Filter frequency</label>
+              <input
+                type="range"
+                class="form-range"
+                value="2500"
+                min="20"
+                max="5000"
+                step="5"
+                id="freq"
+                title="2500"
+              />
+            </div>
+            <div class="col-md">
+              <label for="freq" class="form-label">Q value</label>
+              <input
+                type="range"
+                class="form-range"
+                value="1"
+                min=".0001"
                 max="10"
+                step=".0005"
+                id="q"
+                title="1"
               />
             </div>
           </div>
-        </fieldset>
-        <hr />
-        <div class="row">
-          <div class="col-md">
-            <label for="time" class="form-label" aria-describedby="time-help">
-              Time
-            </label>
-            <input
-              type="range"
-              class="form-range"
-              title="1.1"
-              value="2"
-              min="0"
-              max="50"
-              id="time"
-            />
-            <div id="time-help" class="form-text">Room size</div>
-          </div>
-          <div class="col-md">
-            <label for="decay" class="form-label">Decay</label>
-            <input
-              type="range"
-              class="form-range"
-              title="2"
-              value="2"
-              min="0"
-              max="100"
-              id="decay"
-            />
-            <div id="decay-help" class="form-text">
-              Hardness of room wall size
-            </div>
-          </div>
-          <div class="col-md">
-            <label for="delay" class="form-label">Delay</label>
-            <input
-              type="range"
-              class="form-range"
-              title="0"
-              value="0"
-              min="0"
-              max="100"
-              id="delay"
-            />
-            <div id="delay-help" class="form-text">
-              Delays due to obstacles in front of room walls
-            </div>
-          </div>
-          <div class="col-md">
-            <label for="mix" class="form-label">Dry / Wet</label>
-            <input
-              type="range"
-              id="mix"
-              class="form-range"
-              min="0"
-              max="1"
-              step="0.05"
-              value="0.5"
-              title="0.5"
-            />
-            <div id="delay-help" class="form-text">
-              Closer to the original sound or closer to the effector
-            </div>
-          </div>
-        </div>
-        <h2>Filter for IR</h2>
-        <p>
-          If the value of the filter is allpass, the filtering will be bypassed.
-        </p>
-        <div class="row">
-          <div class="col-md">
-            <label for="filter" class="form-label">Filter Type</label>
-            <select id="filter" class="form-select">
-              <option value="lowpass" selected="selected">
-                lowpass (Default)
-              </option>
-              <option value="highpass">highpass</option>
-              <option value="bandpass">bandpass</option>
-              <option value="lowshelf">lowshelf</option>
-              <option value="highshelf">highshelf</option>
-              <option value="peaking">peaking</option>
-              <option value="notch">notch</option>
-              <option value="allpass">allpass (Through)</option>
-            </select>
-          </div>
-          <div class="col-md">
-            <label for="freq" class="form-label">Filter frequency</label>
-            <input
-              type="range"
-              class="form-range"
-              value="2500"
-              min="20"
-              max="5000"
-              step="5"
-              id="freq"
-              title="2500"
-            />
-          </div>
-          <div class="col-md">
-            <label for="freq" class="form-label">Quality (Q) value</label>
-            <input
-              type="range"
-              class="form-range"
-              value="1"
-              min=".0001"
-              max="10"
-              step=".0005"
-              id="q"
-              title="1"
-            />
-          </div>
-        </div>
+        </section>
         <h2>FFT</h2>
         <div class="overflow-auto">
           <canvas id="graph" width="512" height="256"></canvas>
@@ -378,6 +435,15 @@
       import Reverb from './src/Reverb';
 
       document.getElementById('play').setAttribute('disabled', 'disabled');
+
+      document.addEventListener('touchstart', initAudioContext);
+      function initAudioContext() {
+        document.removeEventListener('touchstart', initAudioContext);
+        // wake up AudioContext
+        const emptySource = ctx.createBufferSource();
+        emptySource.start();
+        emptySource.stop();
+      }
 
       window.addEventListener('load', async () => {
         // Setup Audio Context
@@ -564,10 +630,22 @@
           .forEach(dom =>
             dom.addEventListener('click', e => reverb.setNoise(e.target.value))
           );
-        document.getElementById('power').addEventListener('change', e => {
-          reverb.power(e.target.value);
+
+        document.getElementById('peaks').addEventListener('change', e => {
+          reverb.peaks(e.target.value);
+          console.log('peaks');
           e.target.title = e.target.value;
         });
+        document.getElementById('scale').addEventListener('change', e => {
+          reverb.scale(e.target.value);
+          e.target.title = e.target.value;
+        });
+        document
+          .getElementById('randomAlgorithm')
+          .addEventListener('change', e => {
+            reverb.randomAlgorithm(e.target.value);
+            e.target.title = e.target.value;
+          });
       });
     </script>
   </body>

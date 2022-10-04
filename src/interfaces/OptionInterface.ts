@@ -1,11 +1,23 @@
-import { NoiseType } from '../NoiseType';
+import Noise, { NoiseType } from '../NoiseType';
+import type { INorm } from '@thi.ng/random';
+import { SYSTEM } from '@thi.ng/random/system';
 
 /** Reverb Option */
 export default interface OptionInterface {
-  /** Types of impulse response noise generation algorithms */
+  /**
+   * IR (Inpulse Response) colord noise algorithm (BLUE, GREEN, PINK, RED, VIOLET, WHITE)
+   * @see {@link https://github.com/thi-ng/umbrella/tree/develop/packages/colored-noise}
+   */
   noise: NoiseType;
-  /** IR Power */
-  power: number;
+  /** IR source noise scale */
+  scale: number;
+  /** Number of IR source noise peaks */
+  peaks: number;
+  /**
+   * Randam noise algorythm
+   * @see {@link https://github.com/thi-ng/umbrella/tree/develop/packages/random}
+   */
+  randomAlgorithm: INorm;
   /** Decay */
   decay: number;
   /** Delay until impulse response is generated */
@@ -25,3 +37,20 @@ export default interface OptionInterface {
   /** Prevents multiple effectors from being connected. */
   once: boolean;
 }
+
+/** デフォルト値 */
+export const defaults: OptionInterface = {
+  noise: Noise.WHITE,
+  scale: 2,
+  peaks: 2,
+  randomAlgorithm: SYSTEM,
+  decay: 2,
+  delay: 0,
+  reverse: false,
+  time: 2,
+  filterType: 'lowpass',
+  filterFreq: 2200,
+  filterQ: 1,
+  mix: 0.5,
+  once: false,
+};

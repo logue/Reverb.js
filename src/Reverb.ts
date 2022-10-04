@@ -1,8 +1,10 @@
 import Meta from './Meta';
 import type OptionInterface from './interfaces/OptionInterface';
+import type { INorm } from '@thi.ng/random';
 import Noise, { type NoiseType } from './NoiseType';
 import { take } from '@thi.ng/transducers';
 import { blue, green, pink, red, violet, white } from '@thi.ng/colored-noise';
+import { defaults } from './interfaces/OptionInterface';
 
 /**
  * Reverb effect class
@@ -41,7 +43,7 @@ export default class Reverb {
     // マスターのAudioContextを取得
     this.ctx = ctx;
     // デフォルト値をマージ
-    this.options = { ...optionDefaults, ...options };
+    this.options = { ...defaults, ...options };
     // 初期化
     this.wetGainNode = this.ctx.createGain();
     this.dryGainNode = this.ctx.createGain();
@@ -227,14 +229,36 @@ export default class Reverb {
   }
 
   /**
-   * set IR noise power multiplier.
+   * set IR source noise peaks
    *
-   * @param p - Power
+   * @param p - Peaks
    */
-  public power(p: number): void {
-    this.options.power = p;
+  public peaks(p: number): void {
+    this.options.peaks = p;
     this.buildImpulse();
-    console.debug(`[Reverb.js] Set IR power multiplier to ${p}.`);
+    console.debug(`[Reverb.js] Set IR source noise peaks to ${p}.`);
+  }
+
+  /**
+   * set IR source noise scale.
+   *
+   * @param s - Scale
+   */
+  public scale(s: number): void {
+    this.options.scale = s;
+    this.buildImpulse();
+    console.debug(`[Reverb.js] Set IR source noise scale to ${s}.`);
+  }
+
+  /**
+   * set IR source noise generator.
+   *
+   * @param a - Algorithm
+   */
+  public randomAlgorithm(a: INorm): void {
+    this.options.randomAlgorithm = a;
+    this.buildImpulse();
+    console.debug(`[Reverb.js] Set IR source noise generator to ${a}.`);
   }
 
   /**
@@ -270,6 +294,16 @@ export default class Reverb {
   }
 
   /**
+   * Set Random Algorythm
+   *
+   * @param algorithm - Algorythm
+   */
+  public setRandomAlgorythm(algorithm: INorm) {
+    this.options.randomAlgorithm = algorithm;
+    this.buildImpulse();
+  }
+
+  /**
    * Return true if in range, otherwise false
    *
    * @param x - Target value
@@ -300,6 +334,8 @@ export default class Reverb {
     const noiseL: number[] = this.getNoise(duration);
     /** 右チャンネルのオーディオソース */
     const noiseR: number[] = this.getNoise(duration);
+
+    console.log(noiseL);
 
     for (let i = 0; i < duration; i++) {
       /** 減衰率 */
@@ -332,26 +368,20 @@ export default class Reverb {
    * @param duration - length of IR.
    */
   private getNoise(duration: number): number[] {
-    return [...take<number>(duration, this.noise())].map(
-      x => x * this.options.power
-    );
+    return [
+      ...take<number>(
+        duration,
+        this.options.noise === Noise.WHITE
+          ? this.noise(this.options.peaks, this.options.randomAlgorithm)
+          : this.noise(
+              this.options.peaks,
+              this.options.scale,
+              this.options.randomAlgorithm
+            )
+      ),
+    ];
   }
 }
-
-/** デフォルト値 */
-const optionDefaults: OptionInterface = {
-  noise: Noise.WHITE,
-  power: 2,
-  decay: 2,
-  delay: 0,
-  reverse: false,
-  time: 2,
-  filterType: 'lowpass',
-  filterFreq: 2200,
-  filterQ: 1,
-  mix: 0.5,
-  once: false,
-};
 
 // For CDN.
 // @ts-ignore

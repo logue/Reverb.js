@@ -20,12 +20,19 @@ This script is originally a spin out of [sf2synth.js](https://github.com/logue/s
 ```js
 const reverb = new Reverb(ctx, {
   /**
+   * Randam noise algorythm
+   * @see {@link https://github.com/thi-ng/umbrella/tree/develop/packages/random}
+   */
+  randomAlgorithm: SYSTEM;
+  /**
    * IR (Inpulse Response) colord noise algorithm (BLUE, GREEN, PINK, RED, VIOLET, WHITE)
-   * @see {@link https://en.wikipedia.org/wiki/Colors_of_noise}
+   * @see {@link https://github.com/thi-ng/umbrella/tree/develop/packages/colored-noise}
    */
   noise: Noise.WHITE,
-  /** IR noise power multiplier */
-  power: 2,
+  /** IR source noise scale */
+  scale: 1;
+  /** Number of IR source noise peaks */
+  peaks: 2;
   /** Amount of IR decay. 0~100 */
   decay: 5,
   /** Delay time o IR. (NOT delay effect) 0~100 [sec] */
@@ -52,7 +59,7 @@ const reverb = new Reverb(ctx, {
 
 ```js
 // Setup Audio Context
-const ctx = new (window.AudioContext || window.webkitAudioContext)();
+const ctx = new window.AudioContext();
 
 // iOS fix.
 document.addEventListener('touchstart', initAudioContext);
@@ -85,6 +92,7 @@ sourceNode.play();
   - [Web Audio API 日本語訳](https://g200kg.github.io/web-audio-api-ja/)
 - [コンボルバーの使い方](https://www.g200kg.com/jp/docs/webaudio/convolver.html)
 - [WebAudio の闇](https://qiita.com/zprodev/items/7fcd8335d7e8e613a01f)
+- [@thi.ng/colored-noise](https://github.com/thi-ng/umbrella/tree/develop/packages/colored-noise)
 
 ## License
 
