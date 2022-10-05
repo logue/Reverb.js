@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@logue/reverb",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "JavaScript Reverb effect class",
   "keywords": [
     "webaudio",
@@ -51,11 +51,11 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@thi.ng/colored-noise": "^0.3.18",
-    "@thi.ng/transducers": "^8.3.16"
+    "@thi.ng/colored-noise": "^0.3.19",
+    "@thi.ng/transducers": "^8.3.17"
   },
   "devDependencies": {
-    "@types/node": "^18.8.1",
+    "@types/node": "^18.8.2",
     "@typescript-eslint/eslint-plugin": "^5.39.0",
     "@typescript-eslint/parser": "^5.39.0",
     "eslint": "^8.24.0",
