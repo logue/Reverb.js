@@ -1,7 +1,7 @@
 import Noise, { type NoiseType } from '../NoiseType';
 
+import { SYSTEM } from '@thi.ng/random';
 import type { INorm } from '@thi.ng/random';
-import { SYSTEM } from '@thi.ng/random/system';
 
 /** Reverb Option */
 export default interface OptionInterface {
@@ -42,14 +42,14 @@ export default interface OptionInterface {
 /** デフォルト値 */
 export const defaults: OptionInterface = {
   noise: Noise.WHITE,
-  scale: 2,
+  scale: 1,
   peaks: 2,
   randomAlgorithm: SYSTEM,
   decay: 2,
   delay: 0,
   reverse: false,
   time: 2,
-  filterType: 'lowpass',
+  filterType: 'allpass',
   filterFreq: 2200,
   filterQ: 1,
   mix: 0.5,

@@ -53,6 +53,7 @@ export default class Reverb {
     this.outputNode = this.ctx.createGain();
     // 接続済みフラグを落とす
     this.isConnected = false;
+    this.filterType(this.options.filterType);
     this.setNoise(this.options.noise);
     // インパルス応答を生成
     this.buildImpulse();
@@ -92,7 +93,7 @@ export default class Reverb {
    *
    * @param sourceNode - Input source node
    */
-  public disconnect(sourceNode: AudioNode | undefined): AudioNode | undefined {
+  public disconnect(sourceNode?: AudioNode): AudioNode | undefined {
     // 初期状態ではノードがつながっていないためエラーになる
     if (this.isConnected) {
       // 畳み込みノードをウェットレベルから切断
@@ -192,7 +193,7 @@ export default class Reverb {
    *
    * @param type - Filiter Type
    */
-  public filterType(type: BiquadFilterType): void {
+  public filterType(type: BiquadFilterType = 'allpass'): void {
     this.filterNode.type = this.options.filterType = type;
     console.debug(`[Reverb.js] Set filter type to ${type}`);
   }
@@ -288,7 +289,6 @@ export default class Reverb {
         break;
       default:
         this.noise = white;
-        break;
     }
     this.buildImpulse();
     console.debug(`[Reverb.js] Set IR generator source noise type to ${type}.`);
@@ -372,8 +372,8 @@ export default class Reverb {
     return [
       ...take<number>(
         duration,
-        this.options.noise === Noise.WHITE
-          ? this.noise(this.options.peaks, this.options.randomAlgorithm)
+        this.noise === white
+          ? white(this.options.scale, this.options.randomAlgorithm)
           : this.noise(
               this.options.peaks,
               this.options.scale,

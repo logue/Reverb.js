@@ -230,7 +230,7 @@
                     type="radio"
                     name="noise"
                     id="white"
-                    value="0"
+                    value="white"
                     checked
                   />
                   <label class="form-check-label" for="white">
@@ -272,7 +272,7 @@
                 type="number"
                 class="form-control"
                 id="scale"
-                value="2"
+                value="1"
                 step="1"
                 min="0"
                 max="64"
@@ -371,16 +371,16 @@
             <div class="col-md">
               <label for="filter" class="form-label">Filter Type</label>
               <select id="filter" class="form-select">
-                <option value="lowpass" selected="selected">
-                  lowpass (Default)
-                </option>
+                <option value="lowpass">lowpass</option>
                 <option value="highpass">highpass</option>
                 <option value="bandpass">bandpass</option>
                 <option value="lowshelf">lowshelf</option>
                 <option value="highshelf">highshelf</option>
                 <option value="peaking">peaking</option>
                 <option value="notch">notch</option>
-                <option value="allpass">allpass (Through)</option>
+                <option value="allpass" selected="selected">
+                  allpass (Default)
+                </option>
               </select>
             </div>
             <div class="col-md">

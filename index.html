@@ -108,29 +108,50 @@
 
     <!-- Begin page content -->
     <main role="main" class="flex-shrink-0 my-2">
-      <div class="container">
-        <h1>Reverb.js Demo</h1>
-        <p>Refer to the console log for the values.</p>
-        <button id="play" class="btn btn-primary" disabled>
+      <div class="container-fluid bg-light p-5 mb-3">
+        <h1 class="display-5 fw-bold">Reverb.js Demo</h1>
+        <p class="fs-4">Refer to the console log for the values.</p>
+        <button id="play" type="button" class="btn btn-primary btn-lg" disabled>
           <em class="bi bi-play"></em>
           Play
         </button>
-        <hr />
-        <h2>Reverb Control</h2>
-        <p>
-          Changing these values will regenerate the impulse response each time,
-          but due to its nature, it will take some time to see the effect. It
-          may be helpful to maximize the value of Wet.
-        </p>
-        <div class="form-check form-switch">
-          <input id="reverb" type="checkbox" class="form-check-input" />
-          <label class="form-check-label" for="reverb">Reverb</label>
-        </div>
-        <div class="form-check form-switch">
-          <input type="checkbox" class="form-check-input" id="reverse" />
-          <label class="form-check-label" for="reverse">
-            Reverse Inpulse Response
-          </label>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h2>Reverb Control</h2>
+            <p>
+              Changing these values will regenerate the impulse response each
+              time, but due to its nature, it will take some time to see the
+              effect. It may be helpful to maximize the value of Wet.
+            </p>
+            <div class="form-check form-switch">
+              <input id="reverb" type="checkbox" class="form-check-input" />
+              <label class="form-check-label" for="reverb">Reverb</label>
+            </div>
+            <div class="form-check form-switch">
+              <input type="checkbox" class="form-check-input" id="reverse" />
+              <label class="form-check-label" for="reverse">
+                Reverse Inpulse Response
+              </label>
+            </div>
+          </div>
+          <div class="col">
+            <div class="overflow-auto">
+              <canvas id="graph" width="512" height="256"></canvas>
+            </div>
+            <p class="text-right">
+              The sound uses the drum part of
+              <a
+                href="https://soundcloud.com/logue256/autumn-wind"
+                target="_blank"
+              >
+                <em class="bi bi-soundwave"></em>
+                Autmun Wind
+              </a>
+              .
+            </p>
+          </div>
         </div>
         <section class="mb-3">
           <h3>Impulse response generation algorithm settings</h3>
@@ -158,7 +179,13 @@
                     id="blue"
                     value="blue"
                   />
-                  <label class="form-check-label" for="blue">Blue Noise</label>
+                  <label class="form-check-label" for="blue">
+                    <em
+                      class="bi bi-square-fill"
+                      style="color: var(--bs-blue)"
+                    ></em>
+                    Blue Noise
+                  </label>
                 </div>
               </div>
               <div class="col-auto">
@@ -171,6 +198,10 @@
                     value="green"
                   />
                   <label class="form-check-label" for="green">
+                    <em
+                      class="bi bi-square-fill"
+                      style="color: var(--bs-green)"
+                    ></em>
                     Green Noise
                   </label>
                 </div>
@@ -184,7 +215,13 @@
                     id="pink"
                     value="pink"
                   />
-                  <label class="form-check-label" for="pink">Pink Noise</label>
+                  <label class="form-check-label" for="pink">
+                    <em
+                      class="bi bi-square-fill"
+                      style="color: var(--bs-pink)"
+                    ></em>
+                    Pink Noise
+                  </label>
                 </div>
               </div>
               <div class="col-auto">
@@ -197,6 +234,10 @@
                     value="red"
                   />
                   <label class="form-check-label" for="red">
+                    <em
+                      class="bi bi-square-fill"
+                      style="color: var(--bs-red)"
+                    ></em>
                     Red (Brown) Noise
                   </label>
                 </div>
@@ -211,6 +252,10 @@
                     value="violet"
                   />
                   <label class="form-check-label" for="violet">
+                    <em
+                      class="bi bi-square-fill"
+                      style="color: var(--bs-purple)"
+                    ></em>
                     Violet Noise
                   </label>
                 </div>
@@ -222,10 +267,11 @@
                     type="radio"
                     name="noise"
                     id="white"
-                    value="0"
+                    value="white"
                     checked
                   />
                   <label class="form-check-label" for="white">
+                    <em class="bi bi-square"></em>
                     White Noise
                   </label>
                 </div>
@@ -252,6 +298,7 @@
                 step="1"
                 min="0"
                 max="64"
+                disabled
               />
               <div id="scale-help" class="form-text">
                 The number of frequency band peaks when generating noise. This
@@ -264,7 +311,7 @@
                 type="number"
                 class="form-control"
                 id="scale"
-                value="2"
+                value="1"
                 step="1"
                 min="0"
                 max="64"
@@ -363,16 +410,16 @@
             <div class="col-md">
               <label for="filter" class="form-label">Filter Type</label>
               <select id="filter" class="form-select">
-                <option value="lowpass" selected="selected">
-                  lowpass (Default)
+                <option value="allpass" selected="selected">
+                  allpass (Through)
                 </option>
-                <option value="highpass">highpass</option>
                 <option value="bandpass">bandpass</option>
-                <option value="lowshelf">lowshelf</option>
+                <option value="highpass">highpass</option>
                 <option value="highshelf">highshelf</option>
-                <option value="peaking">peaking</option>
+                <option value="lowpass">lowpass</option>
+                <option value="lowshelf">lowshelf</option>
                 <option value="notch">notch</option>
-                <option value="allpass">allpass (Through)</option>
+                <option value="peaking">peaking</option>
               </select>
             </div>
             <div class="col-md">
@@ -403,18 +450,6 @@
             </div>
           </div>
         </section>
-        <h2>FFT</h2>
-        <div class="overflow-auto">
-          <canvas id="graph" width="512" height="256"></canvas>
-        </div>
-        <p class="text-right">
-          The sound uses the drum part of
-          <a href="https://soundcloud.com/logue256/autumn-wind" target="_blank">
-            <em class="bi bi-soundwave"></em>
-            Autmun Wind
-          </a>
-          .
-        </p>
       </div>
     </main>
 
@@ -625,11 +660,13 @@
           e.target.title = e.target.value;
         });
         // Noise Type
-        document
-          .querySelectorAll('[name=noise]')
-          .forEach(dom =>
-            dom.addEventListener('click', e => reverb.setNoise(e.target.value))
-          );
+        document.querySelectorAll('[name=noise]').forEach(dom =>
+          dom.addEventListener('click', e => {
+            document.getElementById('peaks').disabled =
+              e.target.value === 'white';
+            reverb.setNoise(e.target.value);
+          })
+        );
 
         document.getElementById('peaks').addEventListener('change', e => {
           reverb.peaks(e.target.value);
