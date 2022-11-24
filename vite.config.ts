@@ -1,7 +1,7 @@
+import { checker } from 'vite-plugin-checker';
 import { defineConfig, type UserConfig } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import banner from 'vite-plugin-banner';
-import checker from 'vite-plugin-checker';
 
 import { fileURLToPath, URL } from 'node:url';
 import fs from 'node:fs';
@@ -67,13 +67,11 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
               })
             : undefined,
         ],
-        /*
         external: [
           '@thi.ng/colored-noise',
           '@thi.ng/random',
           '@thi.ng/transducers',
         ],
-        */
         output: {
           exports: 'named',
           globals: {

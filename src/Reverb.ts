@@ -372,13 +372,11 @@ export default class Reverb {
     return [
       ...take<number>(
         duration,
-        this.noise === white
-          ? white(this.options.scale, this.options.randomAlgorithm)
-          : this.noise(
-              this.options.peaks,
-              this.options.scale,
-              this.options.randomAlgorithm
-            )
+        this.noise(
+          this.options.peaks,
+          this.options.scale,
+          this.options.randomAlgorithm
+        )
       ),
     ];
   }
