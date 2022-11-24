@@ -73,7 +73,6 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
           '@thi.ng/transducers',
         ],
         output: {
-          exports: 'named',
           globals: {
             '@thi.ng/colored-noise': 'colordNoise',
             '@thi.ng/random': 'random',

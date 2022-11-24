@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig.json",
-  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "include": ["vite.config.ts", "src/**/*.ts", "src/**/*.d.ts"],
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
@@ -20,6 +20,6 @@
     "declarationMap": true,
     "declarationDir": "dist",
     "newLine": "lf",
-    "types": ["node"]
+    "types": ["Node"]
   }
 }
