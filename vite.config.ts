@@ -38,7 +38,7 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
  *
  * @description ${pkg.description}
  * @author ${pkg.author.name} <${pkg.author.email}>
- * @copyright 2019-2022 By Masashi Yoshikawa All rights reserved.
+ * @copyright 2019-2023 By Masashi Yoshikawa All rights reserved.
  * @license ${pkg.license}
  * @version ${pkg.version}
  * @see {@link ${pkg.homepage}}
@@ -61,9 +61,9 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
               // https://github.com/btd/rollup-plugin-visualizer
               visualizer({
                 open: true,
-                filename: 'dist/stats.html',
-                gzipSize: true,
-                brotliSize: true,
+                filename: './stats.html',
+                gzipSize: false,
+                brotliSize: false,
               })
             : undefined,
         ],
