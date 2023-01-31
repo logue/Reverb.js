@@ -1,5 +1,5 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "@tsconfig/node18-strictest-esm/tsconfig.json",
   "include": ["env.d.ts", "src/**/*"],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
@@ -9,6 +9,7 @@
     "declaration": true,
     "declarationDir": "./dist",
     "outDir": "./dist",
+    "lib": ["DOM"],
     "paths": {
       "@/*": ["./src/*"]
     }

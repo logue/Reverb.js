@@ -271,20 +271,20 @@ export default class Reverb {
   public setNoise(type: NoiseType) {
     this.options.noise = type;
     switch (type) {
-      case Noise.BLUE:
+      case Noise['BLUE']:
         this.noise = blue;
         break;
-      case Noise.GREEN:
+      case Noise['GREEN']:
         this.noise = green;
         break;
-      case Noise.PINK:
+      case Noise['PINK']:
         this.noise = pink;
         break;
-      case Noise.RED:
-      case Noise.BROWN:
+      case Noise['RED']:
+      case Noise['BROWN']:
         this.noise = red;
         break;
-      case Noise.VIOLET:
+      case Noise['VIOLET']:
         this.noise = violet;
         break;
       default:
@@ -353,8 +353,10 @@ export default class Reverb {
         n = this.options.reverse ? duration - i : i;
       }
       // 元の音（ノイズ）を時間経過とともに減衰させる
-      impulseL[i] = noiseL[i] * (1 - n / duration) ** this.options.decay;
-      impulseR[i] = noiseR[i] * (1 - n / duration) ** this.options.decay;
+      impulseL[i] =
+        (noiseL[i] as number) * (1 - n / duration) ** this.options.decay;
+      impulseR[i] =
+        (noiseR[i] as number) * (1 - n / duration) ** this.options.decay;
     }
 
     // インパルス応答のバッファに生成したWaveTableを代入

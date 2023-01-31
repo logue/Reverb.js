@@ -1,4 +1,4 @@
-import Noise, { type NoiseType } from '../NoiseType';
+import type { NoiseType } from '../NoiseType';
 
 import { SYSTEM } from '@thi.ng/random';
 import type { INorm } from '@thi.ng/random';
@@ -41,7 +41,7 @@ export default interface OptionInterface {
 
 /** デフォルト値 */
 export const defaults: OptionInterface = {
-  noise: Noise.WHITE,
+  noise: 'white',
   scale: 1,
   peaks: 2,
   randomAlgorithm: SYSTEM,
