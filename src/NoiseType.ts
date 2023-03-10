@@ -17,7 +17,7 @@ const Noise: Record<string, string> = {
 } as const;
 
 /** Noise Type */
-export type NoiseType = typeof Noise[keyof typeof Noise];
+export type NoiseType = (typeof Noise)[keyof typeof Noise];
 
 /** Noise */
 export default Noise;

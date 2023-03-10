@@ -97,4 +97,4 @@ sourceNode.play();
 
 ## License
 
-[MIT](LICENSE)
+©2019-2023 by Logue. Licensed under the [MIT License](LICENSE).
