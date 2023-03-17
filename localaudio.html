@@ -94,6 +94,18 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" href="./">Demo</a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  aria-current="page"
+                  href="./localaudio.html"
+                >
+                  LocalAudio Demo
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" href="https://github.com/logue/Reverb.js">
                   <em class="bi bi-github"></em>
                 </a>
@@ -158,12 +170,22 @@
     <!-- Begin page content -->
     <main role="main" class="flex-shrink-0">
       <div class="container-fluid bg-light p-5 mb-3">
-        <h1 class="display-5 fw-bold">Reverb.js Demo</h1>
-        <p class="fs-4">Refer to the console log for the values.</p>
-        <button id="play" type="button" class="btn btn-primary btn-lg" disabled>
-          <em class="bi bi-play"></em>
-          Play
-        </button>
+        <h1 class="display-5 fw-bold">Reverb.js Local Audio Demo</h1>
+        <p class="fs-4">Play own audio file.</p>
+        <div>
+          <label for="file" class="form-label">Load Audio file</label>
+          <input type="file" class="form-control" id="file" accept="audio/*" />
+        </div>
+        <div class="my-3">
+          <button id="play" class="btn btn-primary" disabled>
+            <em class="bi bi-play"></em>
+            Play
+          </button>
+          <button id="stop" class="btn btn-secondary" disabled>
+            <em class="bi bi-stop"></em>
+            Stop
+          </button>
+        </div>
       </div>
       <div class="container">
         <div class="row">
@@ -186,20 +208,12 @@
             </div>
           </div>
           <div class="col">
+            <h2>Spectrum Analysis</h2>
             <div class="overflow-auto">
-              <canvas id="graph" width="512" height="256"></canvas>
+              <canvas id="canvas" class="d-none"></canvas>
+              <img id="test" class="d-none" />
+              <canvas id="graph"></canvas>
             </div>
-            <p class="text-right">
-              The sound uses the drum part of
-              <a
-                href="https://soundcloud.com/logue256/autumn-wind"
-                target="_blank"
-              >
-                <em class="bi bi-soundwave"></em>
-                Autmun Wind
-              </a>
-              .
-            </p>
           </div>
         </div>
         <section class="mb-3">
@@ -517,162 +531,379 @@
     </footer>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      integrity="sha256-Bh8LHqeebiyiT0YD5V0+kJ90cboLJ5zbbepAVUEGxqI="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/three-js@79.0.0/three.js"
+      integrity="sha256-A2ofbc4qfSfxXRlxuONE0Bj7ulHxEAIiYk537fvbkJU="
       crossorigin="anonymous"
     ></script>
     <script type="module">
       import Reverb from './src/Reverb';
 
-      const audioFile = new URL('/demo.flac', import.meta.url).href;
+      // Setup Audio Context
+      const AudioCtx = new AudioContext();
 
-      document.getElementById('play').setAttribute('disabled', 'disabled');
-
+      // Defreeze AudioContext for iOS.
       document.addEventListener('touchstart', initAudioContext);
       function initAudioContext() {
         document.removeEventListener('touchstart', initAudioContext);
         // wake up AudioContext
-        const emptySource = ctx.createBufferSource();
+        const emptySource = AudioCtx.createBufferSource();
         emptySource.start();
         emptySource.stop();
       }
 
-      window.addEventListener('load', async () => {
-        // Setup Audio Context
-        const AudioCtx = new window.AudioContext();
+      // Audio object
+      const audio = new Audio();
 
-        // Defreeze AudioContext for iOS.
-        document.addEventListener('touchstart', initAudioContext);
-        function initAudioContext() {
-          document.removeEventListener('touchstart', initAudioContext);
-          // wake up AudioContext
-          const emptySource = AudioCtx.createBufferSource();
-          emptySource.start();
-          emptySource.stop();
+      // Audio Source
+      const AudioSrc = AudioCtx.createMediaElementSource(audio);
+
+      // Analyzer Node
+      const AnalyserNode = AudioCtx.createAnalyser();
+
+      // Setup Reverb Class
+      const reverb = new Reverb(AudioCtx);
+
+      // decode audio
+      const LoadSample = async input => {
+        if (audio) {
+          audio.pause();
+          audio.src = '';
+        }
+        audio.src = await loadDataUri(input);
+      };
+
+      // Load array buffer
+      const loadDataUri = async input => {
+        document.getElementById('play').disabled = 'disabled';
+        document.getElementById('stop').disabled = 'disabled';
+        return await new Promise(resolve => {
+          if (input instanceof File) {
+            const reader = new FileReader();
+            reader.onload = event => {
+              resolve(event.target.result);
+              document.getElementById('play').disabled = '';
+              document.getElementById('stop').disabled = '';
+            };
+            reader.readAsDataURL(input);
+          } else {
+            fetch(input)
+              .then(response => {
+                return {
+                  mime: response.headers.get('content-type'),
+                  buffer: response.arrayBuffer(),
+                };
+              })
+              .then(res => {
+                // to base64
+                let binary = '';
+                let bytes = [].slice.call(new Uint8Array(res.buffer));
+
+                bytes.forEach(b => (binary += String.fromCharCode(b)));
+                const base64 = window.btoa(binary);
+                // prepend data scheme
+                resolve('data:' + res.mime + ';base64;' + base64);
+
+                document.getElementById('play').disabled = '';
+                document.getElementById('stop').disabled = '';
+              });
+          }
+        }).catch(e => alert(e));
+      };
+
+      const handleFileSelect = async e => {
+        const file = e.target.files[0];
+        AudioSrc.buffer = await LoadSample(file);
+      };
+
+      // Reverb switch handler
+      const setReverb = () => {
+        AudioSrc.disconnect();
+
+        if (document.getElementById('reverb').checked) {
+          // Connect Reverb
+          reverb.connect(AudioSrc).connect(AnalyserNode);
+        } else {
+          reverb.disconnect(AudioSrc).connect(AnalyserNode);
+        }
+        AnalyserNode.connect(AudioCtx.destination);
+      };
+
+      /** Draw Texture Functions */
+      const PIXEL_RATIO = () => {
+        const ctx = document.createElement('canvas').getContext('2d'),
+          dpr = window.devicePixelRatio || 1,
+          bsr =
+            ctx.webkitBackingStorePixelRatio ||
+            ctx.mozBackingStorePixelRatio ||
+            ctx.msBackingStorePixelRatio ||
+            ctx.oBackingStorePixelRatio ||
+            ctx.backingStorePixelRatio ||
+            1;
+        return dpr / bsr;
+      };
+
+      // Create retina quality canvas
+      const createRetinaCanvas = (w, h, ratio) => {
+        if (!ratio) {
+          ratio = PIXEL_RATIO;
+        }
+        const canvas = document.getElementById('canvas');
+        //const canvas = document.createElement('canvas');
+        canvas.width = w * ratio;
+        canvas.height = h * ratio;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        canvas.getContext('2d').setTransform(ratio, 0, 0, ratio, 0, 0);
+        return canvas;
+      };
+
+      // Spectrum Analysis canvas size
+      const SPRITE_HEIGHT = 256;
+      const SPRITE_WIDTH = 512;
+
+      // Sprite Canvas
+      const spriteCanvas = createRetinaCanvas(SPRITE_WIDTH, SPRITE_HEIGHT);
+
+      // Draw Graph
+      const DrawGraph = () => {
+        const AnalyseData = new Float32Array(1024);
+        AnalyserNode.getFloatFrequencyData(AnalyseData);
+
+        const sprite = spriteCanvas.getContext('2d', { antialias: false });
+
+        // Background
+        //sprite.fillStyle = "#343a40";
+        //sprite.fillRect(0, 0, SPRITE_WIDTH, SPRITE_HEIGHT);
+
+        sprite.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
+
+        // Graph
+        const grad = sprite.createLinearGradient(0, 0, spriteCanvas.width, 0);
+        grad.addColorStop(0, 'rgb(255, 0, 0)');
+        grad.addColorStop(0.2, 'rgb(255, 255, 0)');
+        grad.addColorStop(0.4, 'rgb(0, 255, 0)');
+        grad.addColorStop(0.6, 'rgb(0, 255, 255)');
+        grad.addColorStop(0.8, 'rgb(0, 0, 255)');
+        grad.addColorStop(1, 'rgb(255, 0, 255)');
+        sprite.fillStyle = grad;
+        //sprite.fillStyle = document.getElementById('reverb').checked ? "#17a2b8" : "#28a745";
+
+        for (let i = 0; i < spriteCanvas.width; ++i) {
+          const f = (AudioCtx.sampleRate * i) / 1024;
+          let y = 128 + (AnalyseData[i] + 48.16) * 2.56 + 1;
+          sprite.fillRect(i, spriteCanvas.height - y, 1, y);
         }
 
-        // Setup Reverb Class
-        const reverb = new Reverb(AudioCtx);
-        console.info(
-          `Reverb.js loaded. (version: ${Reverb.version} / build: ${Reverb.build})`
+        return spriteCanvas.toDataURL();
+      };
+
+      // Draw Axis
+      const DrawAxis = () => {
+        const sprite = spriteCanvas.getContext('2d', { antialias: false });
+        // y axis (dB)
+        for (let d = -50; d < 50; d += 10) {
+          const y = (SPRITE_HEIGHT / 2 - (d * SPRITE_HEIGHT) / 100) | 0;
+          // Line
+          sprite.fillStyle = '#6c757d';
+          sprite.fillRect(20, y, SPRITE_WIDTH, 1);
+          // Label
+          sprite.fillStyle = '#fd7e14';
+          sprite.fillText(d + 'dB', 5, y);
+        }
+        sprite.fillStyle = '#ffc107';
+        sprite.fillRect(20, SPRITE_HEIGHT / 2, SPRITE_WIDTH, 1);
+
+        // x axis (frequency)
+        for (let f = 2000; f < AudioCtx.sampleRate / 2; f += 2000) {
+          const x = ((f * 1024) / AudioCtx.sampleRate) | 0;
+          // Line
+          sprite.fillStyle = '#6c757d';
+          sprite.fillRect(x, 0, 1, 245);
+          // Label
+          sprite.fillStyle = '#e83e8c';
+          sprite.fillText(f / 1000 + 'kHz', x - 10, 255);
+        }
+
+        return spriteCanvas.toDataURL();
+      };
+
+      // スプライトのデバッグ
+      const debug = src => {
+        const canvas = document.getElementById('canvas');
+        canvas.style.width = SPRITE_WIDTH + 'px';
+        canvas.style.height = SPRITE_HEIGHT + 'px';
+        canvas.width = SPRITE_WIDTH;
+        canvas.height = SPRITE_HEIGHT;
+
+        const img = document.getElementById('test');
+        img.style.width = SPRITE_WIDTH + 'px';
+        img.style.height = SPRITE_HEIGHT + 'px';
+        img.src = src;
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const image = new Image();
+        image.addEventListener('load', () => {
+          canvas.getContext('2d').drawImage(image, 0, 0); // Or at whatever offset you like
+        });
+        image.src = src;
+      };
+
+      /** 3D Spectrum Analyzer Code */
+
+      // 3D canvas size
+      const CANVAS_WIDTH = 960;
+      const CANVAS_HEIGHT = 540;
+
+      // Create renderer
+      const renderer = new THREE.WebGLRenderer({
+        canvas: document.querySelector('#graph'),
+      });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
+
+      // Create Scene
+      const scene = new THREE.Scene();
+
+      // Create camera
+      const camera = new THREE.PerspectiveCamera(
+        30,
+        CANVAS_WIDTH / CANVAS_HEIGHT,
+        1,
+        2000
+      );
+      // Move Initial camera position (x, y, z)
+      camera.position.set(100, 50, 1000);
+      //const camera = new THREE.OrthographicCamera(-CANVAS_WIDTH, CANVAS_WIDTH, CANVAS_HEIGHT, -CANVAS_HEIGHT, 1, 100000);
+
+      // Append Fog
+      // new THREE.Fog(color, start distance, end distance);
+      scene.fog = new THREE.Fog(0x000000, 1000, 2000);
+
+      //debug(DrawAxis())
+
+      const AxisMesh = new THREE.Mesh(
+        // Plane
+        new THREE.PlaneGeometry(SPRITE_WIDTH, SPRITE_HEIGHT, 5, 5),
+        // Texture
+        new THREE.MeshBasicMaterial({
+          transparent: true,
+          needsUpdate: true,
+          map: new THREE.TextureLoader().load(DrawAxis()),
+          side: THREE.DoubleSide,
+        })
+      );
+
+      // Move Mesh object
+      AxisMesh.position.set(0, 0, 0);
+
+      scene.add(AxisMesh);
+
+      let depth = 0;
+      let geometries = [];
+      let materials = [];
+      let textures = [];
+      let meshs = [];
+
+      const MAX_DEPTH = 1024;
+
+      // Loop event
+      const tick = () => {
+        // Draw Texture image
+        const sprite = DrawGraph();
+
+        debug(sprite);
+
+        textures[depth] = new THREE.TextureLoader().load(sprite);
+
+        geometries[depth] = new THREE.PlaneGeometry(
+          SPRITE_WIDTH,
+          SPRITE_HEIGHT,
+          5,
+          5
         );
-        const AudioSrc = AudioCtx.createBufferSource();
 
-        // Load audio file and decode asyncly.
-        const LoadSample = async url => {
-          return new Promise(resolve => {
-            fetch(url)
-              .then(response => response.arrayBuffer())
-              .then(arraybuf =>
-                AudioCtx.decodeAudioData(
-                  arraybuf,
-                  buffer => {
-                    document.getElementById('play').removeAttribute('disabled');
-                    resolve(buffer);
-                  },
-                  e => alert(e)
-                )
-              )
-              .catch(e => alert(e));
-          });
-        };
+        materials[depth] = new THREE.MeshBasicMaterial({
+          color: 0xccddee,
+          transparent: true,
+          needsUpdate: true,
+          map: textures[depth],
+          side: THREE.DoubleSide,
+        });
 
-        // Draw FFT to canvas
-        // Code taken from https://www.g200kg.com/jp/docs/webaudio/filter.html
-        const AnalyserNode = AudioCtx.createAnalyser();
-        const canvas = document.getElementById('graph');
-        const canvasContext = canvas.getContext('2d');
+        // Mesh object
+        meshs[depth] = new THREE.Mesh(geometries[depth], materials[depth]);
 
-        const analysedata = new Float32Array(1024);
-        const DrawGraph = () => {
-          AnalyserNode.getFloatFrequencyData(analysedata);
-          // Background
-          canvasContext.fillStyle = '#343a40';
-          canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-          // FFT Graph
-          canvasContext.fillStyle = document.getElementById('reverb').checked
-            ? '#17a2b8'
-            : '#28a745';
-          for (let i = 0; i < canvas.width; ++i) {
-            const f = (AudioCtx.sampleRate * i) / (canvas.width * 2);
-            const y = canvas.height / 2 + (analysedata[i] + 48.16) * 2.56;
-            canvasContext.fillRect(i, canvas.height - y, 1, y);
-          }
+        // Move Mesh object
+        meshs[depth].position.set(0, 0, depth);
+        AxisMesh.position.set(0, 0, depth);
 
-          // y axis (dB)
-          for (let d = -50; d < 50; d += 10) {
-            const y = (canvas.height / 2 - (d * canvas.height) / 100) | 0;
-            // Line
-            canvasContext.fillStyle = '#6c757d';
-            canvasContext.fillRect(20, y, canvas.width, 1);
-            // Label
-            canvasContext.fillStyle = '#fd7e14';
-            canvasContext.fillText(d + 'dB', 5, y);
-          }
-          canvasContext.fillStyle = '#ffc107';
-          canvasContext.fillRect(20, canvas.height / 2, canvas.width, 1);
+        // Append Mesh object to 3D scene
+        scene.add(meshs[depth]);
 
-          // x axis (frequency)
-          for (let f = 2200; f < AudioCtx.sampleRate / 2; f += 2000) {
-            const x = ((f * (canvas.width * 2)) / AudioCtx.sampleRate) | 0;
-            // Line
-            canvasContext.fillStyle = '#6c757d';
-            canvasContext.fillRect(x, 0, 1, canvas.height - 10);
-            // Label
-            if (x % 4 == 0) {
-              canvasContext.fillStyle = '#e83e8c';
-              canvasContext.fillText(
-                f / 1000 + 'kHz',
-                x - 10,
-                canvas.height - 1
-              );
-            }
-          }
-        };
+        // Render
+        renderer.render(scene, camera);
 
-        // Reverb switch handler
-        const setReverb = () => {
-          AudioSrc.disconnect();
+        // Move Camera
+        camera.position.z = depth + 650;
+        //camera.zoom = 2;
+        camera.updateProjectionMatrix();
 
-          if (document.getElementById('reverb').checked) {
-            // Connect Reverb
-            reverb.connect(AudioSrc).connect(AnalyserNode);
-          } else {
-            reverb.disconnect(AudioSrc).connect(AnalyserNode);
-          }
-          AnalyserNode.connect(AudioCtx.destination);
-        };
+        // Look to origin
+        camera.lookAt(new THREE.Vector3(0, 0, depth));
 
-        const sound = await LoadSample(audioFile);
+        // Remove old Mesh
+        if (depth > MAX_DEPTH) {
+          scene.remove(meshs[depth - MAX_DEPTH]);
+          //meshs[depth - MAX_DEPTH].dispose();
+          geometries[depth - MAX_DEPTH].dispose();
+          materials[depth - MAX_DEPTH].dispose();
+          textures[depth - MAX_DEPTH].dispose();
 
-        // Draw FFT
-        setInterval(DrawGraph, 10);
+          // Manual Gabarge Collection
+          delete geometries[depth - MAX_DEPTH];
+          delete materials[depth - MAX_DEPTH];
+          delete textures[depth - MAX_DEPTH];
+        }
 
+        // incriment depth
+        depth++;
+
+        // Update Animation
+        requestAnimationFrame(tick);
+      };
+
+      // Regist Event
+      window.addEventListener('load', async () => {
+        audio.src = await LoadSample('./demo.flac');
         // Play button
-        document.getElementById('play').addEventListener(
-          'click',
-          event => {
-            if (event.target != event.currentTarget) return;
+        document.getElementById('play').addEventListener('click', async () => {
+          if (AudioCtx.state == 'suspended') AudioCtx.resume();
+          setReverb();
+          audio.play();
+        });
 
-            if (AudioSrc.buffer == null) {
-              AudioSrc.buffer = sound;
-              AudioSrc.loop = true;
+        // Stop button
+        document.getElementById('stop').addEventListener('click', () => {
+          audio.stop();
+        });
 
-              setReverb();
-              AudioSrc.start();
-            }
-
-            if (AudioCtx.state === 'running') {
-              AudioCtx.suspend().then(() => {
-                event.target.innerHTML = '<em class="bi bi-play"></em> Play';
-              });
-            } else if (AudioCtx.state === 'suspended') {
-              AudioCtx.resume().then(() => {
-                event.target.innerHTML = '<em class="bi bi-pause"></em> Pause';
-              });
-            }
-          },
-          false
-        );
+        // File form
+        document.getElementById('file').addEventListener('dragover', e => {
+          e.stopPropagation();
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'copy';
+          return false;
+        });
+        document
+          .getElementById('file')
+          .addEventListener('drag', handleFileSelect, false);
+        document
+          .getElementById('file')
+          .addEventListener('change', handleFileSelect, false);
 
         // Reverb switch button
         document.getElementById('reverb').addEventListener('click', setReverb);
@@ -726,7 +957,6 @@
 
         document.getElementById('peaks').addEventListener('change', e => {
           reverb.peaks(e.target.value);
-          console.log('peaks');
           e.target.title = e.target.value;
         });
         document.getElementById('scale').addEventListener('change', e => {
@@ -739,6 +969,9 @@
             reverb.randomAlgorithm(e.target.value);
             e.target.title = e.target.value;
           });
+
+        // Execute Animation Thread
+        tick();
       });
     </script>
   </body>

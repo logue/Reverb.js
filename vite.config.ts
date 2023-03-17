@@ -15,13 +15,6 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
   // Hook production build.
   // https://vitejs.dev/config/
   const config: UserConfig = {
-    // https://vitejs.dev/config/#server-options
-    server: {
-      fs: {
-        // Allow serving files from one level up to the project root
-        allow: ['..'],
-      },
-    },
     plugins: [
       // vite-plugin-checker
       // https://github.com/fi3ework/vite-plugin-checker
@@ -48,19 +41,34 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
 `),
       // vite-plugin-dts
       // https://github.com/qmhc/vite-plugin-dts
-      dts({
-        tsConfigFilePath: './tsconfig.app.json',
-      }),
+      mode === 'docs'
+        ? undefined
+        : dts({
+            tsConfigFilePath: './tsconfig.app.json',
+          }),
     ],
+    // https://vitejs.dev/config/shared-options.html#publicdir
+    publicDir: mode === 'docs' || command === 'serve' ? 'public' : false,
+    // https://vitejs.dev/config/#server-options
+    server: {
+      fs: {
+        // Allow serving files from one level up to the project root
+        allow: ['..'],
+      },
+    },
     // Build Options
     // https://vitejs.dev/config/#build-options
     build: {
-      lib: {
-        entry: fileURLToPath(new URL('src/Reverb.ts', import.meta.url)),
-        name: 'Reverb',
-        formats: ['es', 'umd', 'iife'],
-        fileName: format => `Reverb.${format}.js`,
-      },
+      outDir: mode === 'docs' ? 'docs' : 'dist',
+      lib:
+        mode === 'docs'
+          ? false
+          : {
+              entry: fileURLToPath(new URL('src/Reverb.ts', import.meta.url)),
+              name: 'Reverb',
+              formats: ['es', 'umd', 'iife'],
+              fileName: format => `Reverb.${format}.js`,
+            },
       rollupOptions: {
         plugins: [
           mode === 'analyze'
@@ -74,11 +82,14 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
               })
             : undefined,
         ],
-        external: [
-          '@thi.ng/colored-noise',
-          '@thi.ng/random',
-          '@thi.ng/transducers',
-        ],
+        external:
+          mode === 'docs'
+            ? []
+            : [
+                '@thi.ng/colored-noise',
+                '@thi.ng/random',
+                '@thi.ng/transducers',
+              ],
         output: {
           globals: {
             '@thi.ng/colored-noise': 'colordNoise',

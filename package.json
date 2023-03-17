@@ -48,10 +48,12 @@
     "clean": "rimraf node_modules/.vite",
     "type-check": "tsc --noEmit --composite false",
     "build": "run-p type-check build-only",
+    "build:docs": "vite build --mode=docs",
     "build:analyze": "vite build --mode=analyze",
     "build:clean": "rimraf dist",
     "build-only": "vite build",
     "lint": "eslint . --fix --cache --cache-location ./node_modules/.vite/vite-plugin-eslint && prettier . --write",
+    "preview": "vite preview --mode=docs",
     "prepare": "husky install"
   },
   "dependencies": {
