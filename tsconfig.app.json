@@ -6,12 +6,7 @@
     "composite": true,
     "baseUrl": ".",
     "esModuleInterop": true,
-    "declaration": true,
-    "declarationDir": "./dist",
-    "outDir": "./dist",
     "lib": ["DOM"],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "paths": { "@/*": ["./src/*"] }
   }
 }

@@ -1,18 +1,15 @@
-root: true
 env:
   browser: true
-  es2016: true # Vue recommended
+  es2021: true
   node: true
 extends:
-  - eslint:recommended
-  - google
+  - standard-with-typescript
   - plugin:@typescript-eslint/eslint-recommended
   - plugin:import/recommended
   - plugin:import/typescript
   - eslint-config-prettier
+overrides: []
 plugins:
-  - '@typescript-eslint'
-  - jsdoc
   - tsdoc
 parser: '@typescript-eslint/parser'
 parserOptions:
@@ -20,20 +17,19 @@ parserOptions:
   sourceType: module
   createDefaultProgram: true
   project:
-    - ./tsconfig.json
+    - ./tsconfig.app.json
+    - ./tsconfig.node.json
 rules:
-  new-cap: off
-  no-invalid-this: off
-  no-unused-vars: warn
   require-jsdoc: warn
-  valid-jsdoc: off
-  jsdoc/require-param-type: off
-  jsdoc/require-param:
-    - off
-    - enableRootFixer: false
-  jsdoc/require-returns-description: off
-  jsdoc/require-returns-type: off
-  jsdoc/require-returns: off
+  no-unused-vars: warn
+  '@typescript-eslint/ban-ts-comment': off
+  '@typescript-eslint/no-confusing-void-expression': off
+  '@typescript-eslint/no-floating-promises': off
+  '@typescript-eslint/no-invalid-void-type': off
+  '@typescript-eslint/prefer-nullish-coalescing': off
+  '@typescript-eslint/strict-boolean-expressions': off
+  '@typescript-eslint/triple-slash-reference': off
+  '@typescript-eslint/restrict-template-expressions': off
   tsdoc/syntax: warn
 settings:
   import/parsers:

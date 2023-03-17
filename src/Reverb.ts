@@ -3,7 +3,15 @@ import Meta from './Meta';
 import Noise, { type NoiseType } from './NoiseType';
 import type OptionInterface from './interfaces/OptionInterface';
 
-import { blue, green, pink, red, violet, white } from '@thi.ng/colored-noise';
+import {
+  blue,
+  green,
+  pink,
+  red,
+  violet,
+  white,
+  type ColoredNoiseOpts,
+} from '@thi.ng/colored-noise';
 import { take } from '@thi.ng/transducers';
 import type { INorm } from '@thi.ng/random';
 
@@ -32,7 +40,9 @@ export default class Reverb {
   /** Connected flag */
   private isConnected: boolean;
   /** Noise Generator */
-  private noise: Function = white;
+  private noise: (
+    opts?: Partial<ColoredNoiseOpts> | undefined
+  ) => Generator<number, void, unknown> = white;
 
   /**
    * Constructor
@@ -260,7 +270,7 @@ export default class Reverb {
   public randomAlgorithm(a: INorm): void {
     this.options.randomAlgorithm = a;
     this.buildImpulse();
-    console.debug(`[Reverb.js] Set IR source noise generator to ${a}.`);
+    console.debug(`[Reverb.js] Set IR source noise generator.`);
   }
 
   /**
@@ -268,7 +278,7 @@ export default class Reverb {
    *
    * @param type - IR noise algorithm type.
    */
-  public setNoise(type: NoiseType) {
+  public setNoise(type: NoiseType): void {
     this.options.noise = type;
     switch (type) {
       case Noise['BLUE']:
@@ -299,7 +309,7 @@ export default class Reverb {
    *
    * @param algorithm - Algorythm
    */
-  public setRandomAlgorythm(algorithm: INorm) {
+  public setRandomAlgorythm(algorithm: INorm): void {
     this.options.randomAlgorithm = algorithm;
     this.buildImpulse();
   }
@@ -353,10 +363,8 @@ export default class Reverb {
         n = this.options.reverse ? duration - i : i;
       }
       // 元の音（ノイズ）を時間経過とともに減衰させる
-      impulseL[i] =
-        (noiseL[i] as number) * (1 - n / duration) ** this.options.decay;
-      impulseR[i] =
-        (noiseR[i] as number) * (1 - n / duration) ** this.options.decay;
+      impulseL[i] = (noiseL[i] ?? 0) * (1 - n / duration) ** this.options.decay;
+      impulseR[i] = (noiseR[i] ?? 0) * (1 - n / duration) ** this.options.decay;
     }
 
     // インパルス応答のバッファに生成したWaveTableを代入
@@ -365,6 +373,7 @@ export default class Reverb {
 
     this.convolverNode.buffer = impulse;
   }
+
   /**
    * Noise source
    *
@@ -374,19 +383,19 @@ export default class Reverb {
     return [
       ...take<number>(
         duration,
-        this.noise(
-          this.options.peaks,
-          this.options.scale,
-          this.options.randomAlgorithm
-        )
+        this.noise({
+          bins: this.options.peaks,
+          scale: this.options.scale,
+          rnd: this.options.randomAlgorithm,
+        })
       ),
     ];
   }
 }
 
 // For CDN.
-// @ts-ignore
+// @ts-expect-error
 if (!window.Reverb) {
-  // @ts-ignore
+  // @ts-expect-error
   window.Reverb = Reverb;
 }

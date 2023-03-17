@@ -1,6 +1,6 @@
 {
   "extends": "@tsconfig/node18-strictest-esm/tsconfig.json",
-  "include": ["vite.config.*", "vitest.config.*"],
+  "include": ["vite.config.*", "vitest.config.*", "package.json"],
   "compilerOptions": {
     "composite": true,
     "lib": [],
