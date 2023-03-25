@@ -49,12 +49,21 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
     ],
     // https://vitejs.dev/config/shared-options.html#publicdir
     publicDir: mode === 'docs' || command === 'serve' ? 'public' : false,
-    // https://vitejs.dev/config/#server-options
+    // https://vitejs.dev/config/server-options.html
     server: {
       fs: {
         // Allow serving files from one level up to the project root
         allow: ['..'],
       },
+    },
+    // Resolver
+    resolve: {
+      // https://vitejs.dev/config/shared-options.html#resolve-alias
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+        '~': fileURLToPath(new URL('./node_modules', import.meta.url)),
+      },
+      extensions: ['.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue'],
     },
     // Build Options
     // https://vitejs.dev/config/#build-options

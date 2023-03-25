@@ -1,5 +1,5 @@
 .husky/
 .vscode/
 .yarn/
-docs/
 dist/
+docs/

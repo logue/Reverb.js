@@ -1,7 +1,7 @@
-import { defaults } from './interfaces/OptionInterface';
-import Meta from './Meta';
-import Noise, { type NoiseType } from './NoiseType';
-import type OptionInterface from './interfaces/OptionInterface';
+import { defaults } from '@/interfaces/OptionInterface';
+import Meta from '@/Meta';
+import Noise, { type NoiseType } from '@/NoiseType';
+import type OptionInterface from '@/interfaces/OptionInterface';
 
 import {
   blue,
@@ -36,7 +36,7 @@ export default class Reverb {
   /** Output gain node */
   private readonly outputNode: GainNode;
   /** Option */
-  private readonly options: OptionInterface;
+  private readonly options;
   /** Connected flag */
   private isConnected: boolean;
   /** Noise Generator */
@@ -50,11 +50,27 @@ export default class Reverb {
    * @param ctx - Root AudioContext
    * @param options - Configure
    */
-  constructor(ctx: AudioContext, options?: OptionInterface) {
+  constructor(ctx: AudioContext, options: OptionInterface = {}) {
     // マスターのAudioContextを取得
     this.ctx = ctx;
-    // デフォルト値をマージ
-    this.options = { ...defaults, ...options };
+    this.options = Object.assign<
+      {
+        noise: NoiseType;
+        scale: number;
+        peaks: number;
+        randomAlgorithm: INorm;
+        decay: number;
+        delay: number;
+        filterFreq: number;
+        filterQ: number;
+        filterType: BiquadFilterType;
+        mix: number;
+        reverse: boolean;
+        time: number;
+        once: boolean;
+      },
+      OptionInterface
+    >(defaults, options);
     // 初期化
     this.wetGainNode = this.ctx.createGain();
     this.dryGainNode = this.ctx.createGain();
@@ -281,20 +297,20 @@ export default class Reverb {
   public setNoise(type: NoiseType): void {
     this.options.noise = type;
     switch (type) {
-      case Noise['BLUE']:
+      case Noise.blue:
         this.noise = blue;
         break;
-      case Noise['GREEN']:
+      case Noise.green:
         this.noise = green;
         break;
-      case Noise['PINK']:
+      case Noise.pink:
         this.noise = pink;
         break;
-      case Noise['RED']:
-      case Noise['BROWN']:
+      case Noise.red:
+      case Noise.brown:
         this.noise = red;
         break;
-      case Noise['VIOLET']:
+      case Noise.violet:
         this.noise = violet;
         break;
       default:
