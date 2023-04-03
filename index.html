@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100" data-bs-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Reverb effect written in JavaScript." />
+    <meta name="author" content="Masashi Yoshikawa" />
+    <!-- ogp -->
+    <meta property="og:title" content="JavaScript Reverb Effect Test" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://logue.github.io/Reverb.js/" />
+    <meta
+      property="og:image"
+      content="https://repository-images.githubusercontent.com/194181712/20bdd780-9995-11e9-8811-42e3b44d1cec"
+    />
+    <meta property="og:site_name" content="Logue's Lab" />
+    <meta
+      property="og:description"
+      content="Reverb effect written in JavaScript."
+    />
+    <meta property="fb:app_id" content="129144050466298" />
+    <meta
+      property="article:publisher"
+      content="https://www.facebook.com/logue256"
+    />
+    <meta name="twitter:card" content="Summary" />
+    <meta name="twitter:site" content="@logue256" />
+    <meta name="twitter:title" content="JavaScript Reverb Effect Test" />
+    <meta name="twitter:url" content="https://logue.dev/Reverb.js/" />
+    <meta
+      name="twitter:description"
+      content="Reverb effect written in JavaScript."
+    />
+    <meta
+      name="twitter:image"
+      content="https://repository-images.githubusercontent.com/194181712/20bdd780-9995-11e9-8811-42e3b44d1cec"
+    />
+    <title>Reverb.js Demo</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'UA-33600926-1');
+    </script>
+    <!-- Bootstrap core CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+    />
+    <script type="module" crossorigin src="/assets/-9f06bf3a.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/Reverb-6bc5d37e.js">
+  </head>
+
+  <body class="d-flex flex-column h-100 text-body bg-body">
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid d-flex justify-content-between">
+          <a class="navbar-brand" href="#">Reverb.js</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarCollapse"
+            aria-controls="navbarCollapse"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse flex-grow-0" id="navbarCollapse">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" href="./">Demo</a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  aria-current="page"
+                  href="./localaudio.html"
+                >
+                  LocalAudio Demo
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://github.com/logue/Reverb.js">
+                  <em class="bi bi-github"></em>
+                </a>
+              </li>
+            </ul>
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDarkDropdownMenuLink"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  See Also
+                </a>
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="navbarDarkDropdownMenuLink"
+                >
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="https://github.com/logue/smfplayer.js/"
+                    >
+                      smfplayer.js
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="https://github.com/logue/sf2synth.js/"
+                    >
+                      sf2synth.js
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="https://github.com/logue/Reverb.js/"
+                    >
+                      Reverb.js
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="https://github.com/logue/MabiMmlEmu/"
+                    >
+                      MabiMmlEmu
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Begin page content -->
+    <main role="main" class="flex-shrink-0">
+      <div class="container-fluid bg-light p-5 mb-3">
+        <h1 class="display-5 fw-bold">Reverb.js Demo</h1>
+        <p class="fs-4">Refer to the console log for the values.</p>
+        <button id="play" type="button" class="btn btn-primary btn-lg" disabled>
+          <em class="bi bi-play"></em>
+          Play
+        </button>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h2>Reverb Control</h2>
+            <p>
+              Changing these values will regenerate the impulse response each
+              time, but due to its nature, it will take some time to see the
+              effect. It may be helpful to maximize the value of Wet.
+            </p>
+            <div class="form-check form-switch">
+              <input id="reverb" type="checkbox" class="form-check-input" />
+              <label class="form-check-label" for="reverb">Reverb</label>
+            </div>
+            <div class="form-check form-switch">
+              <input type="checkbox" class="form-check-input" id="reverse" />
+              <label class="form-check-label" for="reverse">
+                Reverse Inpulse Response
+              </label>
+            </div>
+          </div>
+          <div class="col">
+            <div class="overflow-auto">
+              <canvas id="graph" width="512" height="256"></canvas>
+            </div>
+            <p class="text-right">
+              The sound uses the drum part of
+              <a
+                href="https://soundcloud.com/logue256/autumn-wind"
+                target="_blank"
+              >
+                <em class="bi bi-soundwave"></em>
+                Autmun Wind
+              </a>
+              .
+            </p>
+          </div>
+        </div>
+        <section class="mb-3">
+          <h3>Impulse response generation algorithm settings</h3>
+          <p>
+            <a
+              href="https://github.com/thi-ng/umbrella/tree/develop/packages/colored-noise"
+              target="_blank"
+            >
+              @thi.ng/colored-noise
+              <em class="bi bi-box-arrow-up-right"></em>
+            </a>
+            is used for random noise generation process used for impulse
+            response generation. These settings are the parameters of the noise
+            generation process.
+          </p>
+          <fieldset>
+            <legend>Noise algorithm</legend>
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="blue"
+                    value="blue"
+                  />
+                  <label class="form-check-label" for="blue">
+                    <em
+                      class="bi bi-square-fill"
+                      style="color: var(--bs-blue)"
+                    ></em>
+                    Blue Noise
+                  </label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="green"
+                    value="green"
+                  />
+                  <label class="form-check-label" for="green">
+                    <em
+                      class="bi bi-square-fill"
+                      style="color: var(--bs-green)"
+                    ></em>
+                    Green Noise
+                  </label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="pink"
+                    value="pink"
+                  />
+                  <label class="form-check-label" for="pink">
+                    <em
+                      class="bi bi-square-fill"
+                      style="color: var(--bs-pink)"
+                    ></em>
+                    Pink Noise
+                  </label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="red"
+                    value="red"
+                  />
+                  <label class="form-check-label" for="red">
+                    <em
+                      class="bi bi-square-fill"
+                      style="color: var(--bs-red)"
+                    ></em>
+                    Red (Brown) Noise
+                  </label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="violet"
+                    value="violet"
+                  />
+                  <label class="form-check-label" for="violet">
+                    <em
+                      class="bi bi-square-fill"
+                      style="color: var(--bs-purple)"
+                    ></em>
+                    Violet Noise
+                  </label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="noise"
+                    id="white"
+                    value="white"
+                    checked
+                  />
+                  <label class="form-check-label" for="white">
+                    <em class="bi bi-square"></em>
+                    White Noise
+                  </label>
+                </div>
+              </div>
+            </div>
+            <p class="small">
+              <a
+                href="https://en.wikipedia.org/wiki/Colors_of_noise"
+                target="_blank"
+              >
+                What is colord noise?
+                <em class="bi bi-box-arrow-up-right"></em>
+              </a>
+            </p>
+          </fieldset>
+          <div class="row">
+            <div class="col-md">
+              <label for="peaks" class="form-label">Random noise peaks</label>
+              <input
+                type="number"
+                class="form-control"
+                id="peaks"
+                value="2"
+                step="1"
+                min="0"
+                max="64"
+                disabled
+              />
+              <div id="scale-help" class="form-text">
+                The number of frequency band peaks when generating noise. This
+                value is ignored for white noise.
+              </div>
+            </div>
+            <div class="col-md">
+              <label for="scale" class="form-label">Random noise scales</label>
+              <input
+                type="number"
+                class="form-control"
+                id="scale"
+                value="1"
+                step="1"
+                min="0"
+                max="64"
+              />
+            </div>
+            <div class="col-md">
+              <label for="randomAlgorithm" class="form-label">
+                Random Generator
+              </label>
+              <select id="randomAlgorithm" class="form-select" disabled>
+                <option value="SYSTEM" selected="selected">
+                  SYSTEM (Default)
+                </option>
+                <option value="CRYPTO">CRYPTO</option>
+              </select>
+            </div>
+          </div>
+        </section>
+        <section class="mb-3">
+          <h3>Impulse response setting</h3>
+          <p>
+            Generate damped sound from the generated noise and make it an
+            impulse response. These are its settings.
+          </p>
+          <div class="row">
+            <div class="col-md">
+              <label for="time" class="form-label" aria-describedby="time-help">
+                Time
+              </label>
+              <input
+                type="range"
+                class="form-range"
+                title="1.1"
+                value="2"
+                min="0"
+                max="50"
+                id="time"
+              />
+              <div id="time-help" class="form-text">Room size</div>
+            </div>
+            <div class="col-md">
+              <label for="decay" class="form-label">Decay</label>
+              <input
+                type="range"
+                class="form-range"
+                title="2"
+                value="2"
+                min="0"
+                max="100"
+                id="decay"
+              />
+              <div id="decay-help" class="form-text">
+                Hardness of room wall size
+              </div>
+            </div>
+            <div class="col-md">
+              <label for="delay" class="form-label">Delay</label>
+              <input
+                type="range"
+                class="form-range"
+                title="0"
+                value="0"
+                min="0"
+                max="100"
+                id="delay"
+              />
+              <div id="delay-help" class="form-text">
+                Delays due to obstacles in front of room walls
+              </div>
+            </div>
+            <div class="col-md">
+              <label for="mix" class="form-label">Dry / Wet</label>
+              <input
+                type="range"
+                id="mix"
+                class="form-range"
+                min="0"
+                max="1"
+                step="0.05"
+                value="0.5"
+                title="0.5"
+              />
+              <div id="delay-help" class="form-text">
+                Closer to the original sound or closer to the effector
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="mb-3">
+          <h3>Filter for Impulse response</h3>
+          <p>
+            If the value of the filter is allpass, the filtering will be
+            bypassed.
+          </p>
+          <div class="row">
+            <div class="col-md">
+              <label for="filter" class="form-label">Filter Type</label>
+              <select id="filter" class="form-select">
+                <option value="allpass" selected="selected">
+                  allpass (Through)
+                </option>
+                <option value="bandpass">bandpass</option>
+                <option value="highpass">highpass</option>
+                <option value="highshelf">highshelf</option>
+                <option value="lowpass">lowpass</option>
+                <option value="lowshelf">lowshelf</option>
+                <option value="notch">notch</option>
+                <option value="peaking">peaking</option>
+              </select>
+            </div>
+            <div class="col-md">
+              <label for="freq" class="form-label">Filter frequency</label>
+              <input
+                type="range"
+                class="form-range"
+                value="2500"
+                min="20"
+                max="5000"
+                step="5"
+                id="freq"
+                title="2500"
+              />
+            </div>
+            <div class="col-md">
+              <label for="freq" class="form-label">Q value</label>
+              <input
+                type="range"
+                class="form-range"
+                value="1"
+                min=".0001"
+                max="10"
+                step=".0005"
+                id="q"
+                title="1"
+              />
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-light">
+      <div class="container">
+        <address class="text-muted">
+          &copy; 2019-2023 by
+          <a href="http://logue.dev/">Logue</a>
+          . Licensed under the
+          <a href="http://opensource.org/licenses/mit-license.php">
+            MIT License
+          </a>
+          .
+        </address>
+      </div>
+    </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+      crossorigin="anonymous"
+    ></script>
+    
+  </body>
+</html>
