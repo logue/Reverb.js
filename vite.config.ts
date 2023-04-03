@@ -78,7 +78,17 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
               formats: ['es', 'umd', 'iife'],
               fileName: format => `Reverb.${format}.js`,
             },
+      // @ts-expect-error
       rollupOptions: {
+        input:
+          mode === 'docs'
+            ? {
+                '': fileURLToPath(new URL('./index.html', import.meta.url)),
+                localaudio: fileURLToPath(
+                  new URL('./localaudio.html', import.meta.url)
+                ),
+              }
+            : undefined,
         plugins: [
           mode === 'analyze'
             ? // rollup-plugin-visualizer
