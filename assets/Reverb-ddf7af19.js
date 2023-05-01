@@ -50,6 +50,10 @@ class ARandom {
     norm(norm = 1) {
         return (this.int() * INV_MAX - 0.5) * 2 * norm;
     }
+    normMinMax(min, max) {
+        const x = this.minmax(min, max);
+        return this.float() < 0.5 ? x : -x;
+    }
     minmax(min, max) {
         return this.float() * (max - min) + min;
     }
@@ -99,8 +103,8 @@ const defaults = {
 };
 
 const meta = {
-  version: "1.2.11",
-  date: "2023-04-14T05:20:49.168Z"
+  version: "1.2.12",
+  date: "2023-05-01T10:26:31.890Z"
 };
 const Meta = meta;
 
