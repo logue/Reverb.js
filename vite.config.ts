@@ -7,7 +7,6 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import banner from 'vite-plugin-banner';
 import dts from 'vite-plugin-dts';
 
-// @ts-expect-error
 import pkg from './package.json';
 
 // Export vite config
@@ -22,12 +21,12 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
         typescript: true,
         vueTsc: false,
         eslint: {
-          lintCommand:
-            'eslint ./src --fix --cache --cache-location ./node_modules/.vite/vite-plugin-eslint',
+          lintCommand: 'eslint',
         },
       }),
       // vite-plugin-banner
       // https://github.com/chengpeiquan/vite-plugin-banner
+      // @ts-expect-error
       banner(`/**
  * ${pkg.name}
  *

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@logue/reverb",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "description": "JavaScript Reverb effect class",
   "keywords": [
     "webaudio",
@@ -38,7 +38,7 @@
     }
   },
   "engines": {
-    "node": ">=18.15.0",
+    "node": ">=18.16.0",
     "yarn": ">=1.22.19"
   },
   "packageManager": "yarn@3.5.0",
@@ -57,15 +57,16 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@thi.ng/colored-noise": "^1.0.14",
-    "@thi.ng/transducers": "^8.4.2"
+    "@thi.ng/colored-noise": "^1.0.15",
+    "@thi.ng/transducers": "^8.4.4"
   },
   "devDependencies": {
-    "@tsconfig/node18-strictest-esm": "^1.0.1",
-    "@types/node": "^18.15.11",
-    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@tsconfig/node-lts": "^18.12.1",
+    "@tsconfig/strictest": "^2.0.1",
+    "@types/node": "^18.16.3",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
     "bootstrap": "^5.3.0-alpha.3",
-    "eslint": "^8.38.0",
+    "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard-with-typescript": "^34.0.1",
     "eslint-import-resolver-alias": "^1.1.2",
@@ -77,16 +78,16 @@
     "eslint-plugin-tsdoc": "^0.2.17",
     "eslint-plugin-yaml": "^0.5.0",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.1",
+    "lint-staged": "^13.2.2",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.8.7",
+    "prettier": "^2.8.8",
     "rimraf": "^5.0.0",
     "rollup-plugin-visualizer": "^5.9.0",
     "typescript": "*",
-    "vite": "^4.2.1",
+    "vite": "^4.3.3",
     "vite-plugin-banner": "^0.7.0",
-    "vite-plugin-checker": "^0.5.6",
-    "vite-plugin-dts": "^2.2.0"
+    "vite-plugin-checker": "^0.6.0",
+    "vite-plugin-dts": "^2.3.0"
   },
   "husky": {
     "hooks": {
@@ -98,7 +99,8 @@
     "*": "prettier -w -u"
   },
   "resolutions": {
+    "http-cache-semantics": "^4.1.1",
     "json5": "^2.2.3",
-    "http-cache-semantics": "^4.1.1"
+    "yaml": "^2.2.2"
   }
 }

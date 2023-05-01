@@ -1,8 +1,12 @@
 {
-  "extends": "@tsconfig/node18-strictest-esm/tsconfig.json",
-  "include": ["vite.config.*", "vitest.config.*", "package.json"],
+  "extends": ["@tsconfig/node-lts/tsconfig.json", "@tsconfig/strictest"],
+  "include": ["env.d.ts", "vite.config.*", "vitest.config.*", "package.json"],
   "compilerOptions": {
     "composite": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
     "lib": [],
     "types": ["node"]
   }
