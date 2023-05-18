@@ -1,6 +1,6 @@
-import { R as Reverb } from './Reverb-ddf7af19.js';
+import { R as Reverb } from './Reverb-7e1d02e5.js';
 
-const audioFile = new URL("/demo.flac", self.location).href;
+const audioFile = new URL(""+new URL('../demo.flac', import.meta.url).href+"", self.location).href;
 
       document.getElementById('play').setAttribute('disabled', 'disabled');
 

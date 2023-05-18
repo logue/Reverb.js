@@ -103,26 +103,26 @@ const defaults = {
 };
 
 const meta = {
-  version: "1.2.12",
-  date: "2023-05-01T10:26:31.890Z"
+  version: "1.2.13",
+  date: "2023-05-18T02:37:17.355Z"
 };
 const Meta = meta;
 
 const Noise = {
   /** Blue noise */
   blue: "blue",
+  /** Brown noise (same as red noise) */
+  brown: "red",
   /** Green noise */
   green: "green",
   /** Pink noise */
   pink: "pink",
   /** Red noise */
-  brown: "red",
+  red: "red",
   /** Violet noise */
   violet: "violet",
   /** White noise */
-  white: "white",
-  /** Brown noise (same as red noise) */
-  red: "red"
+  white: "white"
 };
 const Noise$1 = Noise;
 
@@ -396,7 +396,7 @@ class Reverb {
    * @param ctx - Root AudioContext
    * @param options - Configure
    */
-  constructor(ctx, options = {}) {
+  constructor(ctx, options) {
     this.ctx = ctx;
     this.options = Object.assign(defaults, options);
     this.wetGainNode = this.ctx.createGain();
@@ -631,9 +631,9 @@ class Reverb {
       if (i < delayDuration) {
         impulseL[i] = 0;
         impulseR[i] = 0;
-        n = this.options.reverse ? duration - (i - delayDuration) : i - delayDuration;
+        n = this.options.reverse ?? false ? duration - (i - delayDuration) : i - delayDuration;
       } else {
-        n = this.options.reverse ? duration - i : i;
+        n = this.options.reverse ?? false ? duration - i : i;
       }
       impulseL[i] = (noiseL[i] ?? 0) * (1 - n / duration) ** this.options.decay;
       impulseR[i] = (noiseR[i] ?? 0) * (1 - n / duration) ** this.options.decay;
