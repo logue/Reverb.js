@@ -36,7 +36,7 @@ export default class Reverb {
   /** Output gain node */
   private readonly outputNode: GainNode;
   /** Option */
-  private readonly options;
+  private readonly options: OptionInterface;
   /** Connected flag */
   private isConnected: boolean;
   /** Noise Generator */
@@ -50,27 +50,10 @@ export default class Reverb {
    * @param ctx - Root AudioContext
    * @param options - Configure
    */
-  constructor(ctx: AudioContext, options: OptionInterface = {}) {
+  constructor(ctx: AudioContext, options: Partial<OptionInterface>) {
     // マスターのAudioContextを取得
     this.ctx = ctx;
-    this.options = Object.assign<
-      {
-        noise: NoiseType;
-        scale: number;
-        peaks: number;
-        randomAlgorithm: INorm;
-        decay: number;
-        delay: number;
-        filterFreq: number;
-        filterQ: number;
-        filterType: BiquadFilterType;
-        mix: number;
-        reverse: boolean;
-        time: number;
-        once: boolean;
-      },
-      OptionInterface
-    >(defaults, options);
+    this.options = Object.assign(defaults, options);
     // 初期化
     this.wetGainNode = this.ctx.createGain();
     this.dryGainNode = this.ctx.createGain();
@@ -372,11 +355,12 @@ export default class Reverb {
         // Delay Effect
         impulseL[i] = 0;
         impulseR[i] = 0;
-        n = this.options.reverse
-          ? duration - (i - delayDuration)
-          : i - delayDuration;
+        n =
+          this.options.reverse ?? false
+            ? duration - (i - delayDuration)
+            : i - delayDuration;
       } else {
-        n = this.options.reverse ? duration - i : i;
+        n = this.options.reverse ?? false ? duration - i : i;
       }
       // 元の音（ノイズ）を時間経過とともに減衰させる
       impulseL[i] = (noiseL[i] ?? 0) * (1 - n / duration) ** this.options.decay;
@@ -409,9 +393,8 @@ export default class Reverb {
   }
 }
 
-// For CDN.
-// @ts-expect-error
+// @ts-expect-error check window object contains Reverb object.
 if (!window.Reverb) {
-  // @ts-expect-error
+  // @ts-expect-error Register Reverb Object to window.
   window.Reverb = Reverb;
 }

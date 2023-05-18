@@ -10,10 +10,11 @@ import dts from 'vite-plugin-dts';
 import pkg from './package.json';
 
 // Export vite config
-export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
+export default defineConfig(({ command, mode }): UserConfig => {
   // Hook production build.
   // https://vitejs.dev/config/
   const config: UserConfig = {
+    base: './',
     plugins: [
       // vite-plugin-checker
       // https://github.com/fi3ework/vite-plugin-checker
@@ -26,7 +27,6 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
       }),
       // vite-plugin-banner
       // https://github.com/chengpeiquan/vite-plugin-banner
-      // @ts-expect-error
       banner(`/**
  * ${pkg.name}
  *
@@ -77,7 +77,6 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
               formats: ['es', 'umd', 'iife'],
               fileName: format => `Reverb.${format}.js`,
             },
-      // @ts-expect-error
       rollupOptions: {
         input:
           mode === 'docs'

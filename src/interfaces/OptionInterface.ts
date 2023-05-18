@@ -8,52 +8,38 @@ export default interface OptionInterface {
    * IR (Inpulse Response) colord noise algorithm (BLUE, GREEN, PINK, RED, VIOLET, WHITE)
    * @see {@link https://github.com/thi-ng/umbrella/tree/develop/packages/colored-noise}
    */
-  noise?: NoiseType;
+  noise: NoiseType;
   /** IR source noise scale */
-  scale?: number;
+  scale: number;
   /** Number of IR source noise peaks */
-  peaks?: number;
+  peaks: number;
   /**
    * Randam noise algorythm
    * @see {@link https://github.com/thi-ng/umbrella/tree/develop/packages/random}
    */
-  randomAlgorithm?: INorm;
+  randomAlgorithm: INorm;
   /** Decay */
-  decay?: number;
+  decay: number;
   /** Delay until impulse response is generated */
-  delay?: number;
+  delay: number;
   /** Filter frequency applied to impulse response[Hz] */
-  filterFreq?: number;
+  filterFreq: number;
   /** Filter quality for impulse response */
-  filterQ?: number;
+  filterQ: number;
   /** Filter type for impulse response */
-  filterType?: BiquadFilterType;
+  filterType: BiquadFilterType;
   /** Dry/Wet ratio */
-  mix?: number;
+  mix: number;
   /** Invert the impulse response */
   reverse?: boolean;
   /** Impulse response length */
-  time?: number;
+  time: number;
   /** Prevents multiple effectors from being connected. */
-  once?: boolean;
+  once: boolean;
 }
 
-/** デフォルト値 */
-export const defaults: {
-  noise: NoiseType;
-  scale: number;
-  peaks: number;
-  randomAlgorithm: INorm;
-  decay: number;
-  delay: number;
-  filterFreq: number;
-  filterQ: number;
-  filterType: BiquadFilterType;
-  mix: number;
-  reverse: boolean;
-  time: number;
-  once: boolean;
-} = {
+/** Default Value */
+export const defaults: OptionInterface = {
   noise: 'white',
   scale: 1,
   peaks: 2,
