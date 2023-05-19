@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@tsconfig/node-lts": "^18.12.2",
-    "@types/node": "^20.2.0",
+    "@types/node": "^20.2.1",
     "@typescript-eslint/eslint-plugin": "^5.59.6",
     "bootstrap": "^5.3.0-alpha.3",
     "eslint": "^8.40.0",
@@ -83,7 +83,7 @@
     "rimraf": "^5.0.1",
     "rollup-plugin-visualizer": "^5.9.0",
     "typescript": "*",
-    "vite": "^4.3.7",
+    "vite": "^4.3.8",
     "vite-plugin-banner": "^0.7.0",
     "vite-plugin-checker": "^0.6.0",
     "vite-plugin-dts": "^2.3.0"

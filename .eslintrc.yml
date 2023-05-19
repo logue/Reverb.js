@@ -12,10 +12,10 @@ overrides: []
 plugins:
   - tsdoc
 rules:
-  '@typescript-eslint/triple-slash-reference': off # for vite fix
-  '@typescript-eslint/strict-boolean-expressions': off
   require-jsdoc: warn
   no-unused-vars: warn
+  '@typescript-eslint/triple-slash-reference': off # for vite fix
+  '@typescript-eslint/strict-boolean-expressions': off # for vite fix
   tsdoc/syntax: warn
 parserOptions:
   ecmaVersion: latest
@@ -34,6 +34,7 @@ settings:
     alias:
       map:
         - ['@', './src']
+        - ['~', './node_modules']
       extensions:
         - .js
         - .ts

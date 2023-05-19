@@ -333,7 +333,7 @@ __metadata:
     "@thi.ng/colored-noise": ^1.0.16
     "@thi.ng/transducers": ^8.4.5
     "@tsconfig/node-lts": ^18.12.2
-    "@types/node": ^20.2.0
+    "@types/node": ^20.2.1
     "@typescript-eslint/eslint-plugin": ^5.59.6
     bootstrap: ^5.3.0-alpha.3
     eslint: ^8.40.0
@@ -354,7 +354,7 @@ __metadata:
     rimraf: ^5.0.1
     rollup-plugin-visualizer: ^5.9.0
     typescript: "*"
-    vite: ^4.3.7
+    vite: ^4.3.8
     vite-plugin-banner: ^0.7.0
     vite-plugin-checker: ^0.6.0
     vite-plugin-dts: ^2.3.0
@@ -719,10 +719,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.2.0":
-  version: 20.2.0
-  resolution: "@types/node@npm:20.2.0"
-  checksum: 9b937367448a07482af14e3518125ae531bff99e16d51e0945f4f93dbd7051d8a270811bdeb57f0b52c629fb0c9c401a238a7352dfbc87e26495b6f0f59cbdb6
+"@types/node@npm:^20.2.1":
+  version: 20.2.1
+  resolution: "@types/node@npm:20.2.1"
+  checksum: ed774afa6e9b4ad7868ed0182a8ca40ad0dd54815a70d3051b23fa850f3bca6bea4d0cb55e1fc769666786ac2cc4c1b37aeade313cb4c4634133f18ebcded496
   languageName: node
   linkType: hard
 
@@ -5132,9 +5132,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^4.3.7":
-  version: 4.3.7
-  resolution: "vite@npm:4.3.7"
+"vite@npm:^4.3.8":
+  version: 4.3.8
+  resolution: "vite@npm:4.3.8"
   dependencies:
     esbuild: ^0.17.5
     fsevents: ~2.3.2
@@ -5165,7 +5165,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: cda8c86fd9f9ab984f2ab8ae09f89bfef7dc636142f0b1ed30d37b8155516729cf91d95eab7ba43d43bb51d8068f0d938ac85dc80d3f53497fbd35f50d27ec25
+  checksum: 454a7c0c1bd1fd5611c9df28c62e3adbe75f48e87fc787179c5af60c4ab9a87aa0eda44be446d898851a135766d36f65f8e7d56317556aa807d30e561de369c4
   languageName: node
   linkType: hard
 
