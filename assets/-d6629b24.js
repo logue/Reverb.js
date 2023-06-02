@@ -1,4 +1,4 @@
-import { R as Reverb } from './Reverb-0922ae82.js';
+import { R as Reverb } from './Reverb-42230b0c.js';
 
 const audioFile = new URL(""+new URL('../demo.flac', import.meta.url).href+"", self.location).href;
 

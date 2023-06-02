@@ -1,4 +1,4 @@
-import { R as Reverb } from './Reverb-0922ae82.js';
+import { R as Reverb } from './Reverb-42230b0c.js';
 
 // Setup Audio Context
       const AudioCtx = new AudioContext();
@@ -110,7 +110,7 @@ import { R as Reverb } from './Reverb-0922ae82.js';
           ratio = PIXEL_RATIO;
         }
         const canvas = document.getElementById('canvas');
-        //const canvas = document.createElement('canvas');
+        // const canvas = document.createElement('canvas');
         canvas.width = w * ratio;
         canvas.height = h * ratio;
         canvas.style.width = w + 'px';
@@ -201,7 +201,7 @@ import { R as Reverb } from './Reverb-0922ae82.js';
         img.style.width = SPRITE_WIDTH + 'px';
         img.style.height = SPRITE_HEIGHT + 'px';
         img.src = src;
-        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const image = new Image();
         image.addEventListener('load', () => {
@@ -307,7 +307,7 @@ import { R as Reverb } from './Reverb-0922ae82.js';
 
         // Move Camera
         camera.position.z = depth + 650;
-        //camera.zoom = 2;
+        // camera.zoom = 2;
         camera.updateProjectionMatrix();
 
         // Look to origin
@@ -316,7 +316,7 @@ import { R as Reverb } from './Reverb-0922ae82.js';
         // Remove old Mesh
         if (depth > MAX_DEPTH) {
           scene.remove(meshs[depth - MAX_DEPTH]);
-          //meshs[depth - MAX_DEPTH].dispose();
+          // meshs[depth - MAX_DEPTH].dispose();
           geometries[depth - MAX_DEPTH].dispose();
           materials[depth - MAX_DEPTH].dispose();
           textures[depth - MAX_DEPTH].dispose();
