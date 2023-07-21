@@ -103,8 +103,8 @@ const defaults = {
 };
 
 const meta = {
-  version: "1.2.14",
-  date: "2023-06-02T11:56:25.917Z"
+  version: "1.2.16",
+  date: "2023-07-21T04:23:47.066Z"
 };
 const Meta = meta;
 
