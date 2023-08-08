@@ -87,6 +87,12 @@ sourceNode.connect(ctx.destination);
 sourceNode.play();
 ```
 
+### CDN Usage
+
+Not really intended for use with a CDN.
+
+The dependent libraries [@thi.ng/colored-noise](https://www.jsdelivr.com/package/npm/@thi.ng/colored-noise), [@thi.ng/random](https://www.jsdelivr.com/package/npm/@thi.ng/random) and [@thi.ng/transducers](https://www.jsdelivr.com/package/npm/@thi.ng/transducers) need to be loaded separately.
+
 ## Reference
 
 - [Web Audio API](https://www.w3.org/TR/webaudio/)

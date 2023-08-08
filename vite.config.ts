@@ -27,6 +27,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
       }),
       // vite-plugin-banner
       // https://github.com/chengpeiquan/vite-plugin-banner
+      // @ts-expect-error banner
       banner(`/**
  * ${pkg.name}
  *
@@ -42,9 +43,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
       // https://github.com/qmhc/vite-plugin-dts
       mode === 'docs'
         ? undefined
-        : dts({
-            tsConfigFilePath: './tsconfig.app.json',
-          }),
+        : dts({ tsconfigPath: './tsconfig.app.json' }),
     ],
     // https://vitejs.dev/config/shared-options.html#publicdir
     publicDir: mode === 'docs' || command === 'serve' ? 'public' : false,
@@ -109,14 +108,14 @@ export default defineConfig(({ command, mode }): UserConfig => {
               ],
         output: {
           globals: {
-            '@thi.ng/colored-noise': 'colordNoise',
-            '@thi.ng/random': 'random',
-            '@thi.ng/transducers': 'transducers',
+            '@thi.ng/colored-noise': 'thiNgcoloredNoise',
+            '@thi.ng/random': 'thiNgrandom',
+            '@thi.ng/transducers': 'thiNgtransducers',
           },
         },
       },
       target: 'esnext',
-      minify: false,
+      minify: mode === 'docs',
     },
     esbuild: {
       drop: command === 'serve' ? [] : ['console'],

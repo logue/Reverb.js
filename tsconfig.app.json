@@ -6,6 +6,7 @@
     "composite": true,
     "baseUrl": ".",
     "esModuleInterop": true,
+    "moduleResolution": "Node",
     "lib": ["DOM"],
     "paths": { "@/*": ["./src/*"] }
   }

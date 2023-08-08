@@ -123,7 +123,7 @@ export default class Reverb {
    * @param mix - Ratio (0~1)
    */
   public mix(mix: number): void {
-    if (!this.inRange(mix, 0, 1)) {
+    if (!Reverb.inRange(mix, 0, 1)) {
       throw new RangeError('[Reverb.js] Dry/Wet ratio must be between 0 to 1.');
     }
     this.options.mix = mix;
@@ -138,7 +138,7 @@ export default class Reverb {
    * @param value - IR length
    */
   public time(value: number): void {
-    if (!this.inRange(value, 1, 50)) {
+    if (!Reverb.inRange(value, 1, 50)) {
       throw new RangeError(
         '[Reverb.js] Time length of inpulse response must be less than 50sec.'
       );
@@ -156,7 +156,7 @@ export default class Reverb {
    * @param value - Decay value
    */
   public decay(value: number): void {
-    if (!this.inRange(value, 0, 100)) {
+    if (!Reverb.inRange(value, 0, 100)) {
       throw new RangeError(
         '[Reverb.js] Inpulse Response decay level must be less than 100.'
       );
@@ -172,7 +172,7 @@ export default class Reverb {
    * @param value - Time[ms]
    */
   public delay(value: number): void {
-    if (!this.inRange(value, 0, 100)) {
+    if (!Reverb.inRange(value, 0, 100)) {
       throw new RangeError(
         '[Reverb.js] Inpulse Response delay time must be less than 100.'
       );
@@ -213,7 +213,7 @@ export default class Reverb {
    * @param freq - Frequency
    */
   public filterFreq(freq: number): void {
-    if (!this.inRange(freq, 20, 20000)) {
+    if (!Reverb.inRange(freq, 20, 20000)) {
       throw new RangeError(
         '[Reverb.js] Filter frequrncy must be between 20 and 20000.'
       );
@@ -229,7 +229,7 @@ export default class Reverb {
    * @param q - Quality
    */
   public filterQ(q: number): void {
-    if (!this.inRange(q, 0, 10)) {
+    if (!Reverb.inRange(q, 0, 10)) {
       throw new RangeError(
         '[Reverb.js] Filter quality value must be between 0 and 10.'
       );
@@ -300,7 +300,10 @@ export default class Reverb {
         this.noise = white;
     }
     this.buildImpulse();
-    console.debug(`[Reverb.js] Set IR generator source noise type to ${type}.`);
+    console.debug(
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      `[Reverb.js] Set IR generator source noise type to ${type}.`
+    );
   }
 
   /**
@@ -320,7 +323,7 @@ export default class Reverb {
    * @param min - Minimum value
    * @param max - Maximum value
    */
-  private inRange(x: number, min: number, max: number): boolean {
+  private static inRange(x: number, min: number, max: number): boolean {
     return (x - min) * (x - max) <= 0;
   }
 
