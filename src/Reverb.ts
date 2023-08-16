@@ -395,9 +395,3 @@ export default class Reverb {
     ];
   }
 }
-
-// @ts-expect-error check window object contains Reverb object.
-if (!window.Reverb) {
-  // @ts-expect-error Register Reverb Object to window.
-  window.Reverb = Reverb;
-}
