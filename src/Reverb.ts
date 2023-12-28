@@ -231,7 +231,7 @@ export default class Reverb {
   public filterQ(q: number): void {
     if (!Reverb.inRange(q, 0, 10)) {
       throw new RangeError(
-        '[Reverb.js] Filter quality value must be between 0 and 10.'
+        '[Reverb.js] Filter Q value must be between 0 and 10.'
       );
     }
     this.options.filterQ = q;
@@ -347,8 +347,6 @@ export default class Reverb {
     const noiseL: number[] = this.getNoise(duration);
     /** 右チャンネルのオーディオソース */
     const noiseR: number[] = this.getNoise(duration);
-
-    // console.log(noiseL);
 
     for (let i = 0; i < duration; i++) {
       /** 減衰率 */

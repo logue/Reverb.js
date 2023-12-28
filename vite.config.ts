@@ -27,7 +27,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
       }),
       // vite-plugin-banner
       // https://github.com/chengpeiquan/vite-plugin-banner
-      // @ts-expect-error banner
       banner(`/**
  * ${pkg.name}
  *
@@ -117,7 +116,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
         },
       },
       target: 'esnext',
-      minify: mode === 'docs',
+      // minify: mode === 'docs',
     },
     esbuild: {
       drop: command === 'serve' ? [] : ['console'],
