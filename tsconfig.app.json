@@ -4,10 +4,13 @@
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
     "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "baseUrl": ".",
-    "esModuleInterop": true,
-    "moduleResolution": "Node",
-    "lib": ["DOM"],
-    "paths": { "@/*": ["./src/*"] }
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "lib":[
+      "DOM"
+    ]
   }
 }

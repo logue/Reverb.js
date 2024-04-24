@@ -1,8 +1,3 @@
-import { defaults } from '@/interfaces/OptionInterface';
-import Meta from '@/Meta';
-import Noise, { type NoiseType } from '@/NoiseType';
-import type OptionInterface from '@/interfaces/OptionInterface';
-
 import {
   blue,
   green,
@@ -13,7 +8,13 @@ import {
   type ColoredNoiseOpts,
 } from '@thi.ng/colored-noise';
 import { take } from '@thi.ng/transducers';
+
+import type OptionInterface from '@/interfaces/OptionInterface';
 import type { INorm } from '@thi.ng/random';
+
+import Meta from '@/Meta';
+import Noise, { type NoiseType } from '@/NoiseType';
+import { defaults } from '@/interfaces/OptionInterface';
 
 /**
  * Reverb effect class
@@ -300,10 +301,7 @@ export default class Reverb {
         this.noise = white;
     }
     this.buildImpulse();
-    console.debug(
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `[Reverb.js] Set IR generator source noise type to ${type}.`
-    );
+    console.debug(`[Reverb.js] Set IR generator source noise type to ${type}.`);
   }
 
   /**
@@ -350,7 +348,7 @@ export default class Reverb {
 
     for (let i = 0; i < duration; i++) {
       /** 減衰率 */
-      let n: number = 0;
+      let n = 0;
 
       if (i < delayDuration) {
         // Delay Effect

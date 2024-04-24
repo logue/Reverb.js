@@ -1,10 +1,11 @@
-import { fileURLToPath, URL } from 'node:url';
 import { writeFileSync } from 'node:fs';
+import { fileURLToPath, URL } from 'node:url';
 
-import { checker } from 'vite-plugin-checker';
 import { defineConfig, type UserConfig } from 'vite';
+
 import { visualizer } from 'rollup-plugin-visualizer';
 import banner from 'vite-plugin-banner';
+import { checker } from 'vite-plugin-checker';
 import dts from 'vite-plugin-dts';
 
 import pkg from './package.json';
@@ -32,7 +33,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
  *
  * @description ${pkg.description}
  * @author ${pkg.author.name} <${pkg.author.email}>
- * @copyright 2019-2023 By Masashi Yoshikawa All rights reserved.
+ * @copyright 2019-${new Date().getFullYear()} By Masashi Yoshikawa All rights reserved.
  * @license ${pkg.license}
  * @version ${pkg.version}
  * @see {@link ${pkg.homepage}}
