@@ -22,9 +22,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
       checker({
         typescript: true,
         vueTsc: false,
-        eslint: {
-          lintCommand: 'eslint',
-        },
+        // eslint: { lintCommand: 'eslint' },
       }),
       // vite-plugin-banner
       // https://github.com/chengpeiquan/vite-plugin-banner
@@ -45,13 +43,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
     ],
     // https://vitejs.dev/config/shared-options.html#publicdir
     publicDir: mode === 'docs' || command === 'serve' ? 'public' : false,
-    // https://vitejs.dev/config/server-options.html
-    server: {
-      fs: {
-        // Allow serving files from one level up to the project root
-        allow: ['..'],
-      },
-    },
     // Resolver
     resolve: {
       // https://vitejs.dev/config/shared-options.html#resolve-alias
@@ -96,7 +87,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
               })
             : undefined,
         ],
-        /*
         external:
           mode === 'docs'
             ? []
@@ -105,15 +95,12 @@ export default defineConfig(({ command, mode }): UserConfig => {
                 '@thi.ng/random',
                 '@thi.ng/transducers',
               ],
-        */
         output: {
-          /*
           globals: {
             '@thi.ng/colored-noise': 'coloredNoise',
             '@thi.ng/random': 'random',
             '@thi.ng/transducers': 'transducers',
           },
-          */
         },
       },
       target: 'esnext',

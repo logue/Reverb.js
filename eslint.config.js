@@ -31,7 +31,6 @@ export default tseslint.config(
           'tsconfig.vitest.json',
         ],
         tsconfigRootDir: import.meta.dirname,
-        extraFileExtensions: ['.vue'],
         ecmaVersion: 'latest',
         sourceType: 'module',
       },
