@@ -28,7 +28,6 @@ export default tseslint.config(
         project: [
           'tsconfig.app.json',
           'tsconfig.node.json',
-          'tsconfig.vitest.json',
         ],
         tsconfigRootDir: import.meta.dirname,
         ecmaVersion: 'latest',
