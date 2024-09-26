@@ -7,29 +7,32 @@ on:
     branches: ['master']
 
 jobs:
-  build:
+  cache-and-install:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
-      - name: Checkout ✅
-        uses: actions/checkout@v3
+      - name: Checkout  ✔
+        uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }} ⚡
-        uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm 📦
         with:
-          node-version: ${{ matrix.node-version }}
+          version: 9
+          run_install: false
+
+      - name: Install Node.js ⚡️
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
 
       - name: Build 🔧
         run: |
-          yarn install
-          yarn build:docs
+          pnpm install
+          pnpm build:docs
 
       - name: Deploy to gh-pages 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        uses: JamesIves/github-pages-deploy-action@v4.6.4
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: docs # The folder the action should deploy.
