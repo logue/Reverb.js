@@ -355,11 +355,11 @@ export default class Reverb {
         impulseL[i] = 0;
         impulseR[i] = 0;
         n =
-          this.options.reverse ?? false
+          (this.options.reverse ?? false)
             ? duration - (i - delayDuration)
             : i - delayDuration;
       } else {
-        n = this.options.reverse ?? false ? duration - i : i;
+        n = (this.options.reverse ?? false) ? duration - i : i;
       }
       // 元の音（ノイズ）を時間経過とともに減衰させる
       impulseL[i] = (noiseL[i] ?? 0) * (1 - n / duration) ** this.options.decay;
