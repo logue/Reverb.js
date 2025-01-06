@@ -21,9 +21,9 @@ import { defaults } from '@/interfaces/OptionInterface';
  */
 export default class Reverb {
   /** Version strings */
-  static version: string = Meta.version;
+  static readonly version: string = Meta.version;
   /** Build date */
-  static build: string = Meta.date;
+  static readonly build: string = Meta.date;
   /** AudioContext */
   private readonly ctx: AudioContext;
   /** Wet Level (Reverberated node) */

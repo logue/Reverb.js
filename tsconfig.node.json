@@ -10,12 +10,14 @@
     "package.json"
   ],
   "compilerOptions": {
+    "baseUrl": ".",
     "composite": true,
     "noEmit": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "types": ["node"]
+    "types": ["node"],
+    "lib": ["ESNext"]
   }
 }
