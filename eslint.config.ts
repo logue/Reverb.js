@@ -1,15 +1,15 @@
-import globals from 'globals';
-import pluginJs from '@eslint/js';
+import js from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import tseslint from 'typescript-eslint';
-
+// @ts-ignore
 import pluginImport from 'eslint-plugin-import';
-import pluginTsdoc from 'eslint-plugin-tsdoc';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 /**
  * ESLint Config
  */
-export default [
+export default defineConfig([
   {
     ignores: [
       '.vscode/',
@@ -22,49 +22,42 @@ export default [
     ],
   },
   { files: ['**/*.{js,mjs,cjs,ts}'] },
-  { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
+  {
+    files: ['**/*.{js,mjs,cjs,ts}'],
+    languageOptions: { globals: globals.browser },
+  },
+  {
+    files: ['**/*.{js,mjs,cjs,ts}'],
+    plugins: { js },
+    extends: ['js/recommended'],
+  },
+  tseslint.configs.recommended,
+  pluginImport.flatConfigs.recommended,
+  pluginImport.flatConfigs.typescript,
   ...tseslint.configs.stylistic,
   {
-    languageOptions: {
-      parserOptions: {
-        project: ['tsconfig.app.json', 'tsconfig.node.json'],
-        tsconfigRootDir: import.meta.dirname,
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-      },
-    },
-    plugins: {
-      import: pluginImport,
-      tsdoc: pluginTsdoc,
-    },
     settings: {
       // This will do the trick
       'import/parsers': {
-        espree: ['.js', '.cjs', '.mjs', '.jsx'],
+        espree: ['.js', '.cjs', '.mjs'],
         '@typescript-eslint/parser': ['.ts', '.tsx'],
       },
       'import/resolver': {
+        // You will also need to install and configure the TypeScript resolver
+        // See also https://github.com/import-js/eslint-import-resolver-typescript#configuration
         typescript: true,
         node: true,
-        alias: {
-          map: [
-            ['@', './src'],
-            ['~', './node_modules'],
-          ],
-          extensions: ['.js', '.ts', '.jsx', '.tsx', '.vue'],
+        'eslint-import-resolver-custom-alias': {
+          alias: {
+            '@': './src',
+            '~': './node_modules',
+          },
+          extensions: ['.js', '.ts'],
         },
-      },
-      vite: {
-        configPath: './vite.config.ts',
       },
     },
     rules: {
-      '@typescript-eslint/consistent-type-imports': 'error',
-      '@typescript-eslint/no-import-type-side-effects': 'error',
-      // ...importPlugin.configs["recommended"].rules,
-      'no-unused-vars': 'warn',
+      'no-unused-vars': 'off',
       // const lines: string[] = []; style
       '@typescript-eslint/array-type': [
         'error',
@@ -86,24 +79,28 @@ export default [
           prefer: 'type-imports',
         },
       ],
-      // Fix for pinia
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      // Allow short land for pretter
-      '@typescript-eslint/no-confusing-void-expression': [
+      // Exclude variables with leading underscores
+      '@typescript-eslint/no-unused-vars': [
         'error',
         {
-          ignoreArrowShorthand: true,
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
         },
       ],
-      '@typescript-eslint/no-explicit-any': 'off',
       // Fix for vite import.meta.env
       '@typescript-eslint/strict-boolean-expressions': 'off',
       // Fix for vite env.d.ts.
       '@typescript-eslint/triple-slash-reference': 'off',
-      // Fix for Vue setup style
-      'import/default': 'off',
-      // Fix for Vue setup style
+      // Fix for vite
+      'import/namespace': 'off',
       'import/no-default-export': 'off',
+      'import/no-named-as-default-member': 'off',
+      'import/no-named-as-default': 'off',
       // Sort Import Order.
       // see https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md#importorder-enforce-a-convention-in-module-import-order
       'import/order': [
@@ -118,21 +115,6 @@ export default [
             'object',
             'type',
           ],
-          pathGroups: [
-            // Vue Core
-            {
-              pattern:
-                '{vue,vue-router,vuex,@/stores,vue-i18n,pinia,vite,vitest,vitest/**,@vitejs/**,@vue/**}',
-              group: 'external',
-              position: 'before',
-            },
-            // Internal Codes
-            {
-              pattern: '{@/**}',
-              group: 'internal',
-              position: 'before',
-            },
-          ],
           pathGroupsExcludedImportTypes: ['builtin'],
           alphabetize: {
             order: 'asc',
@@ -140,9 +122,7 @@ export default [
           'newlines-between': 'always',
         },
       ],
-      'tsdoc/syntax': 'warn',
     },
   },
-  // ...pluginVue.configs['flat/recommended'],
   eslintConfigPrettier,
-];
+]);

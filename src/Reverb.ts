@@ -42,7 +42,7 @@ export default class Reverb {
   private isConnected: boolean;
   /** Noise Generator */
   private noise: (
-    opts?: Partial<ColoredNoiseOpts> | undefined
+    _opts?: Partial<ColoredNoiseOpts>
   ) => Generator<number, void, unknown> = white;
 
   /**

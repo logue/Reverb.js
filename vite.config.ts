@@ -1,11 +1,12 @@
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig, type UserConfig } from 'vite';
-
 import { visualizer } from 'rollup-plugin-visualizer';
+import { defineConfig, type UserConfig } from 'vite';
+// eslint-disable-next-line import/default
 import banner from 'vite-plugin-banner';
 import { checker } from 'vite-plugin-checker';
+// eslint-disable-next-line import/default
 import dts from 'vite-plugin-dts';
 
 import pkg from './package.json';
