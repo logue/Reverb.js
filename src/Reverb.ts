@@ -9,11 +9,11 @@ import {
 } from '@thi.ng/colored-noise';
 import { take } from '@thi.ng/transducers';
 
+import type { NoiseType } from '@/NoiseType';
 import type OptionInterface from '@/interfaces/OptionInterface';
 import type { INorm } from '@thi.ng/random';
 
 import Meta from '@/Meta';
-import Noise, { type NoiseType } from '@/NoiseType';
 import { defaults } from '@/interfaces/OptionInterface';
 
 /**
@@ -44,6 +44,21 @@ export default class Reverb {
   private noise: (
     _opts?: Partial<ColoredNoiseOpts>
   ) => Generator<number, void, unknown> = white;
+  /**
+   * Map of noise types to their respective generator functions.
+   */
+  private readonly noiseMap: Record<
+    NoiseType,
+    (opts?: Partial<ColoredNoiseOpts>) => Generator<number, void, unknown>
+  > = {
+    blue,
+    green,
+    pink,
+    red,
+    brown: red, // brown is an alias for red
+    violet,
+    white,
+  };
 
   /**
    * Constructor
@@ -88,10 +103,14 @@ export default class Reverb {
     this.filterNode.connect(this.wetGainNode);
     // 入力ノードを畳み込みノードに接続
     sourceNode.connect(this.convolverNode);
+    // ドライノードを出力ノードに接続
+    sourceNode.connect(this.dryGainNode);
+    // ウェットノードを出力ノードに接続
+    sourceNode.connect(this.wetGainNode);
     // ドライレベルを出力ノードに接続
-    sourceNode.connect(this.dryGainNode).connect(this.outputNode);
+    this.dryGainNode.connect(this.outputNode);
     // ウェットレベルを出力ノードに接続
-    sourceNode.connect(this.wetGainNode).connect(this.outputNode);
+    this.wetGainNode.connect(this.outputNode);
     // 接続済みフラグを立てる
     this.isConnected = true;
 
@@ -128,8 +147,8 @@ export default class Reverb {
       throw new RangeError('[Reverb.js] Dry/Wet ratio must be between 0 to 1.');
     }
     this.options.mix = mix;
-    this.dryGainNode.gain.value = 1 - this.options.mix;
-    this.wetGainNode.gain.value = this.options.mix;
+    this.dryGainNode.gain.value = 1 - mix;
+    this.wetGainNode.gain.value = mix;
     console.debug(`[Reverb.js] Set dry/wet ratio to ${mix * 100}%`);
   }
 
@@ -141,13 +160,13 @@ export default class Reverb {
   public time(value: number): void {
     if (!Reverb.inRange(value, 1, 50)) {
       throw new RangeError(
-        '[Reverb.js] Time length of inpulse response must be less than 50sec.'
+        '[Reverb.js] Time length of impulse response must be less than 50sec.'
       );
     }
     this.options.time = value;
     this.buildImpulse();
     console.debug(
-      `[Reverb.js] Set inpulse response time length to ${value}sec.`
+      `[Reverb.js] Set impulse response time length to ${value}sec.`
     );
   }
 
@@ -159,12 +178,12 @@ export default class Reverb {
   public decay(value: number): void {
     if (!Reverb.inRange(value, 0, 100)) {
       throw new RangeError(
-        '[Reverb.js] Inpulse Response decay level must be less than 100.'
+        '[Reverb.js] Impulse Response decay level must be less than 100.'
       );
     }
     this.options.decay = value;
     this.buildImpulse();
-    console.debug(`[Reverb.js] Set inpulse response decay level to ${value}.`);
+    console.debug(`[Reverb.js] Set impulse response decay level to ${value}.`);
   }
 
   /**
@@ -175,13 +194,13 @@ export default class Reverb {
   public delay(value: number): void {
     if (!Reverb.inRange(value, 0, 100)) {
       throw new RangeError(
-        '[Reverb.js] Inpulse Response delay time must be less than 100.'
+        '[Reverb.js] Impulse Response delay time must be less than 100.'
       );
     }
     this.options.delay = value;
     this.buildImpulse();
     console.debug(
-      `[Reverb.js] Set inpulse response delay time to ${value}sec.`
+      `[Reverb.js] Set impulse response delay time to ${value}sec.`
     );
   }
 
@@ -263,14 +282,21 @@ export default class Reverb {
   }
 
   /**
-   * set IR source noise generator.
+   * Noise source
    *
-   * @param a - Algorithm
+   * @param duration - length of IR.
    */
-  public randomAlgorithm(a: INorm): void {
-    this.options.randomAlgorithm = a;
-    this.buildImpulse();
-    console.debug(`[Reverb.js] Set IR source noise generator.`);
+  private getNoise(duration: number): number[] {
+    return [
+      ...take<number>(
+        duration,
+        this.noise({
+          bins: this.options.peaks,
+          scale: this.options.scale,
+          rnd: this.options.randomAlgorithm,
+        })
+      ),
+    ];
   }
 
   /**
@@ -280,26 +306,7 @@ export default class Reverb {
    */
   public setNoise(type: NoiseType): void {
     this.options.noise = type;
-    switch (type) {
-      case Noise.blue:
-        this.noise = blue;
-        break;
-      case Noise.green:
-        this.noise = green;
-        break;
-      case Noise.pink:
-        this.noise = pink;
-        break;
-      case Noise.red:
-      case Noise.brown:
-        this.noise = red;
-        break;
-      case Noise.violet:
-        this.noise = violet;
-        break;
-      default:
-        this.noise = white;
-    }
+    this.noise = this.noiseMap[type] || white;
     this.buildImpulse();
     console.debug(`[Reverb.js] Set IR generator source noise type to ${type}.`);
   }
@@ -309,9 +316,10 @@ export default class Reverb {
    *
    * @param algorithm - Algorythm
    */
-  public setRandomAlgorythm(algorithm: INorm): void {
+  public setRandomAlgorithm(algorithm: INorm): void {
     this.options.randomAlgorithm = algorithm;
     this.buildImpulse();
+    console.debug(`[Reverb.js] Set IR source noise generator.`);
   }
 
   /**
@@ -322,7 +330,7 @@ export default class Reverb {
    * @param max - Maximum value
    */
   private static inRange(x: number, min: number, max: number): boolean {
-    return (x - min) * (x - max) <= 0;
+    return x >= min && x <= max;
   }
 
   /** Utility function for building an impulse response from the module parameters. */
@@ -371,23 +379,5 @@ export default class Reverb {
     impulse.getChannelData(1).set(impulseR);
 
     this.convolverNode.buffer = impulse;
-  }
-
-  /**
-   * Noise source
-   *
-   * @param duration - length of IR.
-   */
-  private getNoise(duration: number): number[] {
-    return [
-      ...take<number>(
-        duration,
-        this.noise({
-          bins: this.options.peaks,
-          scale: this.options.scale,
-          rnd: this.options.randomAlgorithm,
-        })
-      ),
-    ];
   }
 }
