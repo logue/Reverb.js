@@ -87,6 +87,66 @@ sourceNode.connect(ctx.destination);
 sourceNode.play();
 ```
 
+## Testing
+
+This project includes a comprehensive test suite to ensure reliability and code quality.
+
+### Test Coverage
+
+- **Statement Coverage**: 100%
+- **Function Coverage**: 100%
+- **Branch Coverage**: 90.56%
+- **Line Coverage**: 100%
+
+### Test Structure
+
+The test suite is organized into several categories:
+
+- **Unit Tests**: Individual method and property testing
+  - `src/__tests__/Reverb.test.ts` - Main Reverb class tests
+  - `src/__tests__/NoiseType.test.ts` - Noise type definition tests
+  - `src/__tests__/OptionInterface.test.ts` - Configuration interface tests
+
+- **Integration Tests**: Component interaction testing
+  - `src/__tests__/integration.test.ts` - Cross-component integration tests
+
+- **End-to-End Tests**: Real-world usage scenarios
+  - `src/__tests__/e2e.test.ts` - Practical implementation scenarios
+
+### Test Features
+
+The test suite covers:
+
+- ✅ Constructor with default and custom options
+- ✅ Audio node connection and disconnection
+- ✅ Parameter validation and error handling
+- ✅ All reverb parameters (mix, time, decay, delay, reverse)
+- ✅ Filter configurations (type, frequency, Q-factor)
+- ✅ Noise algorithm variations (white, pink, brown, blue, violet, red, green)
+- ✅ Performance testing with multiple instances
+- ✅ Edge cases and boundary conditions
+- ✅ Real-world scenarios (guitar, vocal, drum reverb settings)
+
+### Running Tests
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests once
+pnpm test:run
+
+# Run tests with coverage report
+pnpm test:coverage
+```
+
+### Test Environment
+
+- **Vitest** - Fast Vite-based test framework
+- **Happy-DOM** - Browser environment simulation
+- **Web Audio API Mocking** - Complete audio context simulation
+- **TypeScript Support** - Full type checking during tests
+
 ### CDN Usage
 
 Not really intended for use with a CDN.
