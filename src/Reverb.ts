@@ -1,20 +1,13 @@
-import {
-  blue,
-  green,
-  pink,
-  red,
-  violet,
-  white,
-  type ColoredNoiseOpts,
-} from '@thi.ng/colored-noise';
+import { white, type ColoredNoiseOpts } from '@thi.ng/colored-noise';
 import { take } from '@thi.ng/transducers';
 
-import type { NoiseType } from '@/NoiseType';
 import type OptionInterface from '@/interfaces/OptionInterface';
 import type { INorm } from '@thi.ng/random';
 
 import Meta from '@/Meta';
+import { NoiseType as NoiseTypeMap, type NoiseType } from '@/NoiseType';
 import { defaults } from '@/interfaces/OptionInterface';
+
 
 /**
  * Reverb effect class
@@ -50,15 +43,7 @@ export default class Reverb {
   private readonly noiseMap: Record<
     NoiseType,
     (opts?: Partial<ColoredNoiseOpts>) => Generator<number, void, unknown>
-  > = {
-    blue,
-    green,
-    pink,
-    red,
-    brown: red, // brown is an alias for red
-    violet,
-    white,
-  };
+  > = NoiseTypeMap;
 
   /**
    * Constructor
