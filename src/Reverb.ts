@@ -8,7 +8,6 @@ import Meta from '@/Meta';
 import { NoiseType as NoiseTypeMap, type NoiseType } from '@/NoiseType';
 import { defaults } from '@/interfaces/OptionInterface';
 
-
 /**
  * Reverb effect class
  */
