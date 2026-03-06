@@ -164,3 +164,11 @@ The dependent libraries [@thi.ng/colored-noise](https://www.jsdelivr.com/package
 ## License
 
 ©2019-2026 by Logue. Licensed under the [MIT License](LICENSE).
+
+## 🎨 Crafted for Developers
+
+This library is built with a focus **modern developer experience**. Maintaining it involves constant testing and updates to ensure everything works seamlessly.
+
+If you appreciate the attention to detail in this project, a small sponsorship would go a long way in supporting my work across the Vue.js and Metaverse ecosystems.
+
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/logue?label=Sponsor&logo=github&color=ea4aaa)](https://github.com/sponsors/logue)
