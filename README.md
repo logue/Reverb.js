@@ -163,4 +163,4 @@ The dependent libraries [@thi.ng/colored-noise](https://www.jsdelivr.com/package
 
 ## License
 
-©2019-2025 by Logue. Licensed under the [MIT License](LICENSE).
+©2019-2026 by Logue. Licensed under the [MIT License](LICENSE).
