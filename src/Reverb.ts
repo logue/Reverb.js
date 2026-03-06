@@ -53,7 +53,8 @@ export default class Reverb {
   constructor(ctx: AudioContext, options: Partial<OptionInterface>) {
     // マスターのAudioContextを取得
     this.ctx = ctx;
-    this.options = Object.assign(defaults, options);
+    // Keep shared defaults immutable across instances/tests.
+    this.options = Object.assign({}, defaults, options);
     // 初期化
     this.wetGainNode = this.ctx.createGain();
     this.dryGainNode = this.ctx.createGain();
