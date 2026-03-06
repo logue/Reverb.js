@@ -290,7 +290,32 @@ export default class Reverb {
    */
   public setNoise(type: NoiseType): void {
     this.options.noise = type;
-    this.noise = this.noiseMap[type] || white;
+    switch (type) {
+      case 'blue':
+        this.noise = this.noiseMap.blue;
+        break;
+      case 'brown':
+        this.noise = this.noiseMap.brown;
+        break;
+      case 'green':
+        this.noise = this.noiseMap.green;
+        break;
+      case 'pink':
+        this.noise = this.noiseMap.pink;
+        break;
+      case 'red':
+        this.noise = this.noiseMap.red;
+        break;
+      case 'violet':
+        this.noise = this.noiseMap.violet;
+        break;
+      case 'white':
+        this.noise = this.noiseMap.white;
+        break;
+      default:
+        this.noise = white;
+        break;
+    }
     this.buildImpulse();
     console.debug(`[Reverb.js] Set IR generator source noise type to ${type}.`);
   }
@@ -333,6 +358,9 @@ export default class Reverb {
     const impulseL: Float32Array = new Float32Array(duration);
     /** 右チャンネル */
     const impulseR: Float32Array = new Float32Array(duration);
+    /** set() 用の一時バッファ */
+    const sampleL = new Float32Array(1);
+    const sampleR = new Float32Array(1);
     /** 左チャンネルのオーディオソース */
     const noiseL: number[] = this.getNoise(duration);
     /** 右チャンネルのオーディオソース */
@@ -340,12 +368,14 @@ export default class Reverb {
 
     for (let i = 0; i < duration; i++) {
       /** 減衰率 */
-      let n = 0;
+      let n: number;
 
       if (i < delayDuration) {
         // Delay Effect
-        impulseL[i] = 0;
-        impulseR[i] = 0;
+        sampleL[0] = 0;
+        sampleR[0] = 0;
+        impulseL.set(sampleL, i);
+        impulseR.set(sampleR, i);
         n =
           (this.options.reverse ?? false)
             ? duration - (i - delayDuration)
@@ -354,8 +384,12 @@ export default class Reverb {
         n = (this.options.reverse ?? false) ? duration - i : i;
       }
       // 元の音（ノイズ）を時間経過とともに減衰させる
-      impulseL[i] = (noiseL[i] ?? 0) * (1 - n / duration) ** this.options.decay;
-      impulseR[i] = (noiseR[i] ?? 0) * (1 - n / duration) ** this.options.decay;
+      sampleL[0] =
+        (noiseL.at(i) ?? 0) * (1 - n / duration) ** this.options.decay;
+      sampleR[0] =
+        (noiseR.at(i) ?? 0) * (1 - n / duration) ** this.options.decay;
+      impulseL.set(sampleL, i);
+      impulseR.set(sampleR, i);
     }
 
     // インパルス応答のバッファに生成したWaveTableを代入

@@ -37,6 +37,8 @@ export default defineConfig([
   pluginImport.flatConfigs.recommended,
   pluginImport.flatConfigs.typescript,
   ...tseslint.configs.stylistic,
+  ...pluginOxlint.configs['flat/recommended'],
+  pluginSecurity.configs.recommended,
   {
     settings: {
       // This will do the trick
@@ -126,7 +128,5 @@ export default defineConfig([
       ],
     },
   },
-  ...pluginOxlint.configs['flat/recommended'],
-  pluginSecurity.configs.recommended,
   eslintConfigPrettier,
 ]);
