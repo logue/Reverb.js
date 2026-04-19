@@ -45,7 +45,26 @@ export default defineConfig(({ command, mode }): UserConfig => {
       // https://github.com/qmhc/vite-plugin-dts
       mode === 'docs'
         ? undefined
-        : dts({ tsconfigPath: './tsconfig.app.json' }),
+        : dts({
+            tsconfigPath: './tsconfig.app.json',
+            entryRoot: 'src',
+            outDir: 'dist',
+            beforeWriteFile: (filePath, content) => {
+              const normalizedPath = filePath.replace('/dist/src/', '/dist/');
+              const normalizedContent = content
+                .replaceAll(/(['"])\.\.\/interfaces\//g, '$1./interfaces/')
+                .replaceAll(/(['"])\.\.\/NoiseType\1/g, '$1./NoiseType$1')
+                .replaceAll(
+                  /(['"])\.\.\/\.\.\/NoiseType\1/g,
+                  '$1../NoiseType$1'
+                );
+
+              return {
+                filePath: normalizedPath,
+                content: normalizedContent,
+              };
+            },
+          }),
     ],
     // Build Options
     // https://vitejs.dev/config/#build-options
@@ -92,11 +111,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
               ],
         output: {
           esModule: true,
-          generatedCode: {
-            reservedNamesAsProps: false,
-          },
-          interop: 'compat',
-          systemNullSetters: false,
           exports: 'named',
           globals: {
             '@thi.ng/colored-noise': 'coloredNoise',
