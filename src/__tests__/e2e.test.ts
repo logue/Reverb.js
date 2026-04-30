@@ -124,26 +124,41 @@ describe('Reverb E2E', () => {
     it('should handle multiple reverb sends efficiently', () => {
       // Create multiple sends like in a mixing console
       const sends = [
-        new Reverb(audioContext, { time: 1.2, mix: 0.2, noise: 'white' }),
-        new Reverb(audioContext, { time: 2.5, mix: 0.3, noise: 'pink' }),
-        new Reverb(audioContext, { time: 4.0, mix: 0.4, noise: 'brown' }),
-      ];
-
-      const tracks = [
-        createMockAudioNode(),
-        createMockAudioNode(),
-        createMockAudioNode(),
+        {
+          reverb: new Reverb(audioContext, {
+            time: 1.2,
+            mix: 0.2,
+            noise: 'white',
+          }),
+          track: createMockAudioNode(),
+        },
+        {
+          reverb: new Reverb(audioContext, {
+            time: 2.5,
+            mix: 0.3,
+            noise: 'pink',
+          }),
+          track: createMockAudioNode(),
+        },
+        {
+          reverb: new Reverb(audioContext, {
+            time: 4.0,
+            mix: 0.4,
+            noise: 'brown',
+          }),
+          track: createMockAudioNode(),
+        },
       ];
 
       // Connect tracks to different reverb sends
-      for (let i = 0; i < sends.length; i++) {
-        const output = sends[i].connect(tracks[i]);
+      for (const { reverb, track } of sends) {
+        const output = reverb.connect(track);
         expect(output).toBeDefined();
       }
 
       // Disconnect all
-      for (let i = 0; i < sends.length; i++) {
-        sends[i].disconnect(tracks[i]);
+      for (const { reverb, track } of sends) {
+        reverb.disconnect(track);
       }
     });
 
@@ -151,7 +166,8 @@ describe('Reverb E2E', () => {
       const reverb = new Reverb(audioContext, {});
       const sourceNode = createMockAudioNode();
 
-      reverb.connect(sourceNode);
+      const output = reverb.connect(sourceNode);
+      expect(output).toBeDefined();
 
       // Simulate rapid automation (like from a MIDI controller)
       for (let i = 0; i < 100; i++) {

@@ -51,23 +51,23 @@ export default class Reverb {
    * @param options - Configure
    */
   constructor(ctx: AudioContext, options: Partial<OptionInterface>) {
-    // マスターのAudioContextを取得
+    // Store the master AudioContext.
     this.ctx = ctx;
     // Keep shared defaults immutable across instances/tests.
     this.options = Object.assign({}, defaults, options);
-    // 初期化
+    // Initialize audio nodes.
     this.wetGainNode = this.ctx.createGain();
     this.dryGainNode = this.ctx.createGain();
     this.filterNode = this.ctx.createBiquadFilter();
     this.convolverNode = this.ctx.createConvolver();
     this.outputNode = this.ctx.createGain();
-    // 接続済みフラグを落とす
+    // Reset connected flag.
     this.isConnected = false;
     this.filterType(this.options.filterType);
     this.setNoise(this.options.noise);
-    // インパルス応答を生成
+    // Generate the impulse response.
     this.buildImpulse();
-    // トライ／ウェットノードの量を調整
+    // Set the initial dry/wet ratio.
     this.mix(this.options.mix);
   }
 
@@ -78,25 +78,25 @@ export default class Reverb {
    */
   public connect(sourceNode: AudioNode): AudioNode {
     if (this.isConnected && this.options.once) {
-      // 接続済みだった場合、フラグを落としてそのまま出力ノードを返す
+      // Already connected: reset flag and return the output node as-is.
       this.isConnected = false;
       return this.outputNode;
     }
-    // 畳み込みノードをウェットレベルに接続
+    // Connect convolver to filter node.
     this.convolverNode.connect(this.filterNode);
-    // フィルタノードをウェットレベルに接続
+    // Connect filter node to wet gain.
     this.filterNode.connect(this.wetGainNode);
-    // 入力ノードを畳み込みノードに接続
+    // Connect source to convolver (wet path).
     sourceNode.connect(this.convolverNode);
-    // ドライノードを出力ノードに接続
+    // Connect source to dry gain.
     sourceNode.connect(this.dryGainNode);
-    // ウェットノードを出力ノードに接続
+    // Connect source directly to wet gain.
     sourceNode.connect(this.wetGainNode);
-    // ドライレベルを出力ノードに接続
+    // Connect dry gain to output.
     this.dryGainNode.connect(this.outputNode);
-    // ウェットレベルを出力ノードに接続
+    // Connect wet gain to output.
     this.wetGainNode.connect(this.outputNode);
-    // 接続済みフラグを立てる
+    // Mark as connected.
     this.isConnected = true;
 
     return this.outputNode;
@@ -108,17 +108,17 @@ export default class Reverb {
    * @param sourceNode - Input source node
    */
   public disconnect(sourceNode?: AudioNode): AudioNode | undefined {
-    // 初期状態ではノードがつながっていないためエラーになる
+    // Nodes are not connected in the initial state; skip disconnect to avoid errors.
     if (this.isConnected) {
-      // 畳み込みノードをウェットレベルから切断
+      // Disconnect convolver from filter node.
       this.convolverNode.disconnect(this.filterNode);
-      // フィルタノードをウェットレベルから切断
+      // Disconnect filter node from wet gain.
       this.filterNode.disconnect(this.wetGainNode);
     }
-    // 接続済みフラグを解除
+    // Clear connected flag.
     this.isConnected = false;
 
-    // そのままノードを返す（他のAPIに似せるため）
+    // Return the source node to mirror common Web Audio API patterns.
     return sourceNode;
   }
 
@@ -322,9 +322,9 @@ export default class Reverb {
   }
 
   /**
-   * Set Random Algorythm
+   * Set the random number algorithm used for noise generation.
    *
-   * @param algorithm - Algorythm
+   * @param algorithm - Random algorithm implementing {@link INorm}
    */
   public setRandomAlgorithm(algorithm: INorm): void {
     this.options.randomAlgorithm = algorithm;
@@ -343,36 +343,34 @@ export default class Reverb {
     return x >= min && x <= max;
   }
 
-  /** Utility function for building an impulse response from the module parameters. */
+  /** Builds the impulse response buffer from the current options. */
   private buildImpulse(): void {
-    // インパルス応答生成ロジック
-
-    /** サンプリングレート */
+    /** Sample rate of the AudioContext. */
     const rate: number = this.ctx.sampleRate;
-    /** インパルス応答の演奏時間 */
+    /** Total IR length in samples. */
     const duration: number = Math.max(rate * this.options.time, 1);
-    /** インパルス応答が始まるまでの遅延時間 */
+    /** Delay before IR onset, in samples. */
     const delayDuration: number = rate * this.options.delay;
-    /** インパルス応答バッファ（今の所ステレオのみ） */
+    /** IR audio buffer (stereo). */
     const impulse: AudioBuffer = this.ctx.createBuffer(2, duration, rate);
-    /** 左チャンネル */
+    /** Left channel sample array. */
     const impulseL: Float32Array = new Float32Array(duration);
-    /** 右チャンネル */
+    /** Right channel sample array. */
     const impulseR: Float32Array = new Float32Array(duration);
-    /** set() 用の一時バッファ */
+    /** Temporary single-sample buffers used with Float32Array.set(). */
     const sampleL = new Float32Array(1);
     const sampleR = new Float32Array(1);
-    /** 左チャンネルのオーディオソース */
+    /** Noise source for left channel. */
     const noiseL: number[] = this.getNoise(duration);
-    /** 右チャンネルのオーディオソース */
+    /** Noise source for right channel. */
     const noiseR: number[] = this.getNoise(duration);
 
     for (let i = 0; i < duration; i++) {
-      /** 減衰率 */
+      /** Decay position index (accounts for reverse and delay). */
       let n: number;
 
       if (i < delayDuration) {
-        // Delay Effect
+        // Zero out samples within the delay period.
         sampleL[0] = 0;
         sampleR[0] = 0;
         impulseL.set(sampleL, i);
@@ -384,7 +382,7 @@ export default class Reverb {
       } else {
         n = (this.options.reverse ?? false) ? duration - i : i;
       }
-      // 元の音（ノイズ）を時間経過とともに減衰させる
+      // Apply exponential decay to the noise source over time.
       sampleL[0] =
         (noiseL.at(i) ?? 0) * (1 - n / duration) ** this.options.decay;
       sampleR[0] =
@@ -393,7 +391,7 @@ export default class Reverb {
       impulseR.set(sampleR, i);
     }
 
-    // インパルス応答のバッファに生成したWaveTableを代入
+    // Write the generated wave table into the IR buffer.
     impulse.getChannelData(0).set(impulseL);
     impulse.getChannelData(1).set(impulseR);
 

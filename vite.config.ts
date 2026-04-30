@@ -1,8 +1,9 @@
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath, URL } from 'node:url';
 
-import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, type UserConfig } from 'vite';
+
+import { visualizer } from 'rollup-plugin-visualizer';
 import banner from 'vite-plugin-banner';
 import { checker } from 'vite-plugin-checker';
 import dts from 'vite-plugin-dts';
@@ -48,7 +49,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
         : dts({
             tsconfigPath: './tsconfig.app.json',
             entryRoot: 'src',
-            outDir: 'dist',
+            outDirs: 'dist',
             beforeWriteFile: (filePath, content) => {
               const normalizedPath = filePath.replace('/dist/src/', '/dist/');
               const normalizedContent = content
@@ -127,7 +128,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
     },
   };
   // Write meta data.
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- for meta data file
   writeFileSync(
     fileURLToPath(new URL('./src/Meta.ts', import.meta.url)),
     `import type MetaInterface from './interfaces/MetaInterface';

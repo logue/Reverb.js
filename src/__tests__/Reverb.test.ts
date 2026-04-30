@@ -215,6 +215,8 @@ describe('Reverb', () => {
       // Using a mock random algorithm
       const mockRandom = {
         norm: () => Math.random(),
+        normMinMax: (min: number, max: number) =>
+          min + Math.random() * (max - min),
         int: () => Math.floor(Math.random() * 100),
         float: () => Math.random(),
         probability: () => Math.random() < 0.5,
