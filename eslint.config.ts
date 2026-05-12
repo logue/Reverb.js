@@ -13,7 +13,12 @@ import tseslint from 'typescript-eslint';
 import type { Linter } from 'eslint';
 
 // Lint policy:
-const APP_FILES = ['**/*.{ts,mts,tsx}'];
+// 1) Keep oxlint + prettier as primary formatting/quick-check tools.
+// 2) Keep ESLint focused on framework/type/import correctness.
+// 3) Scope plugin presets to relevant file types to avoid cross-file crashes.
+// 4) Restrict markdown lint to workspace instruction docs under .github.
+// 5) Prefer small, explicit overrides over broad global exceptions.
+const APP_FILES = ['**/*.{vue,ts,mts,tsx}'];
 const MARKDOWN_FILES = ['.github/**/*.md'];
 const UNIT_TEST_FILES = ['src/**/__tests__/*'];
 const GLOBAL_IGNORES = ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'];

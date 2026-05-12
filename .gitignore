@@ -1,15 +1,8 @@
-/.yarn/*
 /.vscode/*
-# !/.yarn/patches
-# !/.yarn/plugins
-!/.yarn/releases
-# !/.yarn/sdks
-# !/.yarn/cache
 node_modules
 .DS_Store
 dist
 dist-ssr
 *.local
-/src/Meta.ts
 /docs
 /coverage
