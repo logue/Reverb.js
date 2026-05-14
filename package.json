@@ -47,7 +47,7 @@
     "./package.json": "./package.json"
   },
   "engines": {
-    "node": ">=24"
+    "node": "^20.19.0 || >=22.12.0"
   },
   "packageManager": "pnpm@11.1.1",
   "sideEffects": false,
@@ -119,8 +119,5 @@
   "lint-staged": {
     "*.{js,ts,json,htm,html}": "eslint --fix --cache --cache-location ./node_modules/.vite/vite-plugin-eslint",
     "*": "prettier -w -u"
-  },
-  "resolutions": {
-    "rollup": ">=4.60.2"
   }
 }
