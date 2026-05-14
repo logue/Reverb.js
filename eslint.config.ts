@@ -21,7 +21,12 @@ import type { Linter } from 'eslint';
 const APP_FILES = ['**/*.{vue,ts,mts,tsx}'];
 const MARKDOWN_FILES = ['.github/**/*.md'];
 const UNIT_TEST_FILES = ['src/**/__tests__/*'];
-const GLOBAL_IGNORES = ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'];
+const GLOBAL_IGNORES = [
+  '**/dist/**',
+  '**/dist-ssr/**',
+  '**/coverage/**',
+  '**/docs/**',
+];
 
 const markdownRecommendedConfigs = markdown.configs.recommended.map(config => ({
   ...config,

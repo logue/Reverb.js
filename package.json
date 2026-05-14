@@ -47,9 +47,9 @@
     "./package.json": "./package.json"
   },
   "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+    "node": ">=24.13.0"
   },
-  "packageManager": "pnpm@11.1.1",
+  "packageManager": "pnpm@11.1.2",
   "sideEffects": false,
   "scripts": {
     "dev": "vite",
@@ -105,7 +105,7 @@
     "rollup-plugin-visualizer": "^7.0.1",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.3",
-    "vite": "^8.0.12",
+    "vite": "^8.0.13",
     "vite-plugin-banner": "^0.8.1",
     "vite-plugin-checker": "^0.13.0",
     "vite-plugin-dts": "^5.0.0",

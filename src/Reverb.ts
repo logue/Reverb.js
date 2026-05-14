@@ -50,7 +50,7 @@ export default class Reverb {
    * @param ctx - Root AudioContext
    * @param options - Configure
    */
-  constructor(ctx: AudioContext, options: Partial<OptionInterface>) {
+  constructor(ctx: AudioContext, options: Partial<OptionInterface> = {}) {
     // Store the master AudioContext.
     this.ctx = ctx;
     // Keep shared defaults immutable across instances/tests.

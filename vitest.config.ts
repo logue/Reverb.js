@@ -6,6 +6,10 @@ import { defineConfig } from 'vitest/config';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
+  define: {
+    __APP_VERSION__: JSON.stringify('test'),
+    __BUILD_DATE__: JSON.stringify('test'),
+  },
   test: {
     environment: 'happy-dom',
     coverage: {

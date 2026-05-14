@@ -26,18 +26,27 @@ export default defineConfig(({ mode }): UserConfig => {
       __APP_VERSION__: JSON.stringify(pkg.version),
       __BUILD_DATE__: JSON.stringify(buildDate),
     },
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
+    },
     plugins: [
       // vite-plugin-checker
       // https://github.com/fi3ework/vite-plugin-checker
-      checker({
-        typescript: true,
-        // vueTsc: true,
-        // eslint: { lintCommand: 'eslint' },
-        // stylelint: { lintCommand: 'stylelint' },
-      }),
+      mode === 'docs'
+        ? undefined
+        : checker({
+            typescript: true,
+            // vueTsc: true,
+            // eslint: { lintCommand: 'eslint' },
+            // stylelint: { lintCommand: 'stylelint' },
+          }),
       // vite-plugin-banner
       // https://github.com/chengpeiquan/vite-plugin-banner
-      banner(`/**
+      mode === 'docs'
+        ? undefined
+        : banner(`/**
  * ${pkg.name}
  *
  * @description ${pkg.description}
@@ -74,13 +83,19 @@ export default defineConfig(({ mode }): UserConfig => {
           }),
     ],
     build: {
-      lib: {
-        entry: fileURLToPath(new URL('./src/Reverb.ts', import.meta.url)),
-        name: 'Reverb',
-        formats: ['es', 'umd', 'iife'],
-        fileName: format => `reverb.${format}.js`,
-      },
+      outDir: mode === 'docs' ? 'docs' : 'dist',
+      ...(mode !== 'docs' && {
+        lib: {
+          entry: fileURLToPath(new URL('./src/Reverb.ts', import.meta.url)),
+          name: 'Reverb',
+          formats: ['es', 'umd', 'iife'],
+          fileName: format => `reverb.${format}.js`,
+        },
+      }),
       rollupOptions: {
+        ...(mode === 'docs' && {
+          input: fileURLToPath(new URL('./index.html', import.meta.url)),
+        }),
         plugins: [
           mode === 'analyze'
             ? // rollup-plugin-visualizer
