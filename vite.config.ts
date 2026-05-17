@@ -89,7 +89,7 @@ export default defineConfig(({ mode }): UserConfig => {
           entry: fileURLToPath(new URL('./src/Reverb.ts', import.meta.url)),
           name: 'Reverb',
           formats: ['es', 'umd', 'iife'],
-          fileName: format => `reverb.${format}.js`,
+          fileName: format => `Reverb.${format}.js`,
         },
       }),
       rollupOptions: {
