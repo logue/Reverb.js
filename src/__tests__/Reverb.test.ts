@@ -1,13 +1,13 @@
 /**
  * Reverb class unit tests
  */
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from '@rstest/core';
 
-import { createMockAudioContext, createMockAudioNode } from './setup.js';
+import { createMockAudioContext, createMockAudioNode } from './setup';
 
-import type { NoiseType } from '@/NoiseType';
+import type { NoiseType } from '../NoiseType';
 
-import Reverb from '@/Reverb';
+import Reverb from '../index';
 
 describe('Reverb', () => {
   let audioContext: AudioContext;

@@ -1,8 +1,18 @@
-/.vscode/*
-node_modules
+# Local
 .DS_Store
-dist
-dist-ssr
 *.local
-/docs
-/coverage
+*.log*
+
+# Dist
+node_modules
+dist/
+storybook-static
+doc_build/
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+#
+docs/

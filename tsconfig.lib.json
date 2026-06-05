@@ -1,0 +1,15 @@
+{
+  "extends": "@tsconfig/node-lts/tsconfig.json",
+  "include": ["env.d.ts", "src/**/*"],
+  "exclude": ["src/**/__tests__/*", "src/demo/demo.ts"],
+  "compilerOptions": {
+    "noEmit": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "useDefineForClassFields": true,
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}

@@ -1,11 +1,11 @@
 /**
  * OptionInterface tests
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from '@rstest/core';
 
-import type OptionInterface from '@/interfaces/OptionInterface';
+import type OptionInterface from '../interfaces/OptionInterface';
 
-import { defaults } from '@/interfaces/OptionInterface';
+import { defaults } from '../interfaces/OptionInterface';
 
 describe('OptionInterface', () => {
   describe('defaults', () => {

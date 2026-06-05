@@ -2,11 +2,11 @@
  * End-to-end tests for Reverb.js
  * These tests simulate real-world usage scenarios
  */
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from '@rstest/core';
 
-import { createMockAudioContext, createMockAudioNode } from './setup.js';
+import { createMockAudioContext, createMockAudioNode } from './setup';
 
-import Reverb from '@/Reverb';
+import Reverb from '../index';
 
 describe('Reverb E2E', () => {
   let audioContext: AudioContext;

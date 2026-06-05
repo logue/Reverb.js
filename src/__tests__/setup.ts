@@ -1,43 +1,43 @@
 /**
  * Test setup and utility functions
  */
-import { vi } from 'vitest';
+import { rs } from '@rstest/core';
 
 // Mock Web Audio API for testing
 export const createMockAudioContext = (): AudioContext => {
   const mockAudioContext = {
     sampleRate: 44100,
     state: 'running',
-    createBuffer: vi
+    createBuffer: rs
       .fn()
       .mockImplementation(
         (channels: number, length: number, sampleRate: number) => ({
           numberOfChannels: channels,
           length,
           sampleRate,
-          getChannelData: vi.fn().mockReturnValue(new Float32Array(length)),
-        })
+          getChannelData: rs.fn().mockReturnValue(new Float32Array(length)),
+        }),
       ),
-    createGain: vi.fn().mockReturnValue({
+    createGain: rs.fn().mockReturnValue({
       gain: { value: 1 },
-      connect: vi.fn(),
-      disconnect: vi.fn(),
+      connect: rs.fn(),
+      disconnect: rs.fn(),
     }),
-    createBiquadFilter: vi.fn().mockReturnValue({
+    createBiquadFilter: rs.fn().mockReturnValue({
       type: 'allpass',
       frequency: { value: 350 },
       Q: { value: 1 },
-      connect: vi.fn(),
-      disconnect: vi.fn(),
+      connect: rs.fn(),
+      disconnect: rs.fn(),
     }),
-    createConvolver: vi.fn().mockReturnValue({
+    createConvolver: rs.fn().mockReturnValue({
       buffer: null,
-      connect: vi.fn(),
-      disconnect: vi.fn(),
+      connect: rs.fn(),
+      disconnect: rs.fn(),
     }),
-    close: vi.fn(),
-    resume: vi.fn(),
-    suspend: vi.fn(),
+    close: rs.fn(),
+    resume: rs.fn(),
+    suspend: rs.fn(),
   } as unknown as AudioContext;
 
   return mockAudioContext;
@@ -46,8 +46,8 @@ export const createMockAudioContext = (): AudioContext => {
 // Mock Audio Node for testing
 export const createMockAudioNode = (): AudioNode => {
   const mockAudioNode = {
-    connect: vi.fn(),
-    disconnect: vi.fn(),
+    connect: rs.fn(),
+    disconnect: rs.fn(),
     context: createMockAudioContext(),
     numberOfInputs: 1,
     numberOfOutputs: 1,

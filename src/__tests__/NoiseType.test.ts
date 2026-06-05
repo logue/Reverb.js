@@ -1,9 +1,9 @@
 /**
  * NoiseType tests
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from '@rstest/core';
 
-import type { NoiseType } from '@/NoiseType';
+import type { NoiseType } from '../NoiseType';
 
 describe('NoiseType', () => {
   it('should define all expected noise types', () => {

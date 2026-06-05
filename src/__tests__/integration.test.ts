@@ -1,11 +1,11 @@
 /**
  * Integration tests for Reverb effect
  */
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from '@rstest/core';
 
-import { createMockAudioContext, createMockAudioNode } from './setup.js';
+import { createMockAudioContext, createMockAudioNode } from './setup';
 
-import Reverb from '@/Reverb';
+import Reverb from '../index';
 
 describe('Reverb Integration', () => {
   let audioContext: AudioContext;
@@ -180,45 +180,45 @@ describe('Reverb Integration', () => {
 
       // Test all parameter validation
       expect(() => reverb.mix(-0.1)).toThrow(
-        'Dry/Wet ratio must be between 0 to 1.'
+        'Dry/Wet ratio must be between 0 to 1.',
       );
       expect(() => reverb.mix(1.1)).toThrow(
-        'Dry/Wet ratio must be between 0 to 1.'
+        'Dry/Wet ratio must be between 0 to 1.',
       );
 
       expect(() => reverb.time(0.5)).toThrow(
-        'Time length of impulse response must be less than 50sec.'
+        'Time length of impulse response must be less than 50sec.',
       );
       expect(() => reverb.time(51)).toThrow(
-        'Time length of impulse response must be less than 50sec.'
+        'Time length of impulse response must be less than 50sec.',
       );
 
       expect(() => reverb.decay(-1)).toThrow(
-        'Impulse Response decay level must be less than 100.'
+        'Impulse Response decay level must be less than 100.',
       );
       expect(() => reverb.decay(101)).toThrow(
-        'Impulse Response decay level must be less than 100.'
+        'Impulse Response decay level must be less than 100.',
       );
 
       expect(() => reverb.delay(-1)).toThrow(
-        'Impulse Response delay time must be less than 100.'
+        'Impulse Response delay time must be less than 100.',
       );
       expect(() => reverb.delay(101)).toThrow(
-        'Impulse Response delay time must be less than 100.'
+        'Impulse Response delay time must be less than 100.',
       );
 
       expect(() => reverb.filterFreq(19)).toThrow(
-        'Filter frequrncy must be between 20 and 20000.'
+        'Filter frequrncy must be between 20 and 20000.',
       );
       expect(() => reverb.filterFreq(20001)).toThrow(
-        'Filter frequrncy must be between 20 and 20000.'
+        'Filter frequrncy must be between 20 and 20000.',
       );
 
       expect(() => reverb.filterQ(-1)).toThrow(
-        'Filter Q value must be between 0 and 10.'
+        'Filter Q value must be between 0 and 10.',
       );
       expect(() => reverb.filterQ(11)).toThrow(
-        'Filter Q value must be between 0 and 10.'
+        'Filter Q value must be between 0 and 10.',
       );
     });
 

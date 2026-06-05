@@ -34,7 +34,7 @@ export default class Reverb {
   private isConnected: boolean;
   /** Noise Generator */
   private noise: (
-    _opts?: Partial<ColoredNoiseOpts>
+    _opts?: Partial<ColoredNoiseOpts>,
   ) => Generator<number, void, unknown> = white;
   /**
    * Map of noise types to their respective generator functions.
@@ -145,13 +145,13 @@ export default class Reverb {
   public time(value: number): void {
     if (!Reverb.inRange(value, 1, 50)) {
       throw new RangeError(
-        '[Reverb.js] Time length of impulse response must be less than 50sec.'
+        '[Reverb.js] Time length of impulse response must be less than 50sec.',
       );
     }
     this.options.time = value;
     this.buildImpulse();
     console.debug(
-      `[Reverb.js] Set impulse response time length to ${value}sec.`
+      `[Reverb.js] Set impulse response time length to ${value}sec.`,
     );
   }
 
@@ -163,7 +163,7 @@ export default class Reverb {
   public decay(value: number): void {
     if (!Reverb.inRange(value, 0, 100)) {
       throw new RangeError(
-        '[Reverb.js] Impulse Response decay level must be less than 100.'
+        '[Reverb.js] Impulse Response decay level must be less than 100.',
       );
     }
     this.options.decay = value;
@@ -179,13 +179,13 @@ export default class Reverb {
   public delay(value: number): void {
     if (!Reverb.inRange(value, 0, 100)) {
       throw new RangeError(
-        '[Reverb.js] Impulse Response delay time must be less than 100.'
+        '[Reverb.js] Impulse Response delay time must be less than 100.',
       );
     }
     this.options.delay = value;
     this.buildImpulse();
     console.debug(
-      `[Reverb.js] Set impulse response delay time to ${value}sec.`
+      `[Reverb.js] Set impulse response delay time to ${value}sec.`,
     );
   }
 
@@ -198,7 +198,7 @@ export default class Reverb {
     this.options.reverse = reverse;
     this.buildImpulse();
     console.debug(
-      `[Reverb.js] Inpulse response is ${reverse ? '' : 'not '}reversed.`
+      `[Reverb.js] Inpulse response is ${reverse ? '' : 'not '}reversed.`,
     );
   }
 
@@ -220,7 +220,7 @@ export default class Reverb {
   public filterFreq(freq: number): void {
     if (!Reverb.inRange(freq, 20, 20000)) {
       throw new RangeError(
-        '[Reverb.js] Filter frequrncy must be between 20 and 20000.'
+        '[Reverb.js] Filter frequrncy must be between 20 and 20000.',
       );
     }
     this.options.filterFreq = freq;
@@ -236,7 +236,7 @@ export default class Reverb {
   public filterQ(q: number): void {
     if (!Reverb.inRange(q, 0, 10)) {
       throw new RangeError(
-        '[Reverb.js] Filter Q value must be between 0 and 10.'
+        '[Reverb.js] Filter Q value must be between 0 and 10.',
       );
     }
     this.options.filterQ = q;
@@ -279,7 +279,7 @@ export default class Reverb {
           bins: this.options.peaks,
           scale: this.options.scale,
           rnd: this.options.randomAlgorithm,
-        })
+        }),
       ),
     ];
   }
