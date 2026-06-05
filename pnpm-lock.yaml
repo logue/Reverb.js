@@ -10,13 +10,13 @@ importers:
     dependencies:
       '@thi.ng/colored-noise':
         specifier: ^1
-        version: 1.0.132
+        version: 1.0.135
       '@thi.ng/random':
         specifier: ^4
-        version: 4.1.48
+        version: 4.1.51
       '@thi.ng/transducers':
         specifier: ^9.6.0
-        version: 9.6.36
+        version: 9.6.39
     devDependencies:
       '@biomejs/biome':
         specifier: 2.4.16
@@ -353,56 +353,56 @@ packages:
   '@swc/helpers@0.5.23':
     resolution: {integrity: sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==}
 
-  '@thi.ng/api@8.12.22':
-    resolution: {integrity: sha512-aXlzuPhtVDaMuqhCNWhZtDWJeL8xLKvysmAfI4437gqpNosOwIBXZO+9Lt8cjfAfjwRCfzix8fX0he2A9hIUbg==}
+  '@thi.ng/api@8.12.25':
+    resolution: {integrity: sha512-5Xixty2r+t6LNixnKpVBICz6R7SINaG2KnUG/CVJ2cuiQhih0RztldItEFYk4aRUFthRibhsG2Ie5ULS7qr9Kg==}
     engines: {node: '>=18'}
 
-  '@thi.ng/arrays@2.14.19':
-    resolution: {integrity: sha512-bef1ABAiTWQOSo81qQZXResKN54AzdOz/NIOuWKp5LOJfXaHcoB6AcDh7Z8dJUO6gaHju2KTPXic7BXb8eBv7Q==}
+  '@thi.ng/arrays@2.14.22':
+    resolution: {integrity: sha512-Zdw4dTRPIIgcmOzrB1DZzvUMStcqn+bXmAbCM4npDFcUtIbGvMGiRzYHrqb0Z2E4jKntTDy2wviCuUo1U7Evfw==}
     engines: {node: '>=18'}
 
-  '@thi.ng/binary@3.6.11':
-    resolution: {integrity: sha512-IyQ17ZAU5sXx+h2HaH0sI0aoqpI2ey7moR6S2z1EX94JOCmvxYpZu/F8WBQJ0g3bjWC0F51pAUJ94gBEjtZVCw==}
+  '@thi.ng/binary@3.6.14':
+    resolution: {integrity: sha512-10ZvRzNdJQ30+5UC75VIF5MKzThWQDFBN2jD1ilkCAjTtOLzt/JaGXbcCTKy9x1IW2aUHuUEfUcjvYaMAHmM9Q==}
     engines: {node: '>=18'}
 
-  '@thi.ng/checks@3.9.2':
-    resolution: {integrity: sha512-ATpkaLUlwGNM4e5iez8D3fHD+a62CpznETKjsgPVS/ODSbV+pW3hbrIWv6paTwGJH+RRvtctGpc0HZXtSiprqg==}
+  '@thi.ng/checks@3.9.5':
+    resolution: {integrity: sha512-hxSqs6DtE/RDkzWSa3xqbYEwqAhicqKcWRZSvUmQ9I2NEDrR+qBUj6icjXMtS51k+Mp3FRiTQ0FDCI8FbOBBmw==}
     engines: {node: '>=18'}
 
-  '@thi.ng/colored-noise@1.0.132':
-    resolution: {integrity: sha512-58NRCILKcByZ38EY3RwU5pufKojzdeC/vQ5C10iiJX7puig+gXhce/VW2wouK969sYKLm2iPSO8m2cCtYVHOXw==}
+  '@thi.ng/colored-noise@1.0.135':
+    resolution: {integrity: sha512-4JRz7M2SRUO8OhyaQ16iohgVlrCS4DMzXkaiEo7H+PI34JK3yH9WbFQdOFj0SP5/Iu5tvKG0dTdo3J+5Di+MSg==}
     engines: {node: '>=18'}
 
-  '@thi.ng/compare@2.5.10':
-    resolution: {integrity: sha512-GaRjLOVkndu6BL/XxvjL3BVpnzXSqexykhka0IODZfvkdcbGGtfWzEKFLnEHJZrMGM9KczLpD9/kgW0t7ltqqQ==}
+  '@thi.ng/compare@2.5.13':
+    resolution: {integrity: sha512-tbz+rRgZz7EtYMj/RnseLZQPvbqjpCvewlixQMCPyfq+ORcWHdXDBe0dV67Mt74CofUQvsygOVTevT+bpkKPJg==}
     engines: {node: '>=18'}
 
-  '@thi.ng/compose@3.0.59':
-    resolution: {integrity: sha512-6IHSwbuuvzVuUF8o2tWhkKKHa37n8+rSSjnbh+scJftBj5ePMD6a9CxKQk3P4F++cB/96n/+tgccDU5YeWqlCA==}
+  '@thi.ng/compose@3.0.62':
+    resolution: {integrity: sha512-sGgT+vcLjtCDnXwf2VkGiN6racMpo1E+OQcyq1+Eos4OKbUFxf+Src7SHTq0vGjW9FKfmwWAghe6T8l1BwttKQ==}
     engines: {node: '>=18'}
 
-  '@thi.ng/equiv@2.1.111':
-    resolution: {integrity: sha512-vSmA4RfCDXIKBSTtZ86XnSA8aME1sO371Aj3NYCjjb6kKZtBk5LGo0auzV/MVhJQlDs+ewIfKjbl/2LHin5DDA==}
+  '@thi.ng/equiv@2.1.114':
+    resolution: {integrity: sha512-kQuEqiT+m54MO9UCjdL9qrDD5OT8K+ANa0EziMpkyYRIiRe50XHoBzKCu8++YsCdEv4nX6oOD4c1b1fyu7x1hg==}
     engines: {node: '>=18'}
 
-  '@thi.ng/errors@2.6.11':
-    resolution: {integrity: sha512-l5eXCzZuHKyz2Lcf/i0JfgQeZ1kL6rTQ2oHfivNG5GxBqRrLfDT1ZJyj3DZx37gm6tGUDIOTSg4kF3ZXhqjxyA==}
+  '@thi.ng/errors@2.6.14':
+    resolution: {integrity: sha512-dSqLPZh5wOe329Ks2pJqoDmtjSv2g4KpXEP5/IQ5J9qvrEyNrRBCuaKHUKYUltQ1OUHGd9L5hBqGJl65Hlnu+g==}
     engines: {node: '>=18'}
 
-  '@thi.ng/math@5.15.11':
-    resolution: {integrity: sha512-Hg5zq1Q/E+X1zXRldvFEFofTt8I7dPuksrMLbPeNy30co8LQ5JzKwkVY42WzpAHpraF86+kZFcYvqW+M21B9Ww==}
+  '@thi.ng/math@5.15.14':
+    resolution: {integrity: sha512-8kqMbdFzHxiw3x/nELEyLkZdkVzTj7PTsIcCiqaIGMoRj1tDXSOmj4eBpZcdX8Ch5IwZ6riHwP6lyengNCjr7g==}
     engines: {node: '>=18'}
 
-  '@thi.ng/random@4.1.48':
-    resolution: {integrity: sha512-9ABhSwQfFMLHLBT9FRvFi3lrdeYkupX9+ZWXQ0hwwj0/KphP2wxIMT6goGCF+yfkAB+1DylcQWbtZ79RGKpfWg==}
+  '@thi.ng/random@4.1.51':
+    resolution: {integrity: sha512-3n1MUvGtTYv6Dyju9VfKN3jEJUul+EmMRPUvSZqeXWzCQtsG/2ulRtT4q+nyY/v9xF+LSR8AyQbHrayJQV/c4w==}
     engines: {node: '>=18'}
 
-  '@thi.ng/timestamp@1.1.41':
-    resolution: {integrity: sha512-h0+rCpUP08IS682dHIS7pbGrxiLEnDkQlmPnoMZ+LOt3Jy7YzoUwVjXDJsTW7LvGz0edkbtMZ75Wj7I4t4PiXQ==}
+  '@thi.ng/timestamp@1.1.44':
+    resolution: {integrity: sha512-OOEP2ibgOMQzLFGciU6HrFi0/9fENm3k9vjp6iVV8zyqy9sd477TU2puZN9iQhFTnIEaXkgoz/S//FfWc5rfKQ==}
     engines: {node: '>=18'}
 
-  '@thi.ng/transducers@9.6.36':
-    resolution: {integrity: sha512-HJbeVIaxsLb+MTKBHin702SHJ2yFilPrpSsF1Nrj43g7oj93fDOIRTynTNrnu7ykBOVR3HtwG9F3w4Cp11pkQw==}
+  '@thi.ng/transducers@9.6.39':
+    resolution: {integrity: sha512-NP7QNfs+MKLMaGWskyu1AH05mBSCpzo95HWqnwcxilRip05VEFFTiH3jMZg9Sln1fuyeFHqvqDzyAkyL75N5WA==}
     engines: {node: '>=18'}
 
   '@tsconfig/node-lts@24.0.0':
@@ -521,8 +521,8 @@ packages:
     resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
     engines: {node: '>=12'}
 
-  ws@8.20.1:
-    resolution: {integrity: sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==}
+  ws@8.21.0:
+    resolution: {integrity: sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -757,63 +757,63 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@thi.ng/api@8.12.22': {}
+  '@thi.ng/api@8.12.25': {}
 
-  '@thi.ng/arrays@2.14.19':
+  '@thi.ng/arrays@2.14.22':
     dependencies:
-      '@thi.ng/api': 8.12.22
-      '@thi.ng/checks': 3.9.2
-      '@thi.ng/compare': 2.5.10
-      '@thi.ng/equiv': 2.1.111
-      '@thi.ng/errors': 2.6.11
-      '@thi.ng/random': 4.1.48
+      '@thi.ng/api': 8.12.25
+      '@thi.ng/checks': 3.9.5
+      '@thi.ng/compare': 2.5.13
+      '@thi.ng/equiv': 2.1.114
+      '@thi.ng/errors': 2.6.14
+      '@thi.ng/random': 4.1.51
 
-  '@thi.ng/binary@3.6.11':
+  '@thi.ng/binary@3.6.14':
     dependencies:
-      '@thi.ng/api': 8.12.22
+      '@thi.ng/api': 8.12.25
 
-  '@thi.ng/checks@3.9.2': {}
+  '@thi.ng/checks@3.9.5': {}
 
-  '@thi.ng/colored-noise@1.0.132':
+  '@thi.ng/colored-noise@1.0.135':
     dependencies:
-      '@thi.ng/binary': 3.6.11
-      '@thi.ng/random': 4.1.48
+      '@thi.ng/binary': 3.6.14
+      '@thi.ng/random': 4.1.51
 
-  '@thi.ng/compare@2.5.10':
+  '@thi.ng/compare@2.5.13':
     dependencies:
-      '@thi.ng/api': 8.12.22
+      '@thi.ng/api': 8.12.25
 
-  '@thi.ng/compose@3.0.59':
+  '@thi.ng/compose@3.0.62':
     dependencies:
-      '@thi.ng/api': 8.12.22
-      '@thi.ng/errors': 2.6.11
+      '@thi.ng/api': 8.12.25
+      '@thi.ng/errors': 2.6.14
 
-  '@thi.ng/equiv@2.1.111': {}
+  '@thi.ng/equiv@2.1.114': {}
 
-  '@thi.ng/errors@2.6.11': {}
+  '@thi.ng/errors@2.6.14': {}
 
-  '@thi.ng/math@5.15.11':
+  '@thi.ng/math@5.15.14':
     dependencies:
-      '@thi.ng/api': 8.12.22
+      '@thi.ng/api': 8.12.25
 
-  '@thi.ng/random@4.1.48':
+  '@thi.ng/random@4.1.51':
     dependencies:
-      '@thi.ng/api': 8.12.22
-      '@thi.ng/errors': 2.6.11
+      '@thi.ng/api': 8.12.25
+      '@thi.ng/errors': 2.6.14
 
-  '@thi.ng/timestamp@1.1.41': {}
+  '@thi.ng/timestamp@1.1.44': {}
 
-  '@thi.ng/transducers@9.6.36':
+  '@thi.ng/transducers@9.6.39':
     dependencies:
-      '@thi.ng/api': 8.12.22
-      '@thi.ng/arrays': 2.14.19
-      '@thi.ng/checks': 3.9.2
-      '@thi.ng/compare': 2.5.10
-      '@thi.ng/compose': 3.0.59
-      '@thi.ng/errors': 2.6.11
-      '@thi.ng/math': 5.15.11
-      '@thi.ng/random': 4.1.48
-      '@thi.ng/timestamp': 1.1.41
+      '@thi.ng/api': 8.12.25
+      '@thi.ng/arrays': 2.14.22
+      '@thi.ng/checks': 3.9.5
+      '@thi.ng/compare': 2.5.13
+      '@thi.ng/compose': 3.0.62
+      '@thi.ng/errors': 2.6.14
+      '@thi.ng/math': 5.15.14
+      '@thi.ng/random': 4.1.51
+      '@thi.ng/timestamp': 1.1.44
 
   '@tsconfig/node-lts@24.0.0': {}
 
@@ -874,7 +874,7 @@ snapshots:
       '@types/ws': 8.18.1
       entities: 7.0.1
       whatwg-mimetype: 3.0.0
-      ws: 8.20.1
+      ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -914,5 +914,5 @@ snapshots:
   whatwg-mimetype@3.0.0:
     optional: true
 
-  ws@8.20.1:
+  ws@8.21.0:
     optional: true
