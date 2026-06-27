@@ -21,6 +21,8 @@ export default defineConfig({
     distPath: {
       root: 'docs',
     },
+    assetPrefix: './',
+    filenameHash: true,
   },
   html: {
     template({ entryName }) {

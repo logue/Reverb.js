@@ -57,6 +57,7 @@
     "lint:rslint": "rslint .",
     "lint:format": "prettier --write .",
     "build": "run-s build:lib build:dts",
+    "build:docs": "rsbuild build",
     "build:lib": "rslib build",
     "build:dts": "dts-bundle-generator --project ./tsconfig.app.json --no-banner -o dist/Reverb.d.ts src/index.ts",
     "test": "rstest",
