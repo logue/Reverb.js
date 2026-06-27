@@ -16,6 +16,45 @@ This script is originally a spin out of [sf2synth.js](https://github.com/logue/s
 - <https://logue.dev/Reverb.js/>
 - <https://logue.dev/Reverb.js/localaudio.html>
 
+## Installation
+
+```bash
+pnpm install @logue/reverb @thi.ng/colored-noise @thi.ng/transducers @thi.ng/random
+```
+
+## Usage
+
+```js
+import Reverb from '@logue/reverb';
+
+// Setup Audio Context
+const ctx = new window.AudioContext();
+
+// iOS fix.
+document.addEventListener('touchstart', initAudioContext);
+function initAudioContext() {
+  document.removeEventListener('touchstart', initAudioContext);
+  // wake up AudioContext
+  const emptySource = ctx.createBufferSource();
+  emptySource.start();
+  emptySource.stop();
+}
+
+// Setup Reverb Class
+const reverb = new Reverb(ctx, {});
+
+// put Audio data to audio buffer source
+const sourceNode = ctx.createBufferSource();
+sourceNode.buffer = [AudioBuffer];
+
+// Connect Reverb
+reverb.connect(sourceNode);
+sourceNode.connect(ctx.destination);
+
+// fire
+sourceNode.play();
+```
+
 ## Syntax
 
 ```js
@@ -54,37 +93,6 @@ const reverb = new Reverb(ctx, {
   /** Time length of IR. 0~50 [sec] */
   time: 3,
 });
-```
-
-## Usage
-
-```js
-// Setup Audio Context
-const ctx = new window.AudioContext();
-
-// iOS fix.
-document.addEventListener('touchstart', initAudioContext);
-function initAudioContext() {
-  document.removeEventListener('touchstart', initAudioContext);
-  // wake up AudioContext
-  const emptySource = ctx.createBufferSource();
-  emptySource.start();
-  emptySource.stop();
-}
-
-// Setup Reverb Class
-const reverb = new Reverb(ctx, {});
-
-// put Audio data to audio buffer source
-const sourceNode = ctx.createBufferSource();
-sourceNode.buffer = [AudioBuffer];
-
-// Connect Reverb
-reverb.connect(sourceNode);
-sourceNode.connect(ctx.destination);
-
-// fire
-sourceNode.play();
 ```
 
 ## Testing
