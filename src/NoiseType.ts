@@ -1,11 +1,11 @@
 import {
   blue,
+  type ColoredNoiseOpts,
   green,
   pink,
   red,
   violet,
   white,
-  type ColoredNoiseOpts,
 } from '@thi.ng/colored-noise';
 
 /** Noise Type */

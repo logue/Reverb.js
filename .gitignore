@@ -15,4 +15,5 @@ doc_build/
 .idea
 
 #
-docs/
+
+/docs

@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "includes": ["src/**/*", "!./*.html", "!node_modules"]
+  },
   "assist": {
     "actions": {
       "source": {
@@ -23,12 +26,6 @@
   "css": {
     "parser": {
       "cssModules": true
-    }
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true
     }
   }
 }

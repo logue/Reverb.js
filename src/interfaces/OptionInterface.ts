@@ -1,10 +1,9 @@
-import { SYSTEM } from '@thi.ng/random';
-
-import type { NoiseType } from '@/NoiseType';
 import type { INorm } from '@thi.ng/random';
+import { SYSTEM } from '@thi.ng/random';
+import type { NoiseType } from '@/NoiseType';
 
 /** Reverb Option */
-export default interface OptionInterface {
+export interface OptionInterface {
   /**
    * IR (Inpulse Response) colord noise algorithm (BLUE, GREEN, PINK, RED, VIOLET, WHITE)
    * @see {@link https://github.com/thi-ng/umbrella/tree/develop/packages/colored-noise}

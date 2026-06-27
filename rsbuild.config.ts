@@ -15,17 +15,6 @@ const pkg = JSON.parse(readFileSync('./package.json', 'utf-8')) as {
 };
 
 const buildDate = new Date().toISOString();
-const bannerText = `/**
-* ${pkg.name}
-*
-* @description ${pkg.description}
-* @author ${pkg.author.name} <${pkg.author.email}>
-* @copyright 2026 By Masashi Yoshikawa All rights reserved.
-* @license ${pkg.license}
-* @version ${pkg.version}
-* @see {@link ${pkg.homepage}}
-*/
-`;
 
 export default defineConfig({
   output: {

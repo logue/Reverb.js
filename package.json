@@ -46,17 +46,19 @@
   "engines": {
     "node": ">=24.13.0"
   },
-  "packageManager": "pnpm@11.5.2",
+  "packageManager": "pnpm@11.9.0",
   "sideEffects": false,
   "scripts": {
-    "build": "rslib",
-    "build:docs": "rsbuild build",
-    "check": "biome check --write",
     "dev": "rslib --watch",
     "dev:docs": "rsbuild",
     "preview": "rsbuild preview",
-    "format": "prettier --write .",
-    "lint": "rslint",
+    "lint": "run-s lint:*",
+    "lint:check": "biome check --write",
+    "lint:rslint": "rslint .",
+    "lint:format": "prettier --write .",
+    "build": "run-s build:lib build:dts",
+    "build:lib": "rslib build",
+    "build:dts": "dts-bundle-generator --project ./tsconfig.app.json --no-banner -o dist/Reverb.d.ts src/index.ts",
     "test": "rstest",
     "test:watch": "rstest --watch",
     "version": "auto-changelog -p && git add CHANGELOG.md",
@@ -68,27 +70,24 @@
     "@thi.ng/transducers": "^9.6.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.16",
-    "@rsbuild/core": "^2.0.11",
-    "@rslib/core": "^0.22.0",
-    "@rslint/core": "^0.5.3",
-    "@rstest/adapter-rslib": "^0.10.3",
-    "@rstest/core": "^0.10.3",
+    "@biomejs/biome": "2.5.1",
+    "@rsbuild/core": "^2.1.0",
+    "@rslib/core": "^0.23.0",
+    "@rslint/core": "^0.6.3",
+    "@rstest/adapter-rslib": "^0.10.6",
+    "@rstest/core": "^0.10.6",
     "@tsconfig/node-lts": "^24.0.0",
-    "@types/node": "^25.9.1",
-    "@types/three": "^0.184.1",
+    "@types/node": "^26.0.1",
+    "@types/three": "^0.185.0",
+    "dts-bundle-generator": "^9.5.1",
     "husky": "^9.1.7",
-    "prettier": "^3.8.3",
-    "three": "^0.184.0",
+    "lint-staged": "^17.0.8",
+    "npm-run-all2": "^9.0.2",
+    "prettier": "^3.8.5",
+    "three": "^0.185.0",
     "typescript": "^6.0.3"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
-    "*.{js,ts,json,htm,html,md}": "pnpm run format",
-    "*": "prettier -w -u"
+    "*": "pnpm lint:format"
   }
 }

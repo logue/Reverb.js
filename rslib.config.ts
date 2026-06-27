@@ -20,7 +20,7 @@ const bannerText = `/**
 *
 * @description ${pkg.description}
 * @author ${pkg.author.name} <${pkg.author.email}>
-* @copyright 2026 By Masashi Yoshikawa All rights reserved.
+* @copyright 2019-2026 By Masashi Yoshikawa All rights reserved.
 * @license ${pkg.license}
 * @version ${pkg.version}
 * @see {@link ${pkg.homepage}}
@@ -38,7 +38,7 @@ export default defineConfig({
       },
       output: {
         filename: {
-          js: 'index.es.js',
+          js: 'Reverb.es.js',
         },
         sourceMap: true,
       },
@@ -52,7 +52,7 @@ export default defineConfig({
       },
       output: {
         filename: {
-          js: 'index.umd.js',
+          js: 'Reverb.umd.js',
         },
         cleanDistPath: false,
         minify: true,

@@ -2,10 +2,8 @@
  * Integration tests for Reverb effect
  */
 import { beforeEach, describe, expect, it } from '@rstest/core';
-
-import { createMockAudioContext, createMockAudioNode } from './setup';
-
 import Reverb from '../index';
+import { createMockAudioContext, createMockAudioNode } from './setup';
 
 describe('Reverb Integration', () => {
   let audioContext: AudioContext;
