@@ -46,7 +46,7 @@
   "engines": {
     "node": ">=24.13.0"
   },
-  "packageManager": "pnpm@11.9.0",
+  "packageManager": "pnpm@11.10.0",
   "sideEffects": false,
   "scripts": {
     "dev": "rslib --watch",
@@ -71,21 +71,21 @@
     "@thi.ng/transducers": "^9.6.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.1",
-    "@rsbuild/core": "^2.1.1",
-    "@rslib/core": "^0.23.1",
-    "@rslint/core": "^0.6.3",
-    "@rstest/adapter-rslib": "^0.10.6",
-    "@rstest/core": "^0.10.6",
+    "@biomejs/biome": "2.5.2",
+    "@rsbuild/core": "^2.1.5",
+    "@rslib/core": "^0.23.2",
+    "@rslint/core": "^0.6.5",
+    "@rstest/adapter-rslib": "^0.11.0",
+    "@rstest/core": "^0.11.0",
     "@tsconfig/node-lts": "^24.0.0",
-    "@types/node": "^26.0.1",
+    "@types/node": "^26.1.0",
     "@types/three": "^0.185.0",
     "dts-bundle-generator": "^9.5.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8",
     "npm-run-all2": "^9.0.2",
-    "prettier": "^3.8.5",
-    "three": "^0.185.0",
+    "prettier": "^3.9.4",
+    "three": "^0.185.1",
     "typescript": "^6.0.3"
   },
   "lint-staged": {
