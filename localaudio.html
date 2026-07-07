@@ -63,7 +63,7 @@
       integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
       crossorigin="anonymous"
     />
-  <script defer src="./static/js/index.72c07d58c8.js"></script></head>
+  <script defer src="./static/js/204.85062f5971.js"></script><script defer src="./static/js/localaudio.cad7312276.js"></script></head>
 
   <body class="d-flex flex-column h-100">
     <header>
@@ -84,12 +84,12 @@
           <div class="collapse navbar-collapse flex-grow-0" id="navbarCollapse">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active" href="./">Demo</a>
+                <a class="nav-link" href="./">Demo</a>
               </li>
               <li class="nav-item">
                 <a
                   aria-current="page"
-                  class="nav-link"
+                  class="nav-link active"
                   href="./localaudio.html"
                 >
                   LocalAudio Demo
@@ -99,7 +99,7 @@
                 <a
                   class="nav-link"
                   href="https://github.com/logue/Reverb.js"
-                  aria-label="Github"
+                  aria-label="GitHub"
                 >
                   <em class="bi bi-github"></em>
                 </a>
@@ -164,12 +164,22 @@
     <!-- Begin page content -->
     <main class="flex-shrink-0 my-3">
       <div class="container-fluid bg-body-tertiary p-5 mb-3">
-        <h1 class="display-5 fw-bold">Reverb.js Demo</h1>
-        <p class="fs-4">Refer to the console log for the values.</p>
-        <button id="play" type="button" class="btn btn-primary btn-lg" disabled>
-          <em class="bi bi-play"></em>
-          Play
-        </button>
+        <h1 class="display-5 fw-bold">Reverb.js Local Audio Demo</h1>
+        <p class="fs-4">Play own audio file.</p>
+        <div>
+          <label for="file" class="form-label">Load Audio file</label>
+          <input type="file" class="form-control" id="file" accept="audio/*" />
+        </div>
+        <div class="my-3">
+          <button type="button" id="play" class="btn btn-primary" disabled>
+            <em class="bi bi-play"></em>
+            Play
+          </button>
+          <button type="button" id="stop" class="btn btn-secondary" disabled>
+            <em class="bi bi-stop"></em>
+            Stop
+          </button>
+        </div>
       </div>
       <div class="container">
         <div class="row">
@@ -192,21 +202,12 @@
             </div>
           </div>
           <div class="col">
+            <h2>Spectrum Analysis</h2>
             <div class="overflow-auto">
-              <canvas id="graph" width="512" height="256"></canvas>
+              <canvas id="canvas" class="d-none"></canvas>
+              <img id="test" class="d-none" alt="test" />
+              <canvas id="graph"></canvas>
             </div>
-            <p class="text-right">
-              The sound uses the drum part of
-              <a
-                href="https://soundcloud.com/logue256/autumn-wind"
-                rel="noopener"
-                target="_blank"
-              >
-                <em class="bi bi-soundwave"></em>
-                Autmun Wind
-              </a>
-              .
-            </p>
           </div>
         </div>
         <section class="mb-3">
@@ -214,8 +215,8 @@
           <p>
             <a
               href="https://github.com/thi-ng/umbrella/tree/develop/packages/colored-noise"
-              target="_blank"
               rel="noopener"
+              target="_blank"
             >
               @thi.ng/colored-noise
               <em class="bi bi-box-arrow-up-right"></em>
