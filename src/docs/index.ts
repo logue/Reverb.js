@@ -1,7 +1,6 @@
 import type { NoiseType } from '@/NoiseType';
 import Reverb from '../index';
-
-const audioFile = '/demo.flac';
+import audioFile from '@/docs/demo.flac';
 
 document.getElementById('play')?.setAttribute('disabled', 'disabled');
 
