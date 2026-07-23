@@ -1,8 +1,8 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync } from "node:fs";
 
-import { defineConfig } from '@rslib/core';
+import { defineConfig } from "@rslib/core";
 
-const pkg = JSON.parse(readFileSync('./package.json', 'utf-8')) as {
+const pkg = JSON.parse(readFileSync("./package.json", "utf-8")) as {
   name: string;
   description: string;
   author: {
@@ -30,29 +30,31 @@ const bannerText = `/**
 export default defineConfig({
   lib: [
     {
-      format: 'esm',
-      syntax: 'es2021',
-      dts: true,
+      format: "esm",
+      dts: {
+        tsgo: true, // Enable TypeScript 7 native compiler
+        // isolated: true,  // SWC fast_dts
+        bundle: true,
+      },
       banner: {
         js: bannerText,
       },
       output: {
         filename: {
-          js: 'Reverb.es.js',
+          js: "Reverb.es.js",
         },
         sourceMap: true,
       },
     },
     {
-      format: 'umd',
-      syntax: 'es2021',
-      umdName: 'Reverb',
+      format: "umd",
+      umdName: "Reverb",
       banner: {
         js: bannerText,
       },
       output: {
         filename: {
-          js: 'Reverb.umd.js',
+          js: "Reverb.umd.js",
         },
         cleanDistPath: false,
         minify: true,
@@ -61,6 +63,7 @@ export default defineConfig({
     },
   ],
   source: {
+    tsconfigPath: "./tsconfig.rslib.json",
     define: {
       __APP_VERSION__: JSON.stringify(pkg.version),
       __BUILD_DATE__: JSON.stringify(buildDate),

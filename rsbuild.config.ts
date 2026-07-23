@@ -35,13 +35,15 @@ export default defineConfig({
     },
   },
   source: {
+    tsconfigPath: './tsconfig.rsbuild.json',
+    include: ['./src'],
     define: {
       __APP_VERSION__: JSON.stringify(pkg.version),
       __BUILD_DATE__: JSON.stringify(buildDate),
     },
     entry: {
-      index: './src/docs/index.ts',
-      localaudio: './src/docs/localaudio.ts',
+      index: './src-docs/index.ts',
+      localaudio: './src-docs/localaudio.ts',
     },
   },
 });

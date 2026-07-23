@@ -1,8 +1,6 @@
-/// <reference lib="dom" />
-
 import * as THREE from 'three';
+import Reverb from '@/index.js';
 import type { NoiseType } from '@/NoiseType.js';
-import Reverb from '../index.js';
 
 const defaultAudioFile = '/demo.flac';
 const spectrumBins = 96;

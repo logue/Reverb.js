@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@logue/reverb",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "JavaScript Reverb effect class",
   "keywords": [
     "webaudio",
@@ -46,20 +46,17 @@
   "engines": {
     "node": ">=24.13.0"
   },
-  "packageManager": "pnpm@11.10.0",
+  "packageManager": "pnpm@11.16.0",
   "sideEffects": false,
   "scripts": {
     "dev": "rslib --watch",
     "dev:docs": "rsbuild",
     "preview": "rsbuild preview",
     "lint": "run-s lint:*",
-    "lint:check": "biome check --write",
     "lint:rslint": "rslint .",
-    "lint:format": "prettier --write .",
-    "build": "run-s build:lib build:dts",
+    "lint:biome": "biome check --write",
+    "build": "rslib build",
     "build:docs": "rsbuild build",
-    "build:lib": "rslib build",
-    "build:dts": "dts-bundle-generator --project ./tsconfig.app.json --no-banner -o dist/Reverb.d.ts src/index.ts",
     "test": "rstest",
     "test:watch": "rstest --watch",
     "version": "auto-changelog -p && git add CHANGELOG.md",
@@ -71,24 +68,23 @@
     "@thi.ng/transducers": "^9.6.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.2",
-    "@rsbuild/core": "^2.1.5",
+    "@biomejs/biome": "2.5.5",
+    "@microsoft/api-extractor": "^7.58.12",
+    "@rsbuild/core": "^2.1.7",
     "@rslib/core": "^0.23.2",
-    "@rslint/core": "^0.6.5",
-    "@rstest/adapter-rslib": "^0.11.0",
-    "@rstest/core": "^0.11.0",
+    "@rslint/core": "^0.7.0",
+    "@rstest/adapter-rslib": "^0.11.3",
+    "@rstest/core": "^0.11.3",
     "@tsconfig/node-lts": "^24.0.0",
-    "@types/node": "^26.1.0",
-    "@types/three": "^0.185.0",
-    "dts-bundle-generator": "^9.5.1",
+    "@types/node": "^26.1.1",
+    "@types/three": "^0.185.1",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.8",
+    "lint-staged": "^17.1.1",
     "npm-run-all2": "^9.0.2",
-    "prettier": "^3.9.4",
     "three": "^0.185.1",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "lint-staged": {
-    "*": "pnpm lint:format"
+    "*": "pnpm lint"
   }
 }

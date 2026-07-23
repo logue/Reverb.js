@@ -1,6 +1,6 @@
+import Reverb from '@/index';
 import type { NoiseType } from '@/NoiseType';
-import Reverb from '../index';
-import audioFile from '@/docs/demo.flac';
+import audioFile from './demo.flac';
 
 document.getElementById('play')?.setAttribute('disabled', 'disabled');
 

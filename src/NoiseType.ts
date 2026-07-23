@@ -10,7 +10,13 @@ import {
 
 /** Noise Type */
 export type NoiseType =
-  'blue' | 'brown' | 'green' | 'pink' | 'red' | 'violet' | 'white';
+  | 'blue'
+  | 'brown'
+  | 'green'
+  | 'pink'
+  | 'red'
+  | 'violet'
+  | 'white';
 
 export const NoiseType: Record<
   NoiseType,
