@@ -2,7 +2,8 @@ import Reverb from '@/index';
 import type { NoiseType } from '@/NoiseType';
 import audioFile from './demo.flac';
 
-document.getElementById('play')?.setAttribute('disabled', 'disabled');
+const playButton = document.getElementById('play') as HTMLButtonElement | null;
+playButton?.setAttribute('disabled', 'disabled');
 
 window.addEventListener('load', async () => {
   // Setup Audio Context
@@ -27,10 +28,12 @@ window.addEventListener('load', async () => {
 
   // Load audio file and decode asyncly.
   const LoadSample = async (url: string): Promise<AudioBuffer> => {
+    playButton?.setAttribute('disabled', 'disabled');
+
     const response = await fetch(url);
     const arraybuf = await response.arrayBuffer();
     const buffer = await AudioCtx.decodeAudioData(arraybuf);
-    document.getElementById('play')?.removeAttribute('disabled');
+    playButton?.removeAttribute('disabled');
     return buffer;
   };
 
@@ -110,10 +113,10 @@ window.addEventListener('load', async () => {
   setInterval(DrawGraph, 10);
 
   // Play button
-  document.getElementById('play')?.addEventListener(
+  playButton?.addEventListener(
     'click',
     (event) => {
-      if (event.target !== event.currentTarget) {
+      if (playButton?.disabled || event.target !== event.currentTarget) {
         return;
       }
 

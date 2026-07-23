@@ -1,14 +1,26 @@
 import { defineConfig, importPlugin, js, ts } from '@rslint/core';
 
+const APP_FILES = ['**/*.{ts,mts,tsx,js,mjs,jsx}'];
+const TEST_FILES = ['**/*.{test,spec}.{ts,mts,tsx,js,mjs,jsx}'];
+
 export default defineConfig([
   {
-    ignores: ['**/dist/**', '**/node_modules/**'],
+    ignores: [
+      '**/dist/**',
+      '**/dist-ssr/**',
+      '**/docs/**',
+      '**/coverage/**',
+      '**/node_modules/**',
+    ],
   },
+
+  // Base JavaScript / TypeScript recommended sets.
   js.configs.recommended,
   ts.configs.recommended,
+
   {
     ...importPlugin.configs.recommended,
-    files: ['**/*.{ts,mts,tsx,js,mjs,jsx}'],
+    files: APP_FILES,
     settings: {
       'import/resolver': {
         node: true,
@@ -66,6 +78,19 @@ export default defineConfig([
             'object',
             'type',
           ],
+          pathGroups: [
+            {
+              pattern:
+                '{vue,vue-router,vuex,@/stores,vue-i18n,pinia,@rsbuild,@rstest,@rstest/**,@rslint/**,@vue/**}',
+              group: 'external',
+              position: 'before',
+            },
+            {
+              pattern: '{@/**}',
+              group: 'internal',
+              position: 'before',
+            },
+          ],
           pathGroupsExcludedImportTypes: ['builtin'],
           alphabetize: {
             order: 'asc',
@@ -75,9 +100,13 @@ export default defineConfig([
       ],
     },
   },
+
   {
+    // Test files intentionally import from parent directories.
+    files: TEST_FILES,
     rules: {
       '@typescript-eslint/no-explicit-any': 'warn',
+      'import/no-relative-parent-imports': 'off',
     },
   },
 ]);

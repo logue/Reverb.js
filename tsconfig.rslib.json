@@ -4,7 +4,11 @@
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
     "rootDir": "src",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "lib": ["DOM", "ESNext"],
+    "types": ["@rslib/core/types", "node"],
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.rslib.tsbuildinfo",
 
     "useDefineForClassFields": true,
@@ -20,10 +24,6 @@
 
     /* type checking */
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "noUnusedParameters": true
   }
 }
