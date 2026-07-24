@@ -5,7 +5,7 @@ import type { NoiseType } from '@/NoiseType';
 /** Reverb Option */
 export interface OptionInterface {
   /**
-   * IR (Inpulse Response) colord noise algorithm (BLUE, GREEN, PINK, RED, VIOLET, WHITE)
+   * IR (Impulse Response) color noise algorithm.
    * @see {@link https://github.com/thi-ng/umbrella/tree/develop/packages/colored-noise}
    */
   noise: NoiseType;
@@ -14,7 +14,7 @@ export interface OptionInterface {
   /** Number of IR source noise peaks */
   peaks: number;
   /**
-   * Randam noise algorythm
+   * Random noise algorithm.
    * @see {@link https://github.com/thi-ng/umbrella/tree/develop/packages/random}
    */
   randomAlgorithm: INorm;
@@ -31,7 +31,7 @@ export interface OptionInterface {
   /** Dry/Wet ratio */
   mix: number;
   /** Invert the impulse response */
-  reverse?: boolean;
+  reverse: boolean;
   /** Impulse response length */
   time: number;
   /** Prevents multiple effectors from being connected. */

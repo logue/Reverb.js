@@ -17,8 +17,44 @@ const fileInput = document.getElementById('file') as HTMLInputElement | null;
 playButton?.setAttribute('disabled', 'disabled');
 stopButton?.setAttribute('disabled', 'disabled');
 
+const getInputElement = (id: string): HTMLInputElement | null =>
+  document.getElementById(id) as HTMLInputElement | null;
+
+const bindNumberInput = (
+  id: string,
+  onChange: (value: number) => void,
+): void => {
+  getInputElement(id)?.addEventListener('change', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
+
+    onChange(Number(target.value));
+    target.title = target.value;
+  });
+};
+
+const bindNoiseSelection = (onSelect: (value: NoiseType) => void): void => {
+  document
+    .querySelectorAll<HTMLInputElement>('[name=noise]')
+    .forEach((element) => {
+      element.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLInputElement)) {
+          return;
+        }
+
+        const peaks = getInputElement('peaks');
+        if (peaks) {
+          peaks.disabled = target.value === 'white';
+        }
+        onSelect(target.value as NoiseType);
+      });
+    });
+};
+
 window.addEventListener('load', async () => {
-  // Create and unlock WebAudio context.
   const audioContext = new globalThis.AudioContext();
 
   const initAudioContext = () => {
@@ -43,7 +79,6 @@ window.addEventListener('load', async () => {
     return;
   }
 
-  // Initialize Three.js renderer stack.
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: true,
@@ -88,7 +123,6 @@ window.addEventListener('load', async () => {
   const spectralLines: { line: THREE.Line; z: number }[] = [];
   let timelineZ = 0;
 
-  // Keep the canvas in 16:9 and cap height at 480px.
   const resizeRenderer = (observedWidth?: number) => {
     const fallbackWidth =
       canvas.parentElement?.clientWidth ?? canvas.clientWidth;
@@ -118,13 +152,10 @@ window.addEventListener('load', async () => {
   resizeObserver.observe(resizeTarget);
   resizeRenderer(resizeTarget.clientWidth);
 
-  // Toggle reverb routing while preserving analyzer output.
   const setReverb = () => {
     source.disconnect();
 
-    if (
-      (document.getElementById('reverb') as HTMLInputElement | null)?.checked
-    ) {
+    if (getInputElement('reverb')?.checked) {
       reverb.connect(source).connect(analyserNode);
     } else {
       const node = reverb.disconnect(source);
@@ -134,22 +165,21 @@ window.addEventListener('load', async () => {
     analyserNode.connect(audioContext.destination);
   };
 
-  // Append one spectrum slice and push it toward the depth axis.
   const addSpectrumLine = () => {
     analyserNode.getByteFrequencyData(frequencyData);
 
     const positions = new Float32Array(spectrumBins * 3);
-    for (let i = 0; i < spectrumBins; i += 1) {
-      const t = i / (spectrumBins - 1);
+    for (let index = 0; index < spectrumBins; index += 1) {
+      const t = index / (spectrumBins - 1);
       const mapped = t * t;
-      const index = Math.min(
+      const spectrumIndex = Math.min(
         maxSpectrumDataIndex,
         Math.floor(mapped * maxSpectrumDataIndex),
       );
       const x = (t - 0.5) * 420;
-      const y = (frequencyData[index] / 255) * 130 + 2;
+      const y = (frequencyData[spectrumIndex] / 255) * 130 + 2;
 
-      const base = i * 3;
+      const base = index * 3;
       positions[base] = x;
       positions[base + 1] = y;
       positions[base + 2] = timelineZ;
@@ -158,9 +188,7 @@ window.addEventListener('load', async () => {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-    const reverbEnabled = (
-      document.getElementById('reverb') as HTMLInputElement | null
-    )?.checked;
+    const reverbEnabled = getInputElement('reverb')?.checked;
     const color = reverbEnabled ? 0x32d3ff : 0x5bff88;
     const material = new THREE.LineBasicMaterial({
       color,
@@ -185,7 +213,6 @@ window.addEventListener('load', async () => {
     timelineZ += zStep;
   };
 
-  // Move camera with the timeline so the scene continuously scrolls.
   const updateCamera = () => {
     const targetZ = timelineZ - 140;
     camera.position.z = timelineZ + 280;
@@ -193,7 +220,6 @@ window.addEventListener('load', async () => {
     grid.position.z = timelineZ - 20;
   };
 
-  // Main render loop.
   const render = () => {
     addSpectrumLine();
     updateCamera();
@@ -203,7 +229,6 @@ window.addEventListener('load', async () => {
   render();
 
   let currentObjectUrl: string | null = null;
-  // Load local/remote audio and keep object URL lifecycle safe.
   const loadSample = async (input: File | string) => {
     playButton?.setAttribute('disabled', 'disabled');
     stopButton?.setAttribute('disabled', 'disabled');
@@ -261,7 +286,10 @@ window.addEventListener('load', async () => {
   });
 
   fileInput?.addEventListener('change', async (event) => {
-    const target = event.target as HTMLInputElement;
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
     const file = target.files?.[0];
     if (!file) {
       return;
@@ -269,74 +297,29 @@ window.addEventListener('load', async () => {
     await loadSample(file);
   });
 
-  document.getElementById('reverb')?.addEventListener('click', setReverb);
+  getInputElement('reverb')?.addEventListener('click', setReverb);
 
-  document.getElementById('reverse')?.addEventListener('click', (event) => {
-    reverb.reverse((event.target as HTMLInputElement).checked);
+  getInputElement('reverse')?.addEventListener('click', (event) => {
+    const target = event.target;
+    if (target instanceof HTMLInputElement) {
+      reverb.reverse(target.checked);
+    }
   });
 
-  document.getElementById('time')?.addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    reverb.time(Number(target.value));
-    target.title = target.value;
+  bindNumberInput('time', (value) => reverb.time(value));
+  bindNumberInput('decay', (value) => reverb.decay(value));
+  bindNumberInput('delay', (value) => reverb.delay(value));
+  getInputElement('filter')?.addEventListener('change', (event) => {
+    const target = event.target;
+    if (target instanceof HTMLInputElement) {
+      reverb.filterType(target.value as BiquadFilterType | undefined);
+      target.title = target.value;
+    }
   });
-
-  document.getElementById('decay')?.addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    reverb.decay(Number(target.value));
-    target.title = target.value;
-  });
-
-  document.getElementById('delay')?.addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    reverb.delay(Number(target.value));
-    target.title = target.value;
-  });
-
-  document.getElementById('filter')?.addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    reverb.filterType(target.value as BiquadFilterType | undefined);
-    target.title = target.value;
-  });
-
-  document.getElementById('freq')?.addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    reverb.filterFreq(Number(target.value));
-    target.title = target.value;
-  });
-
-  document.getElementById('q')?.addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    reverb.filterQ(Number(target.value));
-    target.title = target.value;
-  });
-
-  document.getElementById('mix')?.addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    reverb.mix(Number(target.value));
-    target.title = target.value;
-  });
-
-  document.querySelectorAll('[name=noise]').forEach((dom) => {
-    dom.addEventListener('click', (event) => {
-      const target = event.target as HTMLInputElement;
-      const peaks = document.getElementById('peaks') as HTMLInputElement | null;
-      if (peaks) {
-        peaks.disabled = target.value === 'white';
-      }
-      reverb.setNoise(target.value as NoiseType);
-    });
-  });
-
-  document.getElementById('peaks')?.addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    reverb.peaks(Number(target.value));
-    target.title = target.value;
-  });
-
-  document.getElementById('scale')?.addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    reverb.scale(Number(target.value));
-    target.title = target.value;
-  });
+  bindNumberInput('freq', (value) => reverb.filterFreq(value));
+  bindNumberInput('q', (value) => reverb.filterQ(value));
+  bindNumberInput('mix', (value) => reverb.mix(value));
+  bindNoiseSelection((value) => reverb.setNoise(value));
+  bindNumberInput('peaks', (value) => reverb.peaks(value));
+  bindNumberInput('scale', (value) => reverb.scale(value));
 });

@@ -5,136 +5,160 @@ import audioFile from './demo.flac';
 const playButton = document.getElementById('play') as HTMLButtonElement | null;
 playButton?.setAttribute('disabled', 'disabled');
 
+const getInputElement = (id: string): HTMLInputElement | null =>
+  document.getElementById(id) as HTMLInputElement | null;
+
+const bindNumberInput = (
+  id: string,
+  onChange: (value: number) => void,
+): void => {
+  getInputElement(id)?.addEventListener('change', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
+
+    onChange(Number(target.value));
+    target.title = target.value;
+  });
+};
+
+const bindNoiseSelection = (onSelect: (value: NoiseType) => void): void => {
+  document
+    .querySelectorAll<HTMLInputElement>('[name=noise]')
+    .forEach((element) => {
+      element.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLInputElement)) {
+          return;
+        }
+
+        const peaks = getInputElement('peaks');
+        if (peaks) {
+          peaks.disabled = target.value === 'white';
+        }
+        onSelect(target.value as NoiseType);
+      });
+    });
+};
+
 window.addEventListener('load', async () => {
   // Setup Audio Context
-  const AudioCtx = new globalThis.AudioContext();
+  const audioContext = new globalThis.AudioContext();
 
   // Defreeze AudioContext for iOS.
-  document.addEventListener('touchstart', initAudioContext);
-  function initAudioContext() {
+  const initAudioContext = () => {
     document.removeEventListener('touchstart', initAudioContext);
     // wake up AudioContext
-    const emptySource = AudioCtx.createBufferSource();
+    const emptySource = audioContext.createBufferSource();
     emptySource.start();
     emptySource.stop();
-  }
+  };
+  document.addEventListener('touchstart', initAudioContext);
 
   // Setup Reverb Class
-  const reverb = new Reverb(AudioCtx);
+  const reverb = new Reverb(audioContext);
   console.info(
     `Reverb.js loaded. (version: ${Reverb.version} / build: ${Reverb.build})`,
   );
-  const AudioSrc = AudioCtx.createBufferSource();
+  const audioSource = audioContext.createBufferSource();
 
   // Load audio file and decode asyncly.
-  const LoadSample = async (url: string): Promise<AudioBuffer> => {
+  const loadSample = async (url: string): Promise<AudioBuffer> => {
     playButton?.setAttribute('disabled', 'disabled');
 
     const response = await fetch(url);
-    const arraybuf = await response.arrayBuffer();
-    const buffer = await AudioCtx.decodeAudioData(arraybuf);
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = await audioContext.decodeAudioData(arrayBuffer);
     playButton?.removeAttribute('disabled');
     return buffer;
   };
 
   // Draw FFT to canvas
   // Code taken from https://www.g200kg.com/jp/docs/webaudio/filter.html
-  const AnalyserNode = AudioCtx.createAnalyser();
+  const analyserNode = audioContext.createAnalyser();
   const canvas = document.getElementById('graph') as HTMLCanvasElement | null;
   const canvasContext = canvas?.getContext('2d');
 
-  const analysedata = new Float32Array(1024);
-  const DrawGraph = () => {
+  const analysedData = new Float32Array(1024);
+  const drawGraph = () => {
     if (!canvas || !canvasContext) {
       return;
     }
 
-    AnalyserNode.getFloatFrequencyData(analysedata);
-    // Background
+    analyserNode.getFloatFrequencyData(analysedData);
     canvasContext.fillStyle = '#343a40';
     canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-    // FFT Graph
-    canvasContext.fillStyle = (
-      document.getElementById('reverb') as HTMLInputElement | null
-    )?.checked
-      ? '#17a2b8'
-      : '#28a745';
-    for (let i = 0; i < canvas.width; ++i) {
-      const y = canvas.height / 2 + (analysedata[i] + 48.16) * 2.56;
-      canvasContext.fillRect(i, canvas.height - y, 1, y);
+    canvasContext.fillStyle =
+      (getInputElement('reverb')?.checked ?? false) ? '#17a2b8' : '#28a745';
+
+    for (let index = 0; index < canvas.width; index += 1) {
+      const y = canvas.height / 2 + (analysedData[index] + 48.16) * 2.56;
+      canvasContext.fillRect(index, canvas.height - y, 1, y);
     }
 
-    // y axis (dB)
-    for (let d = -50; d < 50; d += 10) {
-      const y = Math.trunc(canvas.height / 2 - (d * canvas.height) / 100);
-      // Line
+    for (let dB = -50; dB < 50; dB += 10) {
+      const y = Math.trunc(canvas.height / 2 - (dB * canvas.height) / 100);
       canvasContext.fillStyle = '#6c757d';
       canvasContext.fillRect(20, y, canvas.width, 1);
-      // Label
       canvasContext.fillStyle = '#fd7e14';
-      canvasContext.fillText(`${d}dB`, 5, y);
+      canvasContext.fillText(`${dB}dB`, 5, y);
     }
+
     canvasContext.fillStyle = '#ffc107';
     canvasContext.fillRect(20, canvas.height / 2, canvas.width, 1);
 
-    // x axis (frequency)
-    for (let f = 2200; f < AudioCtx.sampleRate / 2; f += 2000) {
-      const x = Math.trunc((f * (canvas.width * 2)) / AudioCtx.sampleRate);
-      // Line
+    for (let freq = 2200; freq < audioContext.sampleRate / 2; freq += 2000) {
+      const x = Math.trunc(
+        (freq * (canvas.width * 2)) / audioContext.sampleRate,
+      );
       canvasContext.fillStyle = '#6c757d';
       canvasContext.fillRect(x, 0, 1, canvas.height - 10);
-      // Label
       if (x % 4 === 0) {
         canvasContext.fillStyle = '#e83e8c';
-        canvasContext.fillText(`${f / 1000}kHz`, x, 10, canvas.height - 1);
+        canvasContext.fillText(`${freq / 1000}kHz`, x, 10, canvas.height - 1);
       }
     }
   };
 
-  // Reverb switch handler
   const setReverb = () => {
-    AudioSrc.disconnect();
+    audioSource.disconnect();
 
-    if (
-      (document.getElementById('reverb') as HTMLInputElement | null)?.checked
-    ) {
-      // Connect Reverb
-      reverb.connect(AudioSrc).connect(AnalyserNode);
+    if (getInputElement('reverb')?.checked) {
+      reverb.connect(audioSource).connect(analyserNode);
     } else {
-      const node = reverb.disconnect(AudioSrc);
-      if (node) node.connect(AnalyserNode);
+      const node = reverb.disconnect(audioSource);
+      if (node) {
+        node.connect(analyserNode);
+      }
     }
-    AnalyserNode.connect(AudioCtx.destination);
+    analyserNode.connect(audioContext.destination);
   };
 
-  const sound = await LoadSample(audioFile);
+  const sound = await loadSample(audioFile);
+  setInterval(drawGraph, 10);
 
-  // Draw FFT
-  setInterval(DrawGraph, 10);
-
-  // Play button
   playButton?.addEventListener(
     'click',
     (event) => {
-      if (playButton?.disabled || event.target !== event.currentTarget) {
+      if (playButton.disabled || event.target !== event.currentTarget) {
         return;
       }
 
-      if (AudioSrc.buffer == null) {
-        AudioSrc.buffer = sound;
-        AudioSrc.loop = true;
-
+      if (audioSource.buffer == null) {
+        audioSource.buffer = sound;
+        audioSource.loop = true;
         setReverb();
-        AudioSrc.start();
+        audioSource.start();
       }
 
-      if (AudioCtx.state === 'running') {
-        AudioCtx.suspend().then(() => {
+      if (audioContext.state === 'running') {
+        audioContext.suspend().then(() => {
           (event.target as HTMLElement).innerHTML =
             '<em class="bi bi-play"></em> Play';
         });
-      } else if (AudioCtx.state === 'suspended') {
-        AudioCtx.resume().then(() => {
+      } else if (audioContext.state === 'suspended') {
+        audioContext.resume().then(() => {
           (event.target as HTMLElement).innerHTML =
             '<em class="bi bi-pause"></em> Pause';
         });
@@ -143,80 +167,28 @@ window.addEventListener('load', async () => {
     false,
   );
 
-  // Reverb switch button
-  document.getElementById('reverb')?.addEventListener('click', setReverb);
-  // Reverse checkbox
-  document.getElementById('reverse')?.addEventListener('click', (e) => {
-    reverb.reverse((e.target as HTMLInputElement).checked);
-  });
-  // Reverb duration time
-  document.getElementById('time')?.addEventListener('change', (e) => {
-    const target = e.target as HTMLInputElement;
-    reverb.time(Number(target.value));
-    target.title = target.value;
-  });
-  // Decay time
-  document.getElementById('decay')?.addEventListener('change', (e) => {
-    const target = e.target as HTMLInputElement;
-    reverb.decay(Number(target.value));
-    target.title = target.value;
-  });
-  // Delay time
-  document.getElementById('delay')?.addEventListener('change', (e) => {
-    const target = e.target as HTMLInputElement;
-    reverb.delay(Number(target.value));
-    target.title = target.value;
-  });
-  // Filter select box
-  document.getElementById('filter')?.addEventListener('change', (e) => {
-    const target = e.target as HTMLInputElement;
-    reverb.filterType(target.value as BiquadFilterType | undefined);
-    target.title = target.value;
-  });
-  // Filter frequency
-  document.getElementById('freq')?.addEventListener('change', (e) => {
-    const target = e.target as HTMLInputElement;
-    reverb.filterFreq(Number.parseInt(target.value, 10));
-    target.title = target.value;
-  });
-  // Filter quality
-  document.getElementById('q')?.addEventListener('change', (e) => {
-    const target = e.target as HTMLInputElement;
-    reverb.filterQ(Number.parseInt(target.value, 10));
-    target.title = target.value;
-  });
-  // Dry/Wet
-  document.getElementById('mix')?.addEventListener('change', (e) => {
-    const target = e.target as HTMLInputElement;
-    reverb.mix(Number.parseInt(target.value, 10));
-    target.title = target.value;
-  });
-  // Noise Type
-  document.querySelectorAll('[name=noise]').forEach((dom) => {
-    dom.addEventListener('click', (e) => {
-      const target = e.target as HTMLInputElement;
-      const peaks = document.getElementById('peaks') as HTMLInputElement | null;
-      if (peaks) {
-        peaks.disabled = target.value === 'white';
-      }
-      reverb.setNoise(target.value as NoiseType);
-    });
+  getInputElement('reverb')?.addEventListener('click', setReverb);
+  getInputElement('reverse')?.addEventListener('click', (event) => {
+    const target = event.target;
+    if (target instanceof HTMLInputElement) {
+      reverb.reverse(target.checked);
+    }
   });
 
-  document.getElementById('peaks')?.addEventListener('change', (e) => {
-    const target = e.target as HTMLInputElement;
-    reverb.peaks(Number.parseInt(target.value, 10));
-    target.title = target.value;
+  bindNumberInput('time', (value) => reverb.time(value));
+  bindNumberInput('decay', (value) => reverb.decay(value));
+  bindNumberInput('delay', (value) => reverb.delay(value));
+  getInputElement('filter')?.addEventListener('change', (event) => {
+    const target = event.target;
+    if (target instanceof HTMLInputElement) {
+      reverb.filterType(target.value as BiquadFilterType | undefined);
+      target.title = target.value;
+    }
   });
-  document.getElementById('scale')?.addEventListener('change', (e) => {
-    const target = e.target as HTMLInputElement;
-    reverb.scale(Number.parseInt(target.value, 10));
-    target.title = target.value;
-  });
-  // randomAlgorithmはNoiseTypeではないので型エラー回避のためコメントアウトまたは適切な実装に修正してください
-  // document.getElementById('randomAlgorithm')?.addEventListener('change', e => {
-  //   const target = e.target as HTMLInputElement;
-  //   reverb.setNoise(target.value as import('./NoiseType').NoiseType);
-  //   target.title = target.value;
-  // });
+  bindNumberInput('freq', (value) => reverb.filterFreq(value));
+  bindNumberInput('q', (value) => reverb.filterQ(value));
+  bindNumberInput('mix', (value) => reverb.mix(value));
+  bindNoiseSelection((value) => reverb.setNoise(value));
+  bindNumberInput('peaks', (value) => reverb.peaks(value));
+  bindNumberInput('scale', (value) => reverb.scale(value));
 });
