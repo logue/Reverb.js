@@ -1,6 +1,6 @@
 import type { INorm } from '@thi.ng/random';
 import { SYSTEM } from '@thi.ng/random';
-import type { NoiseType } from '@/NoiseType';
+import type { NoiseType } from '@/types/NoiseType';
 
 /** Reverb Option */
 export interface OptionInterface {

@@ -1,4 +1,4 @@
-import { defineConfig, importPlugin, js, ts } from '@rslint/core';
+import { defineConfig, importPlugin, js, rstestPlugin, ts, unicornPlugin } from '@rslint/core';
 
 const APP_FILES = ['**/*.{ts,mts,tsx,js,mjs,jsx}'];
 const TEST_FILES = ['**/*.{test,spec}.{ts,mts,tsx,js,mjs,jsx}'];
@@ -17,6 +17,7 @@ export default defineConfig([
   // Base JavaScript / TypeScript recommended sets.
   js.configs.recommended,
   ts.configs.recommended,
+  unicornPlugin.configs.recommended,
 
   {
     ...importPlugin.configs.recommended,
@@ -81,7 +82,7 @@ export default defineConfig([
           pathGroups: [
             {
               pattern:
-                '{vue,vue-router,vuex,@/stores,vue-i18n,pinia,@rsbuild,@rstest,@rstest/**,@rslint/**,@vue/**}',
+                '{vue,vue-router,vuex,@/stores,vue-i18n,pinia,@rsbuild/**,@rstest/**,@rstest/**,@rslint/**,@vue/**}',
               group: 'external',
               position: 'before',
             },
@@ -98,6 +99,8 @@ export default defineConfig([
           'newlines-between': 'always',
         },
       ],
+      // File names should, in principle, be in PascalCase, with some exceptions.
+      'unicorn/filename-case': 'off'
     },
   },
 
@@ -105,6 +108,7 @@ export default defineConfig([
     // Test files intentionally import from parent directories.
     files: TEST_FILES,
     rules: {
+      ...rstestPlugin.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': 'warn',
       'import/no-relative-parent-imports': 'off',
     },

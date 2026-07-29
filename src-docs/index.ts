@@ -1,5 +1,5 @@
 import Reverb from '@/index';
-import type { NoiseType } from '@/NoiseType';
+import type { NoiseType } from '@/types/NoiseType';
 import audioFile from './demo.flac';
 
 const playButton = document.getElementById('play') as HTMLButtonElement | null;

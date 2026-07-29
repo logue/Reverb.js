@@ -3,7 +3,7 @@
  */
 import { describe, expect, it } from '@rstest/core';
 
-import type { NoiseType } from '../NoiseType';
+import type { NoiseType } from '../types/NoiseType';
 
 describe('NoiseType', () => {
   it('should define all expected noise types', () => {

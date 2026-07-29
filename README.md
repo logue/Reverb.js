@@ -1,11 +1,14 @@
 # Reverb.js
 
-[![jsdelivr CDN](https://data.jsdelivr.com/v1/package/npm/@logue/reverb/badge?style=rounded)](https://www.jsdelivr.com/package/npm/@logue/reverb)
-[![NPM Downloads](https://img.shields.io/npm/dm/@logue/reverb.svg?style=flat)](https://www.npmjs.com/package/@logue/reverb)
-[![Open in unpkg](https://img.shields.io/badge/Open%20in-unpkg-blue)](https://uiwjs.github.io/npm-unpkg/#/pkg/@logue/reverb/file/README.md)
+English | [日本語](README.ja.md)
+
 [![npm version](https://img.shields.io/npm/v/@logue/reverb.svg)](https://www.npmjs.com/package/@logue/reverb)
-[![Open in Gitpod](https://shields.io/badge/Open%20in-Gitpod-green?logo=Gitpod)](https://gitpod.io/#https://github.com/logue/Reverb.js)
-[![Twitter Follow](https://img.shields.io/twitter/follow/logue256?style=plastic)](https://twitter.com/logue256)
+[![NPM Downloads](https://img.shields.io/npm/dm/@logue/reverb.svg?style=flat)](https://www.npmjs.com/package/@logue/reverb)
+[![jsdelivr CDN](https://data.jsdelivr.com/v1/package/npm/@logue/reverb/badge)](https://www.jsdelivr.com/package/npm/@logue/reverb)
+[![Open in unpkg](https://img.shields.io/badge/Open%20in-unpkg-blue)](https://uiwjs.github.io/npm-unpkg/#/pkg/@logue/reverb/file/README.md)
+[![Open in Gitpod](https://shields.io/badge/Open%20in-Gitpod-green?logo=Gitpod)](https://gitpod.io/#https://github.com/logue/@logue/reverb)
+[![X Follow](https://img.shields.io/twitter/follow/logue256?style=plastic)](https://twitter.com/logue256)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/logue?label=Sponsor&logo=github&color=ea4aaa)](https://github.com/sponsors/logue)
 
 Append reverb effect to audio source.
 
@@ -25,15 +28,15 @@ pnpm install @logue/reverb @thi.ng/colored-noise @thi.ng/transducers @thi.ng/ran
 ## Usage
 
 ```js
-import Reverb from '@logue/reverb';
+import Reverb from "@logue/reverb";
 
 // Setup Audio Context
 const ctx = new window.AudioContext();
 
 // iOS fix.
-document.addEventListener('touchstart', initAudioContext);
+document.addEventListener("touchstart", initAudioContext);
 function initAudioContext() {
-  document.removeEventListener('touchstart', initAudioContext);
+  document.removeEventListener("touchstart", initAudioContext);
   // wake up AudioContext
   const emptySource = ctx.createBufferSource();
   emptySource.start();
@@ -171,12 +174,5 @@ The dependent libraries [@thi.ng/colored-noise](https://www.jsdelivr.com/package
 
 ## License
 
-©2019-2026 by Logue. Licensed under the [MIT License](LICENSE).
-
-## 🎨 Crafted for Developers
-
-This library is built with a focus **modern developer experience**. Maintaining it involves constant testing and updates to ensure everything works seamlessly.
-
-If you appreciate the attention to detail in this project, a small sponsorship would go a long way in supporting my work across the Vue.js and Metaverse ecosystems.
-
-[![GitHub Sponsors](https://img.shields.io/github/sponsors/logue?label=Sponsor&logo=github&color=ea4aaa)](https://github.com/sponsors/logue)
+©2019-2026 by Logue.
+Licensed under the [MIT License](LICENSE).

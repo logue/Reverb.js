@@ -1,15 +1,13 @@
-/// <reference path="./env.d.ts" />
-import { type ColoredNoiseOpts, white } from '@thi.ng/colored-noise';
+import { white } from '@thi.ng/colored-noise/white';
 import type { INorm } from '@thi.ng/random';
 import { take } from '@thi.ng/transducers';
 import { defaults, type OptionInterface } from '@/interfaces/OptionInterface';
 import Meta from '@/Meta';
-import { type NoiseType, NoiseType as NoiseTypeMap } from '@/NoiseType';
-
-type NoiseGenerator = (
-  opts?: Partial<ColoredNoiseOpts>,
-) => Generator<number, void, unknown>;
-
+import {
+  type NoiseGenerator,
+  type NoiseType,
+  NoiseType as NoiseTypeMap,
+} from '@/types/NoiseType';
 /**
  * Reverb effect class
  */

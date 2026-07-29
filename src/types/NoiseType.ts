@@ -18,10 +18,6 @@ export type NoiseType =
   | 'violet'
   | 'white';
 
-type NoiseGenerator = (
-  opts?: Partial<ColoredNoiseOpts>,
-) => Generator<number, void, unknown>;
-
 export const noiseTypes: NoiseType[] = [
   'blue',
   'brown',
@@ -41,5 +37,9 @@ export const NoiseType: Record<NoiseType, NoiseGenerator> = {
   violet,
   white,
 };
+
+export type NoiseGenerator = (
+  opts?: Partial<ColoredNoiseOpts>,
+) => Generator<number, void, unknown>;
 
 export default NoiseType;

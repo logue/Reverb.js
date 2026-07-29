@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import Reverb from '@/index.js';
-import type { NoiseType } from '@/NoiseType.js';
+import type { NoiseType } from '@/types/NoiseType.js';
 
 const defaultAudioFile = '/demo.flac';
 const spectrumBins = 96;

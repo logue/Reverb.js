@@ -4,7 +4,7 @@
 import { beforeEach, describe, expect, it } from '@rstest/core';
 import Reverb from '../index';
 
-import type { NoiseType } from '../NoiseType';
+import type { NoiseType } from '../types/NoiseType';
 import { createMockAudioContext, createMockAudioNode } from './setup';
 
 describe('Reverb', () => {
