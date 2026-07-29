@@ -1,6 +1,7 @@
-import type MetaInterface from '@/interfaces/MetaInterface';
+import type { MetaType } from '@/types/MetaType';
 
-const meta: MetaInterface = {
+/** Build-time metadata injected via bundler defines. */
+const meta: MetaType = {
   version: __APP_VERSION__,
   date: __BUILD_DATE__,
 };

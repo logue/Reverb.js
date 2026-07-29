@@ -52,6 +52,11 @@ This project uses two complementary build tools:
   - Command: `pnpm run build`
   - Output: `dist/` (published to npm)
   - Configuration: `rslib.config.ts`, `tsconfig.rslib.json`
+- **Rsbuild** - Builds the demo and documentation site
+  - Command: `pnpm run build:docs`
+  - Output: `docs/` (for manual testing and validation)
+  - Configuration: `rsbuild.config.ts`, `tsconfig.rsbuild.json`
+  - Purpose: Interactive demo to verify library functionality during development
 
 ### Development Workflow
 
@@ -84,11 +89,6 @@ This project uses two complementary build tools:
 
 - **No `any`** - use `unknown` and narrow with type guards.
 - **Explicit return types** on exported functions.
-- **Use `type` over `interface`** for object shapes; extend via intersection (`&`).
-- **Union literal types** instead of magic strings:
-  ```ts
-  type Status = "active" | "inactive" | "pending";
-  ```
 - **Underscore prefix** for intentionally unused variables: `_value`, `_error`.
 - **Array type syntax**: `string[]` not `Array<string>`.
 - **Generic constructors**: left-hand side style - `const map: Map<string, User> = new Map()`.
@@ -97,74 +97,63 @@ This project uses two complementary build tools:
 
 ### Directory Structure & File Organization
 
-#### Type vs Interface Organization
-
-- **`interfaces/`** - Data structures that:
-  - Define object shapes for APIs
-  - May include default values or factory functions in the same file
-  - Example: `OptionInterface.ts` (type + default config)
-
-- **`types/`** - Type-only definitions:
-  - Union types (preferred over enums)
+- **`types/`** — Type-only definitions:
+  - Type aliases and union types (preferred over enums)
+  - Interface-like object shapes
   - Generic types
-  - Type aliases
-  - No runtime values
+  - Default values paired with type definitions (see Type Pattern below)
+- **`interfaces/`** — Use only when:
+  - Multiple inheritance levels needed
+  - Clear contract inheritance matters
+
+### Type Definition Pattern
+
+Prefer `type` over `interface` for most cases. Consolidate type and default values together:
+
+```ts
+// types/Options.ts
+export type Options = {
+  someText: string;
+  someNumber: number;
+};
+
+/** Default configuration */
+export const Options: Options = {
+  someText: "white",
+  someNumber: 1,
+};
+```
+
+**Default value naming:** The variable name should match the type name (`import { Options }`).
+
+**Why `type` over `interface`:**
+
+- Tree-shaking friendly (especially for unions)
+- Single import point for type and default
+- Default values are visibly paired
+- Cleaner for simple contracts
+
+**Use `interface` when:**
+
+- Deep inheritance hierarchy (3+ levels)
+- Multiple implementations needed
+- Inheritance clarity is paramount
 
 ### Union Types Over Enums
 
-Avoid TypeScript `enum`. Use union types with companion objects:
+Avoid `enum`. Use union types:
 
 ```ts
-// ✅ Good
-export type NoiseType =
-  | "blue"
-  | "brown"
-  | "green"
-  | "pink"
-  | "red"
-  | "violet"
-  | "white";
-
-export const noiseTypes: NoiseType[] = [
-  "blue",
-  "brown",
-  "green",
-  "pink",
-  "red",
-  "violet",
-  "white",
-];
-
-export const NoiseType: Record<NoiseType, NoiseGenerator> = {
-  blue,
-  brown: red,
-  green,
-  pink,
-  red,
-  violet,
-  white,
-};
-
-// ❌ Avoid
-enum NoiseType {
-  Blue = "blue",
-  Brown = "brown",
-  // ...
-}
+export type NoiseType = "blue" | "brown" | "green" | ...;
+export const noiseTypes: NoiseType[] = ["blue", "brown", ...];
+export const NoiseType: Record<NoiseType, NoiseGenerator> = { blue, brown, ... };
 ```
-
-**Why:**
-
-- Tree-shaking friendly
-- No runtime overhead
-- More flexible companion objects
-- Type narrowing remains explicit
 
 #### Formatting
 
 - Use Biome
 - Use Rslint for linting
-- **Indentation**: Tabs
+- **Indentation**: Two spaces
 - **Semicolons**: Use semicolons
 - **Quotes**: Double quotes
 
@@ -174,7 +163,7 @@ enum NoiseType {
 - **Classes**: `PascalCase` (e.g., `Compiler`)
 - **Functions**: `camelCase` (e.g., `createCompiler`)
 - **Variables**: `camelCase` (e.g., `compiler`)
-- **Constants**: `SCREAMING_SNAKE_CASE` or `camelCase`
+- **Constants**: `SCREAMING_SNAKE_CASE`
 - **Files**: `camelCase.ts` or `PascalCase.ts` (match main export)
 
 ### Async/Await Patterns
@@ -192,7 +181,7 @@ while internal complexity is deliberately hidden.
 - Implementation details (binary parsing, encoding, version handling) are internal
 - This reduces cognitive load on users and provides stable contracts
 
-Example: `symbol-art-parser` exposes only `.sar` ↔ JSON conversions, hiding binary protocol details.
+Example: [`symbol-art-parser`](https://github.com/logue/symbol-art-parser) exposes only `.sar` ↔ JSON conversions, hiding binary protocol details.
 
 ## Patterns & Best Practices
 
@@ -224,7 +213,7 @@ Hidden complexity is acceptable if it provides users with simple, intuitive inte
 
 This may include using the same identifier for both type and value when it improves ergonomics.
 
-### Testing
+## Testing
 
 Testing program uses rstest.
 

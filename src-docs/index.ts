@@ -140,7 +140,7 @@ window.addEventListener('load', async () => {
 
   playButton?.addEventListener(
     'click',
-    (event) => {
+    async (event) => {
       if (playButton.disabled || event.target !== event.currentTarget) {
         return;
       }
@@ -153,15 +153,13 @@ window.addEventListener('load', async () => {
       }
 
       if (audioContext.state === 'running') {
-        audioContext.suspend().then(() => {
-          (event.target as HTMLElement).innerHTML =
-            '<em class="bi bi-play"></em> Play';
-        });
+        await audioContext.suspend();
+        (event.target as HTMLElement).innerHTML =
+          '<em class="bi bi-play"></em> Play';
       } else if (audioContext.state === 'suspended') {
-        audioContext.resume().then(() => {
-          (event.target as HTMLElement).innerHTML =
-            '<em class="bi bi-pause"></em> Pause';
-        });
+        await audioContext.resume();
+        (event.target as HTMLElement).innerHTML =
+          '<em class="bi bi-pause"></em> Pause';
       }
     },
     false,

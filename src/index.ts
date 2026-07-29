@@ -1,13 +1,9 @@
 import { white } from '@thi.ng/colored-noise/white';
 import type { INorm } from '@thi.ng/random';
 import { take } from '@thi.ng/transducers';
-import { defaults, type OptionInterface } from '@/interfaces/OptionInterface';
 import Meta from '@/Meta';
-import {
-  type NoiseGenerator,
-  type NoiseType,
-  NoiseType as NoiseTypeMap,
-} from '@/types/NoiseType';
+import { type NoiseGenerator, NoiseType } from '@/types/NoiseType';
+import { ReverbOptions } from '@/types/ReverbOptions';
 /**
  * Reverb effect class
  */
@@ -29,13 +25,13 @@ export default class Reverb {
   /** Output gain node */
   private readonly outputNode: GainNode;
   /** Option */
-  private readonly options: OptionInterface;
+  private readonly options: ReverbOptions;
   /** Connected flag */
   private isConnected: boolean;
   /** Noise generator */
   private noise: NoiseGenerator = white;
   /** Map of noise types to their respective generator functions. */
-  private readonly noiseMap: Record<NoiseType, NoiseGenerator> = NoiseTypeMap;
+  private readonly noiseMap: Record<NoiseType, NoiseGenerator> = NoiseType;
 
   /**
    * Constructor
@@ -43,9 +39,9 @@ export default class Reverb {
    * @param ctx - Root AudioContext
    * @param options - Configure
    */
-  constructor(ctx: AudioContext, options: Partial<OptionInterface> = {}) {
+  constructor(ctx: AudioContext, options: Partial<ReverbOptions> = {}) {
     this.ctx = ctx;
-    this.options = { ...defaults, ...options };
+    this.options = { ...ReverbOptions, ...options };
 
     this.wetGainNode = this.ctx.createGain();
     this.dryGainNode = this.ctx.createGain();

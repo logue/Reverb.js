@@ -18,6 +18,7 @@ export type NoiseType =
   | 'violet'
   | 'white';
 
+/** All valid {@link NoiseType} values. */
 export const noiseTypes: NoiseType[] = [
   'blue',
   'brown',
@@ -28,6 +29,7 @@ export const noiseTypes: NoiseType[] = [
   'white',
 ];
 
+/** Map of noise types to their respective generator functions. */
 export const NoiseType: Record<NoiseType, NoiseGenerator> = {
   blue,
   brown: red,
@@ -38,6 +40,7 @@ export const NoiseType: Record<NoiseType, NoiseGenerator> = {
   white,
 };
 
+/** A colored-noise generator function. */
 export type NoiseGenerator = (
   opts?: Partial<ColoredNoiseOpts>,
 ) => Generator<number, void, unknown>;

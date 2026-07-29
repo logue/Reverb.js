@@ -3,9 +3,9 @@ import { SYSTEM } from '@thi.ng/random';
 import type { NoiseType } from '@/types/NoiseType';
 
 /** Reverb Option */
-export interface OptionInterface {
+export type ReverbOptions = {
   /**
-   * IR (Impulse Response) color noise algorithm.
+   * IR (Impulse Response) waveform table generation color noise algorithm.
    * @see {@link https://github.com/thi-ng/umbrella/tree/develop/packages/colored-noise}
    */
   noise: NoiseType;
@@ -30,16 +30,16 @@ export interface OptionInterface {
   filterType: BiquadFilterType;
   /** Dry/Wet ratio */
   mix: number;
-  /** Invert the impulse response */
+  /** Reverse the impulse response waveform table */
   reverse: boolean;
   /** Impulse response length */
   time: number;
   /** Prevents multiple effectors from being connected. */
   once: boolean;
-}
+};
 
 /** Default Value */
-export const defaults: OptionInterface = {
+export const ReverbOptions: ReverbOptions = {
   noise: 'white',
   scale: 1,
   peaks: 2,
