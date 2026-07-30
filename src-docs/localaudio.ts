@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import Reverb from '@/index.js';
-import type { NoiseType } from '@/types/NoiseType.js';
+import type { Noise } from '@/types/Noise.js';
 
 const defaultAudioFile = '/demo.flac';
 const spectrumBins = 96;
@@ -35,7 +35,7 @@ const bindNumberInput = (
   });
 };
 
-const bindNoiseSelection = (onSelect: (value: NoiseType) => void): void => {
+const bindNoiseSelection = (onSelect: (value: Noise) => void): void => {
   document
     .querySelectorAll<HTMLInputElement>('[name=noise]')
     .forEach((element) => {
@@ -49,7 +49,7 @@ const bindNoiseSelection = (onSelect: (value: NoiseType) => void): void => {
         if (peaks) {
           peaks.disabled = target.value === 'white';
         }
-        onSelect(target.value as NoiseType);
+        onSelect(target.value as Noise);
       });
     });
 };

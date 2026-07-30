@@ -1,8 +1,8 @@
 import { white } from '@thi.ng/colored-noise/white';
 import type { INorm } from '@thi.ng/random';
 import { take } from '@thi.ng/transducers';
-import Meta from '@/Meta';
-import { type NoiseGenerator, NoiseType } from '@/types/NoiseType';
+import { Meta } from '@/types/Meta';
+import { Noise, type NoiseGenerator } from '@/types/Noise';
 import { ReverbOptions } from '@/types/ReverbOptions';
 /**
  * Reverb effect class
@@ -31,7 +31,7 @@ export default class Reverb {
   /** Noise generator */
   private noise: NoiseGenerator = white;
   /** Map of noise types to their respective generator functions. */
-  private readonly noiseMap: Record<NoiseType, NoiseGenerator> = NoiseType;
+  private readonly noiseMap: Record<Noise, NoiseGenerator> = Noise;
 
   /**
    * Constructor
@@ -275,7 +275,7 @@ export default class Reverb {
    *
    * @param type - IR noise algorithm type.
    */
-  public setNoise(type: NoiseType): void {
+  public setNoise(type: Noise): void {
     this.options.noise = type;
     this.noise = this.resolveNoiseGenerator(type);
     this.buildImpulse();
@@ -315,7 +315,7 @@ export default class Reverb {
     }
   }
 
-  private resolveNoiseGenerator(type: NoiseType): NoiseGenerator {
+  private resolveNoiseGenerator(type: Noise): NoiseGenerator {
     switch (type) {
       case 'blue':
         return this.noiseMap.blue;

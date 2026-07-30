@@ -1,6 +1,6 @@
 import type { INorm } from '@thi.ng/random';
 import { SYSTEM } from '@thi.ng/random';
-import type { NoiseType } from '@/types/NoiseType';
+import type { Noise } from '@/types/Noise';
 
 /** Reverb Option */
 export type ReverbOptions = {
@@ -8,7 +8,7 @@ export type ReverbOptions = {
    * IR (Impulse Response) waveform table generation color noise algorithm.
    * @see {@link https://github.com/thi-ng/umbrella/tree/develop/packages/colored-noise}
    */
-  noise: NoiseType;
+  noise: Noise;
   /** IR source noise scale */
   scale: number;
   /** Number of IR source noise peaks */

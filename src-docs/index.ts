@@ -1,5 +1,5 @@
 import Reverb from '@/index';
-import type { NoiseType } from '@/types/NoiseType';
+import type { Noise } from '@/types/Noise';
 import audioFile from './demo.flac';
 
 const playButton = document.getElementById('play') as HTMLButtonElement | null;
@@ -23,7 +23,7 @@ const bindNumberInput = (
   });
 };
 
-const bindNoiseSelection = (onSelect: (value: NoiseType) => void): void => {
+const bindNoiseSelection = (onSelect: (value: Noise) => void): void => {
   document
     .querySelectorAll<HTMLInputElement>('[name=noise]')
     .forEach((element) => {
@@ -37,7 +37,7 @@ const bindNoiseSelection = (onSelect: (value: NoiseType) => void): void => {
         if (peaks) {
           peaks.disabled = target.value === 'white';
         }
-        onSelect(target.value as NoiseType);
+        onSelect(target.value as Noise);
       });
     });
 };

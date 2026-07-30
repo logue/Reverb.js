@@ -9,7 +9,7 @@ import {
 } from '@thi.ng/colored-noise';
 
 /** Noise Type */
-export type NoiseType =
+export type Noise =
   | 'blue'
   | 'brown'
   | 'green'
@@ -19,7 +19,7 @@ export type NoiseType =
   | 'white';
 
 /** All valid {@link NoiseType} values. */
-export const noiseTypes: NoiseType[] = [
+export const noiseTypes: Noise[] = [
   'blue',
   'brown',
   'green',
@@ -30,7 +30,7 @@ export const noiseTypes: NoiseType[] = [
 ];
 
 /** Map of noise types to their respective generator functions. */
-export const NoiseType: Record<NoiseType, NoiseGenerator> = {
+export const Noise: Record<Noise, NoiseGenerator> = {
   blue,
   brown: red,
   green,
@@ -45,4 +45,4 @@ export type NoiseGenerator = (
   opts?: Partial<ColoredNoiseOpts>,
 ) => Generator<number, void, unknown>;
 
-export default NoiseType;
+export default Noise;

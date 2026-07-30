@@ -1,4 +1,11 @@
-import { defineConfig, importPlugin, js, rstestPlugin, ts, unicornPlugin } from '@rslint/core';
+import {
+  defineConfig,
+  importPlugin,
+  js,
+  rstestPlugin,
+  ts,
+  unicornPlugin,
+} from '@rslint/core';
 
 const APP_FILES = ['**/*.{ts,mts,tsx,js,mjs,jsx}'];
 const TEST_FILES = ['**/*.{test,spec}.{ts,mts,tsx,js,mjs,jsx}'];
@@ -100,7 +107,7 @@ export default defineConfig([
         },
       ],
       // File names should, in principle, be in PascalCase, with some exceptions.
-      'unicorn/filename-case': 'off'
+      'unicorn/filename-case': 'off',
     },
   },
 
