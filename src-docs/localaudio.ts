@@ -120,7 +120,10 @@ window.addEventListener('load', async () => {
       (clampedMaxFrequencyHz / nyquistFrequencyHz) * (frequencyData.length - 1),
     ),
   );
-  const spectralLines: { line: THREE.Line; z: number }[] = [];
+  const spectralLines: {
+    line: THREE.Line;
+    z: number;
+  }[] = [];
   let timelineZ = 0;
 
   const resizeRenderer = (observedWidth?: number) => {
@@ -198,7 +201,10 @@ window.addEventListener('load', async () => {
 
     const line = new THREE.Line(geometry, material);
     linesGroup.add(line);
-    spectralLines.push({ line, z: timelineZ });
+    spectralLines.push({
+      line,
+      z: timelineZ,
+    });
 
     while (spectralLines.length > maxLines) {
       const removed = spectralLines.shift();
@@ -260,8 +266,12 @@ window.addEventListener('load', async () => {
         reject(new Error('Failed to load audio source.'));
       };
 
-      audio.addEventListener('canplaythrough', onReady, { once: true });
-      audio.addEventListener('error', onError, { once: true });
+      audio.addEventListener('canplaythrough', onReady, {
+        once: true,
+      });
+      audio.addEventListener('error', onError, {
+        once: true,
+      });
       audio.load();
     });
 

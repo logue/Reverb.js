@@ -41,7 +41,10 @@ export default class Reverb {
    */
   constructor(ctx: AudioContext, options: Partial<ReverbOptions> = {}) {
     this.ctx = ctx;
-    this.options = { ...ReverbOptions, ...options };
+    this.options = {
+      ...ReverbOptions,
+      ...options,
+    };
 
     this.wetGainNode = this.ctx.createGain();
     this.dryGainNode = this.ctx.createGain();

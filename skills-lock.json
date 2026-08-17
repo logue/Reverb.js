@@ -7,17 +7,11 @@
       "skillPath": "skills/rsbuild-best-practices/SKILL.md",
       "computedHash": "2f1de26a27367666c49d16b114d31dbf78dc71f02b3e0784b1e3bf90f4e6e90b"
     },
-    "rslib-best-practices": {
-      "source": "rstackjs/agent-skills",
+    "vue-best-practices": {
+      "source": "hyf0/vue-skills",
       "sourceType": "github",
-      "skillPath": "skills/rslib-best-practices/SKILL.md",
-      "computedHash": "be776b5192c676c6d94f96063b9ee52d2545b9ba47dd8ae1a1afa78a2c19b507"
-    },
-    "rstest-best-practices": {
-      "source": "rstackjs/agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/rstest-best-practices/SKILL.md",
-      "computedHash": "f0b2092fa4696a8364b0ae15e44fa7752367bac01a2dd1b98223d01ffe001e04"
+      "skillPath": "skills/vue-best-practices/SKILL.md",
+      "computedHash": "3df585ad31aec78fe55c56c1411262737e6b231677a3153dec512a882fde80cd"
     }
   }
 }

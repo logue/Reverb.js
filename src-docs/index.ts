@@ -24,22 +24,22 @@ const bindNumberInput = (
 };
 
 const bindNoiseSelection = (onSelect: (value: Noise) => void): void => {
-  document
-    .querySelectorAll<HTMLInputElement>('[name=noise]')
-    .forEach((element) => {
-      element.addEventListener('click', (event) => {
-        const target = event.target;
-        if (!(target instanceof HTMLInputElement)) {
-          return;
-        }
+  for (const element of document.querySelectorAll<HTMLInputElement>(
+    '[name=noise]',
+  )) {
+    element.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLInputElement)) {
+        return;
+      }
 
-        const peaks = getInputElement('peaks');
-        if (peaks) {
-          peaks.disabled = target.value === 'white';
-        }
-        onSelect(target.value as Noise);
-      });
+      const peaks = getInputElement('peaks');
+      if (peaks) {
+        peaks.disabled = target.value === 'white';
+      }
+      onSelect(target.value as Noise);
     });
+  }
 };
 
 window.addEventListener('load', async () => {
@@ -82,7 +82,7 @@ window.addEventListener('load', async () => {
 
   const analysedData = new Float32Array(1024);
   const drawGraph = () => {
-    if (!canvas || !canvasContext) {
+    if (!(canvas && canvasContext)) {
       return;
     }
 
@@ -145,7 +145,7 @@ window.addEventListener('load', async () => {
         return;
       }
 
-      if (audioSource.buffer == null) {
+      if (!audioSource.buffer) {
         audioSource.buffer = sound;
         audioSource.loop = true;
         setReverb();

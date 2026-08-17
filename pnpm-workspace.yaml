@@ -1,3 +1,6 @@
+allowBuilds:
+  "@parcel/watcher": true
+  esbuild: false
 # Do not enforce minimum release age for dependencies.
 # Version selection is delegated to package.json constraints.
 minimumReleaseAge: 0

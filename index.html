@@ -1,33 +1,76 @@
 <!doctype html>
-<html lang="en" class="h-100" data-bs-theme="auto">
+<html
+  lang="en"
+  class="h-100"
+  data-bs-theme="auto"
+>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="description" content="Reverb effect written in JavaScript." />
-    <meta name="author" content="Masashi Yoshikawa" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <meta
+      name="color-scheme"
+      content="light dark"
+    />
+    <meta
+      name="description"
+      content="Reverb effect written in JavaScript."
+    />
+    <meta
+      name="author"
+      content="Masashi Yoshikawa"
+    />
     <!-- ogp -->
-    <meta property="og:title" content="JavaScript Reverb Effect Test" />
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://logue.dev/Reverb.js/" />
+    <meta
+      property="og:title"
+      content="JavaScript Reverb Effect Test"
+    />
+    <meta
+      property="og:type"
+      content="article"
+    />
+    <meta
+      property="og:url"
+      content="https://logue.dev/Reverb.js/"
+    />
     <meta
       property="og:image"
       content="https://repository-images.githubusercontent.com/194181712/20bdd780-9995-11e9-8811-42e3b44d1cec"
     />
-    <meta property="og:site_name" content="Logue's Lab" />
+    <meta
+      property="og:site_name"
+      content="Logue's Lab"
+    />
     <meta
       property="og:description"
       content="Reverb effect written in JavaScript."
     />
-    <meta property="fb:app_id" content="129144050466298" />
+    <meta
+      property="fb:app_id"
+      content="129144050466298"
+    />
     <meta
       property="article:publisher"
       content="https://www.facebook.com/logue256"
     />
-    <meta name="twitter:card" content="Summary" />
-    <meta name="twitter:site" content="@logue256" />
-    <meta name="twitter:title" content="JavaScript Reverb Effect Test" />
-    <meta name="twitter:url" content="https://logue.dev/Reverb.js/" />
+    <meta
+      name="twitter:card"
+      content="Summary"
+    />
+    <meta
+      name="twitter:site"
+      content="@logue256"
+    />
+    <meta
+      name="twitter:title"
+      content="JavaScript Reverb Effect Test"
+    />
+    <meta
+      name="twitter:url"
+      content="https://logue.dev/Reverb.js/"
+    />
     <meta
       name="twitter:description"
       content="Reverb effect written in JavaScript."
@@ -43,12 +86,13 @@
       src="https://www.googletagmanager.com/gtag/js?id=G-2Y2FW3QEG4"
     ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'G-2Y2FW3QEG4');
+    'use strict';
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-2Y2FW3QEG4');
     </script>
     <!-- Bootstrap core CSS -->
     <link
@@ -69,7 +113,12 @@
     <header>
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container-fluid d-flex justify-content-between">
-          <a class="navbar-brand" href="#">Reverb.js</a>
+          <a
+            class="navbar-brand"
+            href="#"
+          >
+            Reverb.js
+          </a>
           <button
             aria-controls="navbarCollapse"
             aria-expanded="false"
@@ -81,10 +130,18 @@
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse flex-grow-0" id="navbarCollapse">
+          <div
+            class="collapse navbar-collapse flex-grow-0"
+            id="navbarCollapse"
+          >
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active" href="./">Demo</a>
+                <a
+                  class="nav-link active"
+                  href="./"
+                >
+                  Demo
+                </a>
               </li>
               <li class="nav-item">
                 <a
@@ -166,7 +223,12 @@
       <div class="container-fluid bg-body-tertiary p-5 mb-3">
         <h1 class="display-5 fw-bold">Reverb.js Demo</h1>
         <p class="fs-4">Refer to the console log for the values.</p>
-        <button id="play" type="button" class="btn btn-primary btn-lg" disabled>
+        <button
+          id="play"
+          type="button"
+          class="btn btn-primary btn-lg"
+          disabled
+        >
           <em class="bi bi-play"></em>
           Play
         </button>
@@ -181,19 +243,39 @@
               effect. It may be helpful to maximize the value of Wet.
             </p>
             <div class="form-check form-switch">
-              <input id="reverb" type="checkbox" class="form-check-input" />
-              <label class="form-check-label" for="reverb">Reverb</label>
+              <input
+                id="reverb"
+                type="checkbox"
+                class="form-check-input"
+              />
+              <label
+                class="form-check-label"
+                for="reverb"
+              >
+                Reverb
+              </label>
             </div>
             <div class="form-check form-switch">
-              <input type="checkbox" class="form-check-input" id="reverse" />
-              <label class="form-check-label" for="reverse">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="reverse"
+              />
+              <label
+                class="form-check-label"
+                for="reverse"
+              >
                 Reverse Inpulse Response
               </label>
             </div>
           </div>
           <div class="col">
             <div class="overflow-auto">
-              <canvas id="graph" width="512" height="256"></canvas>
+              <canvas
+                id="graph"
+                width="512"
+                height="256"
+              ></canvas>
             </div>
             <p class="text-right">
               The sound uses the drum part of
@@ -236,11 +318,14 @@
                     id="blue"
                     value="blue"
                   />
-                  <label class="form-check-label" for="blue">
-                    <em
+                  <label
+                    class="form-check-label"
+                    for="blue"
+                  >
+                    <i
                       class="bi bi-square-fill"
                       style="color: var(--bs-blue)"
-                    ></em>
+                    ></i>
                     Blue Noise
                   </label>
                 </div>
@@ -254,11 +339,14 @@
                     id="green"
                     value="green"
                   />
-                  <label class="form-check-label" for="green">
-                    <em
+                  <label
+                    class="form-check-label"
+                    for="green"
+                  >
+                    <i
                       class="bi bi-square-fill"
                       style="color: var(--bs-green)"
-                    ></em>
+                    ></i>
                     Green Noise
                   </label>
                 </div>
@@ -272,11 +360,14 @@
                     id="pink"
                     value="pink"
                   />
-                  <label class="form-check-label" for="pink">
-                    <em
+                  <label
+                    class="form-check-label"
+                    for="pink"
+                  >
+                    <i
                       class="bi bi-square-fill"
                       style="color: var(--bs-pink)"
-                    ></em>
+                    ></i>
                     Pink Noise
                   </label>
                 </div>
@@ -290,11 +381,14 @@
                     id="red"
                     value="red"
                   />
-                  <label class="form-check-label" for="red">
-                    <em
+                  <label
+                    class="form-check-label"
+                    for="red"
+                  >
+                    <i
                       class="bi bi-square-fill"
                       style="color: var(--bs-red)"
-                    ></em>
+                    ></i>
                     Red (Brown) Noise
                   </label>
                 </div>
@@ -308,11 +402,14 @@
                     id="violet"
                     value="violet"
                   />
-                  <label class="form-check-label" for="violet">
-                    <em
+                  <label
+                    class="form-check-label"
+                    for="violet"
+                  >
+                    <i
                       class="bi bi-square-fill"
                       style="color: var(--bs-purple)"
-                    ></em>
+                    ></i>
                     Violet Noise
                   </label>
                 </div>
@@ -327,8 +424,11 @@
                     value="white"
                     checked
                   />
-                  <label class="form-check-label" for="white">
-                    <em class="bi bi-square"></em>
+                  <label
+                    class="form-check-label"
+                    for="white"
+                  >
+                    <i class="bi bi-square"></i>
                     White Noise
                   </label>
                 </div>
@@ -347,7 +447,12 @@
           </fieldset>
           <div class="row">
             <div class="col-md">
-              <label for="peaks" class="form-label">Random noise peaks</label>
+              <label
+                for="peaks"
+                class="form-label"
+              >
+                Random noise peaks
+              </label>
               <input
                 type="number"
                 class="form-control"
@@ -358,13 +463,21 @@
                 max="64"
                 disabled
               />
-              <div id="scale-help" class="form-text">
+              <div
+                id="scale-help"
+                class="form-text"
+              >
                 The number of frequency band peaks when generating noise. This
                 value is ignored for white noise.
               </div>
             </div>
             <div class="col-md">
-              <label for="scale" class="form-label">Random noise scales</label>
+              <label
+                for="scale"
+                class="form-label"
+              >
+                Random noise scales
+              </label>
               <input
                 type="number"
                 class="form-control"
@@ -376,11 +489,21 @@
               />
             </div>
             <div class="col-md">
-              <label for="randomAlgorithm" class="form-label">
+              <label
+                for="randomAlgorithm"
+                class="form-label"
+              >
                 Random Generator
               </label>
-              <select id="randomAlgorithm" class="form-select" disabled>
-                <option value="SYSTEM" selected="selected">
+              <select
+                id="randomAlgorithm"
+                class="form-select"
+                disabled
+              >
+                <option
+                  value="SYSTEM"
+                  selected="selected"
+                >
                   SYSTEM (Default)
                 </option>
                 <option value="CRYPTO">CRYPTO</option>
@@ -396,7 +519,11 @@
           </p>
           <div class="row">
             <div class="col-md">
-              <label for="time" class="form-label" aria-describedby="time-help">
+              <label
+                for="time"
+                class="form-label"
+                aria-describedby="time-help"
+              >
                 Time
               </label>
               <input
@@ -408,10 +535,20 @@
                 max="50"
                 id="time"
               />
-              <div id="time-help" class="form-text">Room size</div>
+              <div
+                id="time-help"
+                class="form-text"
+              >
+                Room size
+              </div>
             </div>
             <div class="col-md">
-              <label for="decay" class="form-label">Decay</label>
+              <label
+                for="decay"
+                class="form-label"
+              >
+                Decay
+              </label>
               <input
                 type="range"
                 class="form-range"
@@ -421,12 +558,20 @@
                 max="100"
                 id="decay"
               />
-              <div id="decay-help" class="form-text">
+              <div
+                id="decay-help"
+                class="form-text"
+              >
                 Hardness of room wall size
               </div>
             </div>
             <div class="col-md">
-              <label for="delay" class="form-label">Delay</label>
+              <label
+                for="delay"
+                class="form-label"
+              >
+                Delay
+              </label>
               <input
                 type="range"
                 class="form-range"
@@ -436,12 +581,20 @@
                 max="100"
                 id="delay"
               />
-              <div id="delay-help" class="form-text">
+              <div
+                id="delay-help"
+                class="form-text"
+              >
                 Delays due to obstacles in front of room walls
               </div>
             </div>
             <div class="col-md">
-              <label for="mix" class="form-label">Dry / Wet</label>
+              <label
+                for="mix"
+                class="form-label"
+              >
+                Dry / Wet
+              </label>
               <input
                 type="range"
                 id="mix"
@@ -452,7 +605,10 @@
                 value="0.5"
                 title="0.5"
               />
-              <div id="delay-help" class="form-text">
+              <div
+                id="delay-help"
+                class="form-text"
+              >
                 Closer to the original sound or closer to the effector
               </div>
             </div>
@@ -466,9 +622,20 @@
           </p>
           <div class="row">
             <div class="col-md">
-              <label for="filter" class="form-label">Filter Type</label>
-              <select id="filter" class="form-select">
-                <option value="allpass" selected="selected">
+              <label
+                for="filter"
+                class="form-label"
+              >
+                Filter Type
+              </label>
+              <select
+                id="filter"
+                class="form-select"
+              >
+                <option
+                  value="allpass"
+                  selected="selected"
+                >
                   allpass (Through)
                 </option>
                 <option value="bandpass">bandpass</option>
@@ -481,7 +648,12 @@
               </select>
             </div>
             <div class="col-md">
-              <label for="freq" class="form-label">Filter frequency</label>
+              <label
+                for="freq"
+                class="form-label"
+              >
+                Filter frequency
+              </label>
               <input
                 type="range"
                 class="form-range"
@@ -494,7 +666,12 @@
               />
             </div>
             <div class="col-md">
-              <label for="freq" class="form-label">Q value</label>
+              <label
+                for="q"
+                class="form-label"
+              >
+                Q value
+              </label>
               <input
                 type="range"
                 class="form-range"

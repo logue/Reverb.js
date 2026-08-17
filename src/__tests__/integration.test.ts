@@ -139,7 +139,9 @@ describe('Reverb Integration', () => {
       ] as const;
 
       for (const noiseType of noiseTypes) {
-        const reverb = new Reverb(audioContext, { noise: noiseType });
+        const reverb = new Reverb(audioContext, {
+          noise: noiseType,
+        });
         const sourceNode = createMockAudioNode();
 
         expect(() => reverb.connect(sourceNode)).not.toThrow();
@@ -162,7 +164,9 @@ describe('Reverb Integration', () => {
       ];
 
       for (const filterType of filterTypes) {
-        const reverb = new Reverb(audioContext, { filterType });
+        const reverb = new Reverb(audioContext, {
+          filterType,
+        });
         const sourceNode = createMockAudioNode();
 
         expect(() => reverb.connect(sourceNode)).not.toThrow();

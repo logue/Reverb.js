@@ -57,7 +57,13 @@ describe('Reverb E2E', () => {
       expect(output).toBeDefined();
 
       // Test parameter automation
-      const automationSteps = [0.15, 0.2, 0.3, 0.25, 0.2];
+      const automationSteps = [
+        0.15,
+        0.2,
+        0.3,
+        0.25,
+        0.2,
+      ];
       for (const mixValue of automationSteps) {
         vocalReverb.mix(mixValue);
       }
@@ -270,13 +276,34 @@ describe('Reverb E2E', () => {
   describe('noise algorithm scenarios', () => {
     it('should produce different characteristics with different noise types', () => {
       const noiseConfigs = [
-        { noise: 'white', use: 'General purpose reverb' },
-        { noise: 'pink', use: 'Warmer, more natural reverb' },
-        { noise: 'brown', use: 'Very warm, dark reverb' },
-        { noise: 'blue', use: 'Bright, crisp reverb' },
-        { noise: 'violet', use: 'Very bright reverb' },
-        { noise: 'red', use: 'Alternative to brown' },
-        { noise: 'green', use: 'Balanced frequency response' },
+        {
+          noise: 'white',
+          use: 'General purpose reverb',
+        },
+        {
+          noise: 'pink',
+          use: 'Warmer, more natural reverb',
+        },
+        {
+          noise: 'brown',
+          use: 'Very warm, dark reverb',
+        },
+        {
+          noise: 'blue',
+          use: 'Bright, crisp reverb',
+        },
+        {
+          noise: 'violet',
+          use: 'Very bright reverb',
+        },
+        {
+          noise: 'red',
+          use: 'Alternative to brown',
+        },
+        {
+          noise: 'green',
+          use: 'Balanced frequency response',
+        },
       ] as const;
 
       for (const config of noiseConfigs) {

@@ -10,7 +10,7 @@ You are an expert in TypeScript, Rsbuild, Rslib, Rstest, and library development
 - **Language**: TypeScript 7
 - **Package manager**: pnpm (do not use npm or yarn)
 
-**Last updated**: 2026-07-29
+**Last updated**: 2026-08-17
 **Verified with**: `package.json` in this repository
 
 ### Tool Versions
@@ -20,9 +20,9 @@ See `package.json` for authoritative dependency versions.
 This guide assumes:
 
 - TypeScript 7.0.2 or later
-- Rsbuild 2.1.7 or later
+- Rsbuild 2.1.13 or later
 - Rslib 0.23.2 or later
-- Rstest 0.11.4 or later
+- Rstest 0.11.8 or later
 
 **If you encounter version-related issues, check `package.json` directly—it is the source of truth.**
 
@@ -58,6 +58,18 @@ This project uses two complementary build tools:
   - Configuration: `rsbuild.config.ts`, `tsconfig.rsbuild.json`
   - Purpose: Interactive demo to verify library functionality during development
 
+#### TypeScript Configuration Strategy
+
+TypeScript configurations are organized by **tool name, not by purpose**:
+
+- `tsconfig.rslib.json` - Library bundling configuration
+- `tsconfig.rsbuild.json` - Demo/documentation site configuration
+- `tsconfig.rstest.json` - Testing configuration (if applicable)
+
+This approach eliminates conditional branching based on build purpose.
+Instead, each tool has its own explicit configuration namespace,
+making the build pipeline transparent and maintainable.
+
 ### Development Workflow
 
 - `pnpm run dev` - Watch mode for library
@@ -73,6 +85,8 @@ This project uses two complementary build tools:
 - `pnpm run test` - Run tests
 - `pnpm run test:watch` - Watch mode for tests
 - `pnpm run lint` - Lint and format all code (Biome + Rslint)
+- `pnpm run inspect` - Inspect final rslib config
+- `pnpm run inspect:docs` - Inspect final rsbuild config
 - `pnpm run clean` - Remove build artifacts
 - `pnpm run clean:hard` - Remove build artifact and build caches.
 
@@ -102,20 +116,29 @@ This project uses two complementary build tools:
   - Interface-like object shapes
   - Generic types
   - Default values paired with type definitions (see Type Pattern below)
+  - `.d.ts`: Type aliases, interfaces, generic types (no values)
+  - `.ts`: Type definitions paired with default values or constants
 - **`interfaces/`** — Use only when:
   - Multiple inheritance levels needed
   - Clear contract inheritance matters
 
 ### Type Definition Pattern
 
-Prefer `type` over `interface` for most cases. Consolidate type and default values together:
+Prefer `type` over `interface` for most cases.
 
 ```ts
-// types/Options.ts
+// types/Options.d.ts
 export type Options = {
   someText: string;
   someNumber: number;
 };
+```
+
+Consolidate type and default values together:
+
+```ts
+// types/Options.ts
+import type { Options } from "./Options.d.ts";
 
 /** Default configuration */
 export const Options: Options = {
@@ -144,18 +167,58 @@ export const Options: Options = {
 Avoid `enum`. Use union types:
 
 ```ts
-export type NoiseType = "blue" | "brown" | "green" | ...;
-export const noiseTypes: NoiseType[] = ["blue", "brown", ...];
+export type NoiseType = 'blue' | 'brown' | 'green' | ...;
+export const noiseTypes: NoiseType[] = ['blue', 'brown', ...];
 export const NoiseType: Record<NoiseType, NoiseGenerator> = { blue, brown, ... };
 ```
 
-#### Formatting
+### Do not use `null` except when using JSON
+
+- **strict**: Except for JSON round trips, `null` is not allowed.
+- **undefined only**: A unified expression for the state of "no value"
+
+#### Pattern
+
+❌ Do not
+
+```ts
+function process(str: string | null) {}
+function handler(data: { value: string | null }) {}
+```
+
+✓ Recommend
+
+```ts
+function process(str?: string) {}
+function handler(data: { value?: string }) {}
+```
+
+#### Exception: JSON transformation boundary layer only
+
+```typescript
+// Immediately after JSON parsing: Normalize to allow null values
+const apiData = JSON.parse(json);
+const normalized = {
+  value: apiData.value ?? undefined,
+};
+
+// The following is based on undefined
+process(normalized.value);
+```
+
+**Why do not use `null`:**
+
+1. SQL normalization (eliminates ambiguity for `0`, `''`, and `null`)
+2. TypeScript design philosophy (`Partial` is based on `undefined`)
+3. _Type specificity_ at library boundaries
+
+## Formatting
 
 - Use Biome
 - Use Rslint for linting
 - **Indentation**: Two spaces
 - **Semicolons**: Use semicolons
-- **Quotes**: Double quotes
+- **Quotes**: Single quotes
 
 ### Naming Conventions
 
@@ -174,8 +237,7 @@ export const NoiseType: Record<NoiseType, NoiseGenerator> = { blue, brown, ... }
 
 ### Facade Pattern: Hiding Complexity
 
-This project follows the Facade pattern: the public API is simple and focused,
-while internal complexity is deliberately hidden.
+This project employs the **Facade pattern**. In a library, the public API should be simple and focused, while internal complexity should be intentionally hidden.
 
 - Users interact with high-level operations (read/write files, transform data)
 - Implementation details (binary parsing, encoding, version handling) are internal
@@ -215,15 +277,54 @@ This may include using the same identifier for both type and value when it impro
 
 ## Testing
 
-Testing program uses rstest.
+This project uses **Rstest** for testing.
 
-- Run `pnpm run test` to run tests
-- Run `pnpm run test:watch` to run tests in watch mode
+### Running Tests
+
+- `pnpm run test` - Run all tests
+- `pnpm run test:watch` - Run tests in watch mode
+
+### Test Structure & Naming
+
+Tests are co-located with source code in `__tests__/` directories:
+
+```plain
+src/
+  components/
+    Button.ts
+    __tests__/
+      Button.spec.ts
+  utils/
+    helpers.ts
+    __tests__/
+      helpers.spec.ts
+```
+
+Naming convention:
+
+- Test files: `[SourceFile].spec.ts`
+- Co-location makes tests easy to find and maintain
 
 ### Test Code Style
 
 - Use descriptive test names
 - Group related tests with `describe`
 - Use `it` or `test` for individual cases
-- Clean up resources after tests (afterEach, afterAll)
+- Clean up resources after tests (`afterEach`, `afterAll`)
 - Follow the same TypeScript rules as non-test code
+
+## Markdown Generation
+
+When generating markdown (documentation, AGENTS.md, etc.):
+
+- **Preserve code formatting**: `__` should NOT be converted to bold
+  within inline code or code blocks
+- Use backticks for inline code: `` `__tests__` ``
+- Code blocks will preserve literal `__` as-is
+- This applies to Node.js globals (`__dirname`, `__filename`)
+  and directory names (`__tests__`, `__mocks__`, etc.)
+
+Example:
+
+- ✓ Tests in `` `__tests__` `` directories
+- ✗ Tests in `**tests**` directories (incorrect)

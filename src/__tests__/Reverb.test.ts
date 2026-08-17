@@ -46,7 +46,9 @@ describe('Reverb', () => {
     });
 
     it('should handle once option correctly', () => {
-      const onceReverb = new Reverb(audioContext, { once: true });
+      const onceReverb = new Reverb(audioContext, {
+        once: true,
+      });
       const sourceNode = createMockAudioNode();
 
       const outputNode1 = onceReverb.connect(sourceNode);

@@ -19,14 +19,20 @@ export const createMockAudioContext = (): AudioContext => {
         }),
       ),
     createGain: rs.fn().mockReturnValue({
-      gain: { value: 1 },
+      gain: {
+        value: 1,
+      },
       connect: rs.fn(),
       disconnect: rs.fn(),
     }),
     createBiquadFilter: rs.fn().mockReturnValue({
       type: 'allpass',
-      frequency: { value: 350 },
-      Q: { value: 1 },
+      frequency: {
+        value: 350,
+      },
+      Q: {
+        value: 1,
+      },
       connect: rs.fn(),
       disconnect: rs.fn(),
     }),

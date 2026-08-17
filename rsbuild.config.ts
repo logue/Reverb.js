@@ -2,6 +2,7 @@
 import { readFileSync } from 'node:fs';
 
 import { defineConfig } from '@rsbuild/core';
+import { pluginTypeCheck } from '@rsbuild/plugin-type-check';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8')) as {
   version: string;
@@ -10,13 +11,9 @@ const pkg = JSON.parse(readFileSync('./package.json', 'utf-8')) as {
 const buildDate = new Date().toISOString();
 
 export default defineConfig({
-  output: {
-    distPath: {
-      root: 'docs',
-    },
-    assetPrefix: './',
-    filenameHash: true,
-  },
+  plugins: [
+    pluginTypeCheck(),
+  ],
   html: {
     template({ entryName }) {
       const templates: Record<string, string> = {
@@ -27,16 +24,24 @@ export default defineConfig({
       return templates[entryName] ?? './index.html';
     },
   },
+  output: {
+    assetPrefix: './',
+    distPath: {
+      root: 'docs',
+    },
+    filenameHash: true,
+  },
   source: {
-    tsconfigPath: './tsconfig.rsbuild.json',
-    include: ['./src'],
     define: {
       __APP_VERSION__: JSON.stringify(pkg.version),
       __BUILD_DATE__: JSON.stringify(buildDate),
     },
     entry: {
       index: './src-docs/index.ts',
-      localaudio: './src-docs/localaudio.ts',
     },
+    include: [
+      './src',
+    ],
+    tsconfigPath: './tsconfig.rsbuild.json',
   },
 });
