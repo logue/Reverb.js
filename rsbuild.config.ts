@@ -1,4 +1,4 @@
-/** For build documentation site use. */
+/** For build demo site use. */
 import { readFileSync } from 'node:fs';
 
 import { defineConfig } from '@rsbuild/core';
@@ -27,7 +27,7 @@ export default defineConfig({
   output: {
     assetPrefix: './',
     distPath: {
-      root: 'docs',
+      root: 'demo',
     },
     filenameHash: true,
   },
@@ -37,7 +37,7 @@ export default defineConfig({
       __BUILD_DATE__: JSON.stringify(buildDate),
     },
     entry: {
-      index: './src-docs/index.ts',
+      index: './src-demo/index.ts',
     },
     include: [
       './src',

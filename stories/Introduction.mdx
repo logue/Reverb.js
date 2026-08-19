@@ -1,0 +1,131 @@
+---
+title: "Reverb.js/はじめに"
+---
+
+# Reverb.js
+
+**Web Audio API** を使ったリバーブエフェクトクラスです。
+カラードノイズでインパルス応答 (IR) を合成し、`ConvolverNode` を通してリバーブを掛けます。
+
+## インストール
+
+```bash
+pnpm add @logue/reverb
+# or
+npm install @logue/reverb
+```
+
+## 基本的な使い方
+
+```typescript
+import Reverb from "@logue/reverb";
+
+// AudioContext を作成（ユーザー操作後に呼ぶこと）
+const ctx = new AudioContext();
+
+// Reverb インスタンスを作成
+const reverb = new Reverb(ctx, {
+  time: 2, // IR の長さ（秒）
+  decay: 2, // 減衰率
+  mix: 0.5, // Dry/Wet 比率（0〜1）
+});
+
+// AudioBufferSourceNode を作成してリバーブに接続
+const source = ctx.createBufferSource();
+source.buffer = await loadAudioBuffer(ctx, "/your-audio.mp3");
+source.loop = true;
+
+// connect() の返値（OutputGainNode）を destination に接続
+reverb.connect(source).connect(ctx.destination);
+source.start();
+```
+
+## 信号フロー
+
+```
+AudioBufferSourceNode（入力）
+  ├─→ ConvolverNode → BiquadFilterNode → WetGainNode ─┐
+  ├─→ DryGainNode ─────────────────────────────────────┤
+  └─→ WetGainNode（直結）──────────────────────────────┤
+                                                    OutputGainNode → destination
+```
+
+## API リファレンス
+
+### コンストラクタ
+
+```typescript
+new Reverb(ctx: AudioContext, options?: Partial<ReverbOptions>)
+```
+
+| オプション   | 型                 | デフォルト  | 説明                               |
+| ------------ | ------------------ | ----------- | ---------------------------------- |
+| `time`       | `number`           | `2`         | IR の長さ（秒, 1〜50）             |
+| `decay`      | `number`           | `2`         | 減衰率（0〜100）                   |
+| `delay`      | `number`           | `0`         | リバーブ開始前の遅延（ms, 0〜100） |
+| `reverse`    | `boolean`          | `false`     | IR を逆転させる                    |
+| `mix`        | `number`           | `0.5`       | Dry/Wet 比率（0〜1）               |
+| `noise`      | `Noise`            | `'white'`   | IR 生成ノイズ種別                  |
+| `peaks`      | `number`           | `2`         | ノイズのピーク数                   |
+| `scale`      | `number`           | `1`         | ノイズのスケール                   |
+| `filterType` | `BiquadFilterType` | `'allpass'` | フィルタ種別                       |
+| `filterFreq` | `number`           | `2200`      | フィルタ周波数（Hz, 20〜20000）    |
+| `filterQ`    | `number`           | `1`         | フィルタ Q 値（0〜10）             |
+| `once`       | `boolean`          | `false`     | 二重接続を防ぐ                     |
+
+### メソッド
+
+#### `connect(sourceNode: AudioNode): AudioNode`
+
+ソースノードにリバーブを接続します。返値の `AudioNode` を `destination` に繋いでください。
+
+```typescript
+reverb.connect(source).connect(ctx.destination);
+```
+
+#### `disconnect(sourceNode?: AudioNode): AudioNode | undefined`
+
+リバーブを切断します。リアルタイムに ON/OFF を切り替えられます。
+
+```typescript
+const dry = reverb.disconnect(source);
+dry?.connect(ctx.destination);
+```
+
+#### リアルタイムパラメータ変更
+
+再生中でもすべてのパラメータを変更できます。
+
+```typescript
+reverb.mix(0.7);
+reverb.time(5); // IR 再生成
+reverb.decay(3); // IR 再生成
+reverb.reverse(true); // IR 再生成
+reverb.filterType("lowpass");
+reverb.filterFreq(4000);
+reverb.setNoise("pink"); // IR 再生成
+```
+
+## ノイズ種別
+
+IR 生成に使うカラードノイズを切り替えることで音色が変わります。
+
+| 種別            | 特徴                                   |
+| --------------- | -------------------------------------- |
+| `white`         | フラットなスペクトル。標準的なリバーブ |
+| `pink`          | 低域が豊か。自然な空間感               |
+| `brown` / `red` | さらに低域寄り。深みのあるリバーブ     |
+| `blue`          | 高域が豊か。明るい質感                 |
+| `violet`        | 最も高域寄り                           |
+| `green`         | 中域が豊か                             |
+
+## バージョン情報
+
+```typescript
+console.log(Reverb.version); // パッケージバージョン
+console.log(Reverb.build); // ビルド日時
+```
+
+## ライセンス
+
+MIT © [Logue](https://logue.dev/)

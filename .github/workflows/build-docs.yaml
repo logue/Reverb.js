@@ -1,4 +1,4 @@
-name: Build Docs
+name: Build Storybook
 permissions:
   contents: read
   pull-requests: write
@@ -30,7 +30,7 @@ jobs:
       - name: Build 🔧
         run: |
           pnpm install
-          pnpm build:docs
+          pnpm build:storybook
 
       - name: Deploy to gh-pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4

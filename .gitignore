@@ -4,6 +4,7 @@ node_modules/
 
 # Build / Cache
 dist/
+demo/
 docs/
 .rsbuild/
 .rslib/

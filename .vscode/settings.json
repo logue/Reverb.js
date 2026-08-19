@@ -28,5 +28,8 @@
   },
   // Enable the experimental TypeScript Go (tsgo) feature for faster TypeScript compilation.
   "js/ts.experimental.useTsgo": true,
-  "notebook.defaultFormatter": "biomejs.biome"
+  "notebook.defaultFormatter": "biomejs.biome",
+  "[mdx]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

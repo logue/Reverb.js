@@ -53,13 +53,17 @@
       "a11y": {
         // Because they are often used for purposes that are meaningless
         // to screen readers, such as icons.
-        "noSvgWithoutTitle": "info"
+        "noSvgWithoutTitle": "info",
+        // For bootstrap fix.
+        "useValidAnchor": "off"
       },
       "complexity": {
         // To remove the warning about processing long lines of code, uncomment the following line.
         // "noExcessiveLinesPerFunction": "off",
         // The contents of the interior should be kept secret. (The concept of the facade)
-        "noRedundantDefaultExport": "off"
+        "noRedundantDefaultExport": "off",
+        // For Google Analytics fix.
+        "noArguments": "off"
       },
       "correctness": {
         // Disable this rule to allow Node.js modules for configuration files and scripts.

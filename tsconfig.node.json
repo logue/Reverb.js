@@ -12,17 +12,14 @@
     "**/.*/"
   ],
   "compilerOptions": {
-    "composite": true,
-    "noEmit": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "resolveJsonModule": true,
-    "types": [
-      "node"
-    ],
     "paths": {
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "composite": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo"
   }
 }
