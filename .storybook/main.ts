@@ -2,6 +2,8 @@ import { mergeRslibConfig } from '@rslib/core';
 import remarkGfm from 'remark-gfm';
 import type { StorybookConfig } from 'storybook-html-rsbuild';
 
+import rehypePreMermaid from './rehype-pre-mermaid';
+
 const config: StorybookConfig = {
   framework: 'storybook-html-rsbuild',
   stories: [
@@ -15,9 +17,8 @@ const config: StorybookConfig = {
       options: {
         mdxPluginOptions: {
           mdxCompileOptions: {
-            remarkPlugins: [
-              remarkGfm,
-            ],
+            remarkPlugins: [remarkGfm],
+            rehypePlugins: [rehypePreMermaid],
           },
         },
       },

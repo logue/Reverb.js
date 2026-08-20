@@ -1,52 +1,89 @@
 /**
  * Reverb.js Storybook Story
  *
- * Web Audio API を使ったリバーブエフェクトのインタラクティブデモ。
- * Storybook Controls パネルで全パラメータをリアルタイムに変更できます。
+ * Interactive demo of the reverb effect using the Web Audio API.
+ * All parameters can be changed in real time via the Storybook Controls panel.
  */
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryContext, StoryObj } from 'storybook-html-rsbuild';
 
 import Reverb from '@/index';
 import type { Noise } from '@/types/Noise';
 import { noiseTypes } from '@/types/Noise';
 import { ReverbOptions as defaults } from '@/types/ReverbOptions';
 
-// --- デモ音声 ---
 import demoAudioUrl from './assets/demo.flac';
 
 // ---------------------------------------------------------------------------
-// Story で使う型定義
+// i18n
+// ---------------------------------------------------------------------------
+
+const i18n = {
+  ja: {
+    title: 'Reverb.js インタラクティブデモ',
+    playBtn: '▶ 再生',
+    pauseBtn: '⏸ 一時停止',
+    statusReady:
+      'クリックして音声を再生（ブラウザの自動再生ポリシーのため操作が必要です）',
+    statusNoFile:
+      '⚠️ demo.flac が見つかりません。stories/assets/ にコピーしてください。',
+    statusLoading: '🎵 音声ファイルを読み込み中...',
+    statusLoaded: '読み込み完了',
+    statusError: '⚠️ 音声ファイルの読み込みに失敗しました',
+    statusPlaying: (reverbOn: boolean) =>
+      `再生中 — ${reverbOn ? 'Reverb ON' : 'Dry only'}`,
+    statusPaused: '一時停止中',
+    canvasIdle: '▶ 再生を押して開始',
+    canvasAnalyzing: 'Analyzing...',
+    reverseOn: 'ON',
+    reverseOff: 'OFF',
+  },
+  en: {
+    title: 'Reverb.js Interactive Demo',
+    playBtn: '▶ Play',
+    pauseBtn: '⏸ Pause',
+    statusReady:
+      'Click to play audio (browser autoplay policy requires user interaction)',
+    statusNoFile: '⚠️ demo.flac not found. Copy it to stories/assets/.',
+    statusLoading: '🎵 Loading audio file...',
+    statusLoaded: 'Loaded',
+    statusError: '⚠️ Failed to load audio file',
+    statusPlaying: (reverbOn: boolean) =>
+      `Playing — ${reverbOn ? 'Reverb ON' : 'Dry only'}`,
+    statusPaused: 'Paused',
+    canvasIdle: 'Press ▶ Play to start',
+    canvasAnalyzing: 'Analyzing...',
+    reverseOn: 'ON',
+    reverseOff: 'OFF',
+  },
+} as const;
+
+type Locale = keyof typeof i18n;
+
+function t(locale: string): (typeof i18n)[Locale] {
+  return locale in i18n ? i18n[locale as Locale] : i18n.en;
+}
+
+// ---------------------------------------------------------------------------
+// Type definition
 // ---------------------------------------------------------------------------
 
 type ReverbArgs = {
-  /** リバーブエフェクトの有効 / 無効 */
   enabled: boolean;
-  /** Dry/Wet 比率 */
   mix: number;
-  /** インパルス応答の長さ（秒） */
   time: number;
-  /** 減衰率 */
   decay: number;
-  /** リバーブ開始前の遅延（ms） */
   delay: number;
-  /** インパルス応答を逆転させる */
   reverse: boolean;
-  /** ノイズアルゴリズムの種類 */
   noise: Noise;
-  /** ノイズのピーク数 */
   peaks: number;
-  /** ノイズのスケール */
   scale: number;
-  /** フィルタ種別 */
   filterType: BiquadFilterType;
-  /** フィルタ周波数（Hz） */
   filterFreq: number;
-  /** フィルタ Q 値 */
   filterQ: number;
 };
 
 // ---------------------------------------------------------------------------
-// モジュールレベルの音声状態（Story の再レンダリングをまたいで保持）
+// Module-level audio state (persists across story re-renders)
 // ---------------------------------------------------------------------------
 
 let audioCtx: AudioContext | null = null;
@@ -57,7 +94,6 @@ let soundBuffer: AudioBuffer | null = null;
 let isPlaying = false;
 let rafId: number | null = null;
 
-/** Reverb インスタンスに args を適用する */
 function applyArgs(r: Reverb, args: ReverbArgs): void {
   r.time(args.time);
   r.decay(args.decay);
@@ -72,10 +108,8 @@ function applyArgs(r: Reverb, args: ReverbArgs): void {
   r.scale(args.scale);
 }
 
-/** AudioContext / Reverb / Analyser を初期化（初回呼び出し時のみ生成） */
 function ensureAudio(args: ReverbArgs): void {
   audioCtx ??= new AudioContext();
-
   reverb ??= new Reverb(audioCtx, {
     time: args.time,
     decay: args.decay,
@@ -89,14 +123,12 @@ function ensureAudio(args: ReverbArgs): void {
     peaks: args.peaks,
     scale: args.scale,
   });
-
   if (!analyserNode) {
     analyserNode = audioCtx.createAnalyser();
     analyserNode.fftSize = 2048;
   }
 }
 
-/** ソースノードをリバーブあり / なし で接続し直す */
 function reconnect(enabled: boolean): void {
   if (!audioCtx || !reverb || !analyserNode || !audioSource) return;
   audioSource.disconnect();
@@ -133,28 +165,23 @@ const meta = {
     docs: {
       description: {
         component: `
-**Reverb.js** は Web Audio API を使ったリバーブエフェクトクラスです。
-カラードノイズでインパルス応答 (IR) を合成し、ConvolverNode を通してリバーブを掛けます。
+**Reverb.js** is a reverb effect class built on the Web Audio API.
+It synthesizes an impulse response (IR) using colored noise and applies reverb via \`ConvolverNode\`.
 
-## 基本的な使い方
+## Basic usage
 
 \`\`\`typescript
 import Reverb from '@logue/reverb';
 
 const ctx = new AudioContext();
-const reverb = new Reverb(ctx, {
-  time: 2,   // IR の長さ（秒）
-  decay: 2,  // 減衰率
-  mix: 0.5,  // Dry/Wet 比率
-});
+const reverb = new Reverb(ctx, { time: 2, decay: 2, mix: 0.5 });
 
 const source = ctx.createBufferSource();
-// リバーブあり: source → Reverb → destination
 reverb.connect(source).connect(ctx.destination);
 source.start();
 \`\`\`
 
-## 信号フロー
+## Signal flow
 
 \`\`\`
 AudioBufferSourceNode
@@ -168,16 +195,13 @@ AudioBufferSourceNode
     },
   },
   argTypes: {
-    // ── 再生 ─────────────────────────────────────────
     enabled: {
       control: 'boolean',
-      description: 'リバーブエフェクトの有効 / 無効',
+      description: 'Enable or disable the reverb effect',
       table: {
         category: 'Playback',
       },
     },
-
-    // ── リバーブ ──────────────────────────────────────
     mix: {
       control: {
         type: 'range',
@@ -185,7 +209,7 @@ AudioBufferSourceNode
         max: 1,
         step: 0.01,
       },
-      description: 'Dry/Wet 比率（0 = ドライのみ / 1 = ウェットのみ）',
+      description: 'Dry/Wet ratio (0 = dry only / 1 = wet only)',
       table: {
         category: 'Reverb',
         defaultValue: {
@@ -200,7 +224,7 @@ AudioBufferSourceNode
         max: 50,
         step: 1,
       },
-      description: 'インパルス応答の長さ（秒）',
+      description: 'Impulse response length (seconds)',
       table: {
         category: 'Reverb',
         defaultValue: {
@@ -215,7 +239,7 @@ AudioBufferSourceNode
         max: 100,
         step: 0.1,
       },
-      description: 'インパルス応答の減衰率',
+      description: 'Decay rate of the impulse response',
       table: {
         category: 'Reverb',
         defaultValue: {
@@ -230,7 +254,7 @@ AudioBufferSourceNode
         max: 100,
         step: 1,
       },
-      description: 'リバーブ開始前の遅延（ms）',
+      description: 'Pre-reverb delay (ms)',
       table: {
         category: 'Reverb',
         defaultValue: {
@@ -240,7 +264,7 @@ AudioBufferSourceNode
     },
     reverse: {
       control: 'boolean',
-      description: 'インパルス応答を逆転させる（リバースリバーブ）',
+      description: 'Reverse the impulse response (reverse reverb)',
       table: {
         category: 'Reverb',
         defaultValue: {
@@ -248,14 +272,12 @@ AudioBufferSourceNode
         },
       },
     },
-
-    // ── ノイズ ────────────────────────────────────────
     noise: {
       control: {
         type: 'select',
       },
       options: noiseTypes,
-      description: 'IR 合成に使うカラードノイズの種類',
+      description: 'Colored noise type used for IR synthesis',
       table: {
         category: 'Noise',
         defaultValue: {
@@ -273,7 +295,7 @@ AudioBufferSourceNode
         max: 32,
         step: 1,
       },
-      description: 'ノイズのピーク数（pink ノイズ系で有効）',
+      description: 'Number of noise peaks (effective for pink noise)',
       table: {
         category: 'Noise',
         defaultValue: {
@@ -288,7 +310,7 @@ AudioBufferSourceNode
         max: 4,
         step: 0.1,
       },
-      description: 'ノイズのスケール',
+      description: 'Noise scale',
       table: {
         category: 'Noise',
         defaultValue: {
@@ -296,14 +318,12 @@ AudioBufferSourceNode
         },
       },
     },
-
-    // ── フィルタ ──────────────────────────────────────
     filterType: {
       control: {
         type: 'select',
       },
       options: FILTER_TYPES,
-      description: 'IR に適用する BiquadFilter の種類',
+      description: 'BiquadFilter type applied to the IR',
       table: {
         category: 'Filter',
         defaultValue: {
@@ -318,7 +338,7 @@ AudioBufferSourceNode
         max: 20000,
         step: 10,
       },
-      description: 'フィルタ周波数（Hz）',
+      description: 'Filter frequency (Hz)',
       table: {
         category: 'Filter',
         defaultValue: {
@@ -333,7 +353,7 @@ AudioBufferSourceNode
         max: 10,
         step: 0.1,
       },
-      description: 'フィルタ Q 値',
+      description: 'Filter Q value',
       table: {
         category: 'Filter',
         defaultValue: {
@@ -342,8 +362,6 @@ AudioBufferSourceNode
       },
     },
   },
-
-  // デフォルト値（ReverbOptions の初期値に合わせる）
   args: {
     enabled: true,
     mix: defaults.mix,
@@ -359,41 +377,27 @@ AudioBufferSourceNode
     filterQ: defaults.filterQ,
   },
 
-  /**
-   * render は Storybook Controls が変わるたびに呼び出されます。
-   * 既存の Reverb インスタンスがあれば args を適用するだけにして、
-   * 音声状態（AudioContext など）は保持します。
-   */
-  render: (args: ReverbArgs) => {
-    // args 変更を既存インスタンスに反映
-    if (reverb) {
-      applyArgs(reverb, args);
-    }
+  render: (args: ReverbArgs, context: StoryContext<ReverbArgs>) => {
+    const locale = (context?.globals?.locale as string) ?? 'ja';
+    const s = t(locale);
 
-    // 再生中なら接続を更新
-    if (isPlaying) {
-      reconnect(args.enabled);
-    }
-
-    // 前のアニメーションループをキャンセル
+    if (reverb) applyArgs(reverb, args);
+    if (isPlaying) reconnect(args.enabled);
     if (rafId !== null) {
       cancelAnimationFrame(rafId);
       rafId = null;
     }
 
-    // ── UI 構築 ──────────────────────────────────────
-
+    // ── UI ──
     const wrapper = document.createElement('div');
     wrapper.style.cssText =
       'font-family: system-ui, sans-serif; padding: 16px; max-width: 660px;';
 
-    // タイトル
     const title = document.createElement('h3');
-    title.textContent = 'Reverb.js インタラクティブデモ';
+    title.textContent = s.title;
     title.style.cssText = 'margin: 0 0 12px; font-size: 16px;';
     wrapper.appendChild(title);
 
-    // FFT キャンバス
     const canvas = document.createElement('canvas');
     canvas.width = 628;
     canvas.height = 120;
@@ -402,15 +406,13 @@ AudioBufferSourceNode
     wrapper.appendChild(canvas);
     const ctx2d = canvas.getContext('2d');
 
-    // コントロール行
     const row = document.createElement('div');
     row.style.cssText =
       'display: flex; gap: 10px; margin-top: 12px; align-items: center; flex-wrap: wrap;';
 
-    // Play / Pause ボタン
     const playBtn = document.createElement('button');
     playBtn.type = 'button';
-    playBtn.textContent = '▶ Play';
+    playBtn.textContent = s.playBtn;
     playBtn.style.cssText = `
       padding: 8px 20px; font-size: 14px; cursor: pointer;
       border-radius: 4px; border: none;
@@ -419,16 +421,12 @@ AudioBufferSourceNode
     `;
     row.appendChild(playBtn);
 
-    // ステータステキスト
     const status = document.createElement('span');
     status.style.cssText = 'font-size: 12px; color: #64748b;';
-    status.textContent = demoAudioUrl
-      ? 'クリックして音声を再生（ブラウザの自動再生ポリシーのため操作が必要です）'
-      : '⚠️ demo.flac が見つかりません。src/stories/assets/ にコピーしてください。';
+    status.textContent = demoAudioUrl ? s.statusReady : s.statusNoFile;
     row.appendChild(status);
     wrapper.appendChild(row);
 
-    // パラメータ表示
     const paramGrid = document.createElement('div');
     paramGrid.style.cssText = `
       display: grid; grid-template-columns: repeat(3, 1fr);
@@ -472,7 +470,7 @@ AudioBufferSourceNode
       ],
       [
         'Reverse',
-        args.reverse ? 'ON' : 'OFF',
+        args.reverse ? s.reverseOn : s.reverseOff,
       ],
     ];
     for (const [label, value] of params) {
@@ -484,14 +482,12 @@ AudioBufferSourceNode
     }
     wrapper.appendChild(paramGrid);
 
-    // ── FFT アニメーション ────────────────────────────
-
+    // ── FFT loop ──
     const drawFFT = () => {
       if (!ctx2d) {
         rafId = requestAnimationFrame(drawFFT);
         return;
       }
-
       const { width, height } = canvas;
       ctx2d.fillStyle = '#1e1e2e';
       ctx2d.fillRect(0, 0, width, height);
@@ -499,15 +495,11 @@ AudioBufferSourceNode
       if (analyserNode && isPlaying) {
         const data = new Float32Array(analyserNode.frequencyBinCount);
         analyserNode.getFloatFrequencyData(data);
-
-        // スペクトル描画
         ctx2d.fillStyle = args.enabled ? '#89b4fa' : '#a6e3a1';
         for (let i = 0; i < width; i++) {
           const y = height / 2 + ((data[i] ?? -100) + 48) * 2.2;
           ctx2d.fillRect(i, height - y, 1, y);
         }
-
-        // dB グリッド線
         ctx2d.font = '9px monospace';
         for (let db = -40; db <= 40; db += 20) {
           const y = Math.trunc(height / 2 - (db * height) / 100);
@@ -517,56 +509,49 @@ AudioBufferSourceNode
           ctx2d.fillText(`${db}dB`, 2, y - 1);
         }
       } else {
-        // 再生前はフラットラインを表示
         ctx2d.fillStyle = '#313244';
         ctx2d.fillRect(0, Math.trunc(canvas.height / 2), width, 1);
         ctx2d.fillStyle = '#6c7086';
         ctx2d.font = '12px system-ui';
         ctx2d.textAlign = 'center';
         ctx2d.fillText(
-          isPlaying ? 'Analyzing...' : '▶ Play を押して開始',
+          isPlaying ? s.canvasAnalyzing : s.canvasIdle,
           width / 2,
           height / 2 + 4,
         );
         ctx2d.textAlign = 'left';
       }
-
       rafId = requestAnimationFrame(drawFFT);
     };
     drawFFT();
 
-    // ── Play ボタンのハンドラ ─────────────────────────
-
+    // ── Play button ──
     playBtn.addEventListener('click', async () => {
       if (!demoAudioUrl) {
-        status.textContent =
-          '⚠️ demo.flac が未設定です。ファイルを src/stories/assets/ にコピーしてください。';
+        status.textContent = s.statusNoFile;
         return;
       }
 
-      // 初回: AudioContext / Reverb 初期化
       ensureAudio(args);
       if (!audioCtx || !reverb || !analyserNode) return;
 
-      // 初回: サウンドバッファ読み込み
       if (!soundBuffer) {
-        status.textContent = '🎵 音声ファイルを読み込み中...';
+        status.textContent = s.statusLoading;
         playBtn.disabled = true;
         try {
           const res = await fetch(demoAudioUrl);
           const arraybuf = await res.arrayBuffer();
           soundBuffer = await audioCtx.decodeAudioData(arraybuf);
-          status.textContent = '読み込み完了';
+          status.textContent = s.statusLoaded;
         } catch (err) {
           console.error('[Reverb Story]', err);
-          status.textContent = '⚠️ 音声ファイルの読み込みに失敗しました';
+          status.textContent = s.statusError;
           playBtn.disabled = false;
           return;
         }
         playBtn.disabled = false;
       }
 
-      // 初回再生
       if (!isPlaying) {
         audioSource = audioCtx.createBufferSource();
         audioSource.buffer = soundBuffer;
@@ -575,23 +560,22 @@ AudioBufferSourceNode
         audioSource.start();
         isPlaying = true;
         await audioCtx.resume();
-        playBtn.textContent = '⏸ Pause';
+        playBtn.textContent = s.pauseBtn;
         playBtn.style.background = '#fb923c';
-        status.textContent = `再生中 — ${args.enabled ? 'Reverb ON' : 'Dry only'}`;
+        status.textContent = s.statusPlaying(args.enabled);
         return;
       }
 
-      // 一時停止 / 再開
       if (audioCtx.state === 'running') {
         await audioCtx.suspend();
-        playBtn.textContent = '▶ Play';
+        playBtn.textContent = s.playBtn;
         playBtn.style.background = '#4ade80';
-        status.textContent = '一時停止中';
+        status.textContent = s.statusPaused;
       } else {
         await audioCtx.resume();
-        playBtn.textContent = '⏸ Pause';
+        playBtn.textContent = s.pauseBtn;
         playBtn.style.background = '#fb923c';
-        status.textContent = `再生中 — ${args.enabled ? 'Reverb ON' : 'Dry only'}`;
+        status.textContent = s.statusPlaying(args.enabled);
       }
     });
 
@@ -606,20 +590,14 @@ type Story = StoryObj<ReverbArgs>;
 // Stories
 // ---------------------------------------------------------------------------
 
-/**
- * デフォルト設定のデモ。
- * Controls パネルで全パラメータをリアルタイム変更できます。
- */
+/** Default settings. All parameters can be changed in real time via the Controls panel. */
 export const Default: Story = {
-  name: 'デフォルト設定',
+  name: 'Default / デフォルト設定',
 };
 
-/**
- * 大きなホールのリバーブ。
- * time を長く、decay を大きくし、ローパスフィルタで高域を落とします。
- */
+/** Large hall reverb. Long time, high decay, low-pass filter. */
 export const LargeHall: Story = {
-  name: 'ラージホール',
+  name: 'Large Hall / ラージホール',
   args: {
     time: 8,
     decay: 6,
@@ -630,12 +608,9 @@ export const LargeHall: Story = {
   },
 };
 
-/**
- * 狭い部屋のリバーブ。
- * 短い IR と低い mix で自然な残響感を演出します。
- */
+/** Small room reverb. Short IR and low mix for subtle ambience. */
 export const SmallRoom: Story = {
-  name: 'スモールルーム',
+  name: 'Small Room / スモールルーム',
   args: {
     time: 1,
     decay: 1,
@@ -646,12 +621,9 @@ export const SmallRoom: Story = {
   },
 };
 
-/**
- * リバースリバーブ。
- * IR を逆転させることで、音の前にリバーブが立ち上がる独特のサウンドになります。
- */
+/** Reverse reverb. Reversed IR creates a swell before the source. */
 export const ReverseReverb: Story = {
-  name: 'リバースリバーブ',
+  name: 'Reverse Reverb / リバースリバーブ',
   args: {
     reverse: true,
     time: 3,
@@ -661,12 +633,9 @@ export const ReverseReverb: Story = {
   },
 };
 
-/**
- * ドライ（リバーブなし）の比較用。
- * enabled を切り替えてリバーブあり / なしを比較できます。
- */
+/** Dry signal for A/B comparison. Toggle `enabled` to switch. */
 export const DrySignal: Story = {
-  name: 'ドライ信号（比較用）',
+  name: 'Dry Signal / ドライ信号（比較用）',
   args: {
     enabled: false,
     mix: 0,

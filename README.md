@@ -1,7 +1,5 @@
 # Reverb.js
 
-English | [日本語](README.ja.md)
-
 [![npm version](https://img.shields.io/npm/v/@logue/reverb.svg)](https://www.npmjs.com/package/@logue/reverb)
 [![NPM Downloads](https://img.shields.io/npm/dm/@logue/reverb.svg?style=flat)](https://www.npmjs.com/package/@logue/reverb)
 [![jsdelivr CDN](https://data.jsdelivr.com/v1/package/npm/@logue/reverb/badge)](https://www.jsdelivr.com/package/npm/@logue/reverb)
@@ -14,11 +12,6 @@ Append reverb effect to audio source.
 
 This script is originally a spin out of [sf2synth.js](https://github.com/logue/smfplayer.js)'s reverb effect.
 
-## Sample
-
-- <https://logue.dev/Reverb.js/>
-- <https://logue.dev/Reverb.js/localaudio.html>
-
 ## Installation
 
 ```bash
@@ -26,6 +19,8 @@ pnpm install @logue/reverb @thi.ng/colored-noise @thi.ng/transducers @thi.ng/ran
 ```
 
 ## Usage
+
+<https://logue.dev/Reverb.js>
 
 ```js
 import Reverb from "@logue/reverb";
