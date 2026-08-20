@@ -17,11 +17,11 @@ export default defineConfig({
   html: {
     template({ entryName }) {
       const templates: Record<string, string> = {
-        index: './index.html',
-        localaudio: './localaudio.html',
+        index: './src-demo/index.html',
+        localaudio: './src-demo/localaudio.html',
       };
 
-      return templates[entryName] ?? './index.html';
+      return templates[entryName] ?? './src-demo/index.html';
     },
   },
   output: {

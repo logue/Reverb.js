@@ -1,4 +1,5 @@
 import { mergeRslibConfig } from '@rslib/core';
+import remarkGfm from 'remark-gfm';
 import type { StorybookConfig } from 'storybook-html-rsbuild';
 
 const config: StorybookConfig = {
@@ -9,7 +10,18 @@ const config: StorybookConfig = {
   ],
   addons: [
     '@storybook/addon-a11y',
-    '@storybook/addon-docs',
+    {
+      name: '@storybook/addon-docs',
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [
+              remarkGfm,
+            ],
+          },
+        },
+      },
+    },
   ],
   rsbuildFinal: (config) => {
     return mergeRslibConfig(config, {

@@ -3,9 +3,6 @@
  *
  * Web Audio API を使ったリバーブエフェクトのインタラクティブデモ。
  * Storybook Controls パネルで全パラメータをリアルタイムに変更できます。
- *
- * ⚠️ デモ音声を使うには src-docs/demo.flac を src/stories/assets/demo.flac に
- *    コピーしてから import のコメントアウトを解除してください。
  */
 import type { Meta, StoryObj } from '@storybook/html';
 
@@ -367,7 +364,7 @@ AudioBufferSourceNode
    * 既存の Reverb インスタンスがあれば args を適用するだけにして、
    * 音声状態（AudioContext など）は保持します。
    */
-  render: (args) => {
+  render: (args: ReverbArgs) => {
     // args 変更を既存インスタンスに反映
     if (reverb) {
       applyArgs(reverb, args);
